@@ -176,6 +176,7 @@ public class TestTexteMNP{
         System.out.println("==========================");
         System.out.println("Partition du groupe racine en 3 groupes TD.");
         agf.createPartition(agf.getPromotion(), "TD",3);
+        
         System.out.println(agf.getPromotion().monPrint());
 
         Groupe racineDeLaPartition = agf.getPromotion().getSousGroupes().iterator().next();
