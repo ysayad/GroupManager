@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Adam Meddahi
  * @author Youcef Sayad
- * @author Yannis Bouarroudj
+ * @author Yanis Bouarroudj
  */
 public class EtudiantP implements Etudiant {
 

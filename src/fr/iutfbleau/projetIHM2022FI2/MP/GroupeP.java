@@ -1,14 +1,32 @@
 package fr.iutfbleau.projetIHM2022FI2.MP;
+
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.util.*;
 
 /**
- * Un groupe
+ * L'implémentation de l'interface Groupe.java de l'API
+ * @see fr.iutfbleau.projetIHM2022FI2.API.Groupe.java
+ *
+ * @author Adam Meddahi
+ * @author Youcef Sayad
+ * @author Yanis Bouarroudj
  */
-
 public class GroupeP implements Groupe {
 
+    private Set<EtudiantP> setEtudiant;
+    Groupe groupePere;
+    String nom;
+    Type
+    
+    /**
+     * Cons 
+     */
+     public GroupeP(){
+        this.setEtudiant = new HashSet<EtudiantP>();
+     }
+
     public boolean addEtudiant(Etudiant e) {
+        if()
         return false;
     }
 
