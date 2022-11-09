@@ -8,6 +8,7 @@ import java.util.*;
  */
 
 public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
+    
     public AbstractGroupeFactoryP(String string, int i, int j) {
     }
 

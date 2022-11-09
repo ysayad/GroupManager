@@ -27,7 +27,7 @@ doc :
 	javadoc -d doc src/fr/iutfbleau/projetIHM2022FI2/API/*.java src/fr/iutfbleau/projetIHM2022FI2/MNP/*.java
 
 clean :
-	rm -rf ${BUILD}/* *.jar
+	rm -rf ${BUILD}/* *.jar doc/*
 
 
 # REGLES DE DEPENDANCE #
