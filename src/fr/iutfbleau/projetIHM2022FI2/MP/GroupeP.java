@@ -2,6 +2,7 @@ package fr.iutfbleau.projetIHM2022FI2.MP;
 
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.util.*;
+import org.mariadb.jdbc.*;
 
 /**
  * L'implémentation de l'interface Groupe.java de l'API
@@ -19,9 +20,9 @@ public class GroupeP implements Groupe {
     private String nom;
     private TypeGroupe type;
     private int id;
-    private int size;
     private int min;
     private int max;
+    private Connection cnx;
     
     /**
      * Constructeur de la classe GroupeP, crée un nouveau groupe vide de type ROOT sans étudiants, sans sous-Groupe
@@ -29,7 +30,27 @@ public class GroupeP implements Groupe {
      * @param min - Le nombre minimum d'étudiants souhaités dans le groupe
      * @param max - Le nombre maximum d'étudiants souhaités dans le groupe 
      */
-     public GroupeP(String name, int min, int max){
+     public GroupeP(String name, int min, int max) throws IllegalStateException{
+        
+        //Verifier si le nom est deja pris
+        //1ere étape se connecter
+        //2eme etape inserer dans la bdd
+        //3eme etapes remplir l'objet en local 
+        
+        try{
+            this.connectToDataBase();
+        }catch(IllegalStateException ex){
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+
+        this.nom = name;
+        this.min = min;
+        this.max = max;
+        this.type = TypeGroupe.ROOT;
+        this.GroupePere = ;
+        
+
         Objects.requireNonNull(name,"On ne peut pas créer un groupe dont le nom est null");
         this.id=++this.nextId;
         this.name=name;
@@ -84,7 +105,6 @@ public class GroupeP implements Groupe {
         this.max = max;
         this.setEtudiants = new HashSet<Etudiant>(max-min);
         this.setSousGroupes = new HashSet<Groupe>(0);
-
      }
     
     /**
@@ -161,4 +181,26 @@ public class GroupeP implements Groupe {
         return this.setEtudiants;
     }
     
+    /**
+     * Permet de se connecter à la base de données
+     * @throws IllegalStateException si la connexion a échouée
+     */
+    private void connectToDataBase() throws IllegalStateException{
+       try{
+        Connection cnx = DriverManager.getConnection("jdbc:mariadb://dwarves.iut-fbleau.fr/meddahi","meddahi", "jaimelespizza");
+        Class.forName("org.mariadb.jdbc.Driver");
+        this.cnx = cnx;
+       } catch(SQLException ex){
+            throw new IllegalStateException("Erreur lors de la connexion à la base de données : "+ex.getMessage());
+       } catch(ClassNotFoundException ex){
+            throw new IllegalStateException("Le pilote pour se connecter à la base de données n'est pas disponible : "+ex.getMessage());
+       }
+    }
+
+    /**
+    * Permet de se déconnecter de la base de données en nettoyant correctement les ressources occupées  
+     */
+    private void endConnection(){
+        this.cnx.close();
+    }
 }

@@ -8,9 +8,7 @@ import java.util.*;
  * L'implémentation de l'interface Etudiant.java de l'API
  * @see fr.iutfbleau.projetIHM2022FI2.API.Etudiant.java
  *
- * @author Adam Meddahi
- * @author Youcef Sayad
- * @author Yanis Bouarroudj
+ * @author Adam Meddahi, Youcef Sayad et Yanis Bouarroudj
  */
 public class EtudiantP implements Etudiant {
 
