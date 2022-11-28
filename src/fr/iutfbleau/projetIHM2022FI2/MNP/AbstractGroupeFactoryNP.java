@@ -18,6 +18,7 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
 
 
 
+
     /**
      * Le constructeur fabrique le groupe promotion vide.
      * Il faut ensuite y ajouter les étudiants.

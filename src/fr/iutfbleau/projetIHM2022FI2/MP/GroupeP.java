@@ -14,21 +14,21 @@ import org.mariadb.jdbc.*;
  */
 public class GroupeP implements Groupe {
 
-    private Set<Etudiant> setEtudiants;
-    private Set<Groupe> setSousGroupes;
-    private Groupe groupePere;
     private String nom;
     private TypeGroupe type;
     private int id;
     private int min;
     private int max;
+    private Groupe groupePere;
     private Connection cnx;
-    
+    //Dans GroupeP : un constucteur pour créer un groupe via un id (permet de créer un objet Groupe en local pour un groupe existant sur la bdd)
+    //Dans GroupeFactoryP : une méthode pour récuperer un groupes déja existant qui appellera donc le constructeur expliqué juste au dessus 
     /**
      * Constructeur de la classe GroupeP, crée un nouveau groupe vide de type ROOT sans étudiants, sans sous-Groupe
      * @param name - Le nom du groupe
      * @param min - Le nombre minimum d'étudiants souhaités dans le groupe
      * @param max - Le nombre maximum d'étudiants souhaités dans le groupe 
+     * @exceptions
      */
      public GroupeP(String name, int min, int max) throws IllegalStateException{
         
@@ -36,13 +36,50 @@ public class GroupeP implements Groupe {
         //1ere étape se connecter
         //2eme etape inserer dans la bdd
         //3eme etapes remplir l'objet en local 
-        
+
+        //Créer le groupe racine
+        //Ajouter à chaque étudiants le groupe 1
+
+        //Connection à la Bdd
         try{
             this.connectToDataBase();
         }catch(IllegalStateException ex){
             IllegalStateException newEx = new IllegalStateException(ex.getMessage());
             throw newEx;
+        }finally{
+            this.cleanCo();
         }
+        this.nom = name;
+        this.type = TypeGroupe.ROOT;
+        this.id = 1;
+        this.min = min;
+        this.max = max;
+        this.groupePere = this;
+        
+        this.setEtudiants = new Set<Etudiant>();
+
+
+        PreparedStatement pstAddStudentsGroups = this.cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
+        //Récupere tous les étudiant et les places dans le set
+        PreparedStatement pstGetAllStudents = this.cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
+        ResultSet rs = pst.executeQuery();
+        while(rs.next()){
+            //Ajout du lien etudiants et groupe dans la table StudentsGroups
+            pstAddStudentsGroups.SetInt(1,rs.getInt(1));
+            pstAddStudentsGroups.SetInt(2,1);
+            pstAddStudentsGroups.executeUpdate();
+        }
+
+        //Création du groupe en local 
+            //Récuperer tous les étudiants
+            //Les ajouter au set
+            //
+
+        
+
+
+
+
 
         this.nom = name;
         this.min = min;
