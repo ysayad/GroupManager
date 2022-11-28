@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.iutfbleau.projetIHM2022FI2.API"},{"l":"fr.iutfbleau.projetIHM2022FI2.MNP"}];updateSearchResults();
