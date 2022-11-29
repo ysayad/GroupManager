@@ -19,8 +19,8 @@ public class GroupeP implements Groupe {
     private int id;
     private int min;
     private int max;
-    private Groupe groupePere;
-    private Connection cnx;
+    private Groupe father;
+
     //Dans GroupeP : un constucteur pour créer un groupe via un id (permet de créer un objet Groupe en local pour un groupe existant sur la bdd)
     //Dans GroupeFactoryP : une méthode pour récuperer un groupes déja existant qui appellera donc le constructeur expliqué juste au dessus 
     /**
@@ -31,72 +31,55 @@ public class GroupeP implements Groupe {
      * @exceptions
      */
      public GroupeP(String name, int min, int max) throws IllegalStateException{
-        
-        //Verifier si le nom est deja pris
-        //1ere étape se connecter
-        //2eme etape inserer dans la bdd
-        //3eme etapes remplir l'objet en local 
 
-        //Créer le groupe racine
-        //Ajouter à chaque étudiants le groupe 1
-
-        //Connection à la Bdd
+        //Connection à la Bdd 
+        Connection cnx;
         try{
-            this.connectToDataBase();
+            cnx = this.connectToDataBase();
         }catch(IllegalStateException ex){
             IllegalStateException newEx = new IllegalStateException(ex.getMessage());
             throw newEx;
-        }finally{
-            this.cleanCo();
         }
+
+        // Création et initialisation du groupe racine dans la BdD
+        try{
+            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJIHM_Groups(id,name,type,min,max,fatherId) VALUES(?,?,?,?,?,?)");
+            pst1.setInt(1,1);
+            pst1.setString(2,name);
+            pst1.setString(3,"ROOT");
+            pst1.setInt(4,min);
+            pst1.setInt(5,max);
+            pst1.setInt(6,1);
+            pst1.executeUpdate();
+        }catch(SQLException ex){
+            this.endConnection(cnx);
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+        
+        // Attribution à tous les étudiant du groupe Racine (groupId = 1)
+        try{
+            PreparedStatement pstGetAllStudents = this.cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
+            PreparedStatement pstAddStudentsGroups = this.cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
+            ResultSet rs = pst.executeQuery();
+            while(rs.next()){
+                pstAddStudentsGroups.SetInt(1,rs.getInt(1));
+                pstAddStudentsGroups.SetInt(2,1);
+                pstAddStudentsGroups.executeUpdate();
+            }
+        }catch(SQLException ex){
+            this.endConnection(cnx);
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+
+        //Initialisation en local des attributs du groupes 
         this.nom = name;
         this.type = TypeGroupe.ROOT;
         this.id = 1;
         this.min = min;
         this.max = max;
-        this.groupePere = this;
-        
-        this.setEtudiants = new Set<Etudiant>();
-
-
-        PreparedStatement pstAddStudentsGroups = this.cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
-        //Récupere tous les étudiant et les places dans le set
-        PreparedStatement pstGetAllStudents = this.cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
-        ResultSet rs = pst.executeQuery();
-        while(rs.next()){
-            //Ajout du lien etudiants et groupe dans la table StudentsGroups
-            pstAddStudentsGroups.SetInt(1,rs.getInt(1));
-            pstAddStudentsGroups.SetInt(2,1);
-            pstAddStudentsGroups.executeUpdate();
-        }
-
-        //Création du groupe en local 
-            //Récuperer tous les étudiants
-            //Les ajouter au set
-            //
-
-        
-
-
-
-
-
-        this.nom = name;
-        this.min = min;
-        this.max = max;
-        this.type = TypeGroupe.ROOT;
-        this.GroupePere = ;
-        
-
-        Objects.requireNonNull(name,"On ne peut pas créer un groupe dont le nom est null");
-        this.id=++this.nextId;
-        this.name=name;
-        this.min=min;
-        this.max=max;
-        this.type=TypeGroupe.ROOT;
-        this.groupePere=this;
-        this.setSousGroupes= new LinkedHashSet<Groupe>();
-        this.setEtudiants= new LinkedHashSet<Etudiant>();
+        this.father = this;
      }
      
     /**
@@ -107,23 +90,51 @@ public class GroupeP implements Groupe {
      * @param max - Le nombre maximum d'étudiants souhaités dans le groupe 
      */
      public GroupeP(Groupe pere, String name, int min, int max){
-        Objects.requireNonNull(pere,"On ne peut pas créer un groupe dont le père est null");
-        Objects.requireNonNull(name,"On ne peut pas créer un groupe dont le nom est null");
-        this.id=++this.nextId;
-        this.name=name;
-        this.min=min;
-        this.max=max;
-        this.type=TypeGroupe.FREE;
-        this.groupePere=pere;
-        this.setSousGroupes= new LinkedHashSet<Groupe>();
-        this.setEtudiants= new LinkedHashSet<Etudiant>();
+        
+        //Connection à la Bdd 
+        Connection cnx;
+        try{
+            cnx = this.connectToDataBase();
+        }catch(IllegalStateException ex){
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+
+        //Création du groupe dans la BdD
+        try{
+            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJIHM_Groups(id,name,type,min,max,fatherId) VALUES(?,?,?,?,?,?)");
+            pst1.setInt(1,1);//A MODIFIER (PEUT ETRE AUTO INCREMENT)
+            pst1.setString(2,name);
+            pst1.setString(3,"FREE");
+            pst1.setInt(4,min);
+            pst1.setInt(5,max);
+            pst1.setInt(6,pere.getId());
+            pst1.executeUpdate();
+        }catch(SQLException ex){
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+
+        //Initialisation des attributs du groupe en local
+        try{
+            PreparedStatement pst1 = cnx.PrepareStatement("SELECT id FROM PJIHM__Groups WHERE name = AND father = ")
+            this.id = ;
+        }catch(SQLException ex){
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;            
+        }
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.type = TypeGroupe.FREE;
+        this.father = pere;
     }
 
     /**
     * Surcharge du constructeur de la classe GroupeP, crée un nouveau groupe de type PARTITION dupliquant le groupe passé en paramètre (pour servir de racine à une partition de ce groupe de type FREE passé en paramètre).
     * @param pere - Le groupe pere du groupe à créer
     */
-    public GroupeNP(Groupe pere){
+    public GroupeP(Groupe pere){
         Objects.requireNonNull(pere,"On ne peut pas créer un groupe dont le père est null");
         this.id=++this.nextId;
         this.name=pere.getName()+"_PARTITION_"+ this.id;
@@ -134,9 +145,12 @@ public class GroupeP implements Groupe {
         this.sousGroupes= new LinkedHashSet<Groupe>();
         this.membresDuGroupe= pere.getEtudiants();
     }
-    
-     public GroupeP(Groupe pere, String name, int min, int max, TypeGroupe type){
-        this.groupePere = pere;
+    /**
+     * Surcharge du constructeur permettant de créer un objet GroupeP correspondant à un groupe sur la base de données
+    */
+     
+     public GroupeP(int groupId){
+        this.father = pere;
         this.nom = name;
         this.min = min;
         this.max = max;
@@ -207,7 +221,7 @@ public class GroupeP implements Groupe {
     }
 
     public Groupe getPointPoint() {
-        return this.groupePere;
+        return this.father;
     }
 
     public Set<Groupe> getSousGroupes() {
@@ -220,24 +234,27 @@ public class GroupeP implements Groupe {
     
     /**
      * Permet de se connecter à la base de données
-     * @throws IllegalStateException si la connexion a échouée
+     * @throws IllegalStateException si la connexion a échouée, la connexion est fermée 
      */
-    private void connectToDataBase() throws IllegalStateException{
+    private Connection connectToDataBase() throws IllegalStateException{
+       Connection cnx;
        try{
-        Connection cnx = DriverManager.getConnection("jdbc:mariadb://dwarves.iut-fbleau.fr/meddahi","meddahi", "jaimelespizza");
+        cnx = DriverManager.getConnection("jdbc:mariadb://dwarves.iut-fbleau.fr/meddahi","meddahi", "jaimelespizza");
         Class.forName("org.mariadb.jdbc.Driver");
-        this.cnx = cnx;
+        return cnx;
        } catch(SQLException ex){
             throw new IllegalStateException("Erreur lors de la connexion à la base de données : "+ex.getMessage());
        } catch(ClassNotFoundException ex){
             throw new IllegalStateException("Le pilote pour se connecter à la base de données n'est pas disponible : "+ex.getMessage());
+       }finally{
+            this.endConnection(cnx);
        }
     }
 
     /**
-    * Permet de se déconnecter de la base de données en nettoyant correctement les ressources occupées  
+     * Permet de se déconnecter de la base de données en nettoyant correctement les ressources occupées  
      */
-    private void endConnection(){
-        this.cnx.close();
+    private void endConnection(Connection cnx){
+        cnx.close();
     }
 }
