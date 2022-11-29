@@ -3,13 +3,15 @@ import java.util.*;
 import javax.swing.*;
 public class ButtonListener implements MouseListener{
     JButton button;
-    String id;
-    public ButtonListener(JButton button, String id) {
+    public ButtonListener(JButton button) {
         this.button = button;
-        this.id = id;
     }
 
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+        if (this.button.getName() == "1") {
+            System.out.println("on quitte mtn");
+        }
+    }
 
     public void mouseEntered(MouseEvent e) {}
 

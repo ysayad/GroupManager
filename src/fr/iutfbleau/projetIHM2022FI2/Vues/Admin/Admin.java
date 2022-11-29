@@ -114,7 +114,8 @@ public class Admin {
         gbcpanneauBouton.gridwidth = 1;
         gbcpanneauBouton.gridheight = 1;
         JButton acces = new JButton(" acces ");
-        acces.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
+        acces.setText("");
+        //acces.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
         acces.setBorderPainted(false);
         acces.setFocusPainted(false);
         acces.setContentAreaFilled(false);
@@ -125,28 +126,35 @@ public class Admin {
         acces.setIcon(new ImageIcon("../Img/acces.png"));
         acces.setSelectedIcon(new ImageIcon("../Img/acces-hover.png"));
         acces.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
-        panneauBouton.add(acces, gbcpanneauBouton);
+        JPanel pacces = new JPanel();
+        pacces.setBackground(Color.WHITE);
+        pacces.add(acces);
+        panneauBouton.add(pacces, gbcpanneauBouton);
 
         gbcpanneauBouton.gridx = 4;
         gbcpanneauBouton.gridy = 2;
         gbcpanneauBouton.gridwidth = 1;
         gbcpanneauBouton.gridheight = 1;
         JButton quitter = new JButton(" Entrer ");
-        quitter.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
-        quitter.setBorderPainted(true);
+        quitter.setText("");
+        //quitter.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
+        quitter.setBorderPainted(false);
         quitter.setFocusPainted(false);
         quitter.setContentAreaFilled(false);
         quitter.setBackground(Color.DARK_GRAY);
         quitter.setForeground(Color.WHITE);
+        acces.setPreferredSize(new Dimension(125, 37));
 
-        ImageIcon icon = new ImageIcon("../Img/quitter.png");
-        Image test = icon.getImage();
-        Image image = test.getScaledInstance(200, 200, Image.SCALE_DEFAULT);
-        icon = new ImageIcon(image);
-        quitter.setIcon(icon);
+        quitter.setIcon(new ImageIcon("../Img/quitter.png"));
         quitter.setSelectedIcon(new ImageIcon("../Img/quitter-hover.png"));
         quitter.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
-        panneauBouton.add(quitter, gbcpanneauBouton);
+        quitter.setName("1");
+        quitter.addListener
+
+        JPanel pquitter = new JPanel();
+        pquitter.setBackground(Color.WHITE);
+        pquitter.add(quitter);
+        panneauBouton.add(pquitter, gbcpanneauBouton);
 
         gbcpanneau.gridx = 1;
         gbcpanneau.gridy = 3;
