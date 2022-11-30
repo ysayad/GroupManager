@@ -174,7 +174,7 @@ public class Admin {
         acces.addMouseListener(new ButtonListener(fenetre,cardLayout,acces));
         quitter.addMouseListener(new ButtonListener(fenetre,cardLayout,quitter));
         fenetre.add(panneau, "Accueil");
-        fenetre.add(menu.test, "Menu"); 
+        fenetre.add(menu.menu, "Menu"); 
         fenetre.setVisible(true);
     }
 }
