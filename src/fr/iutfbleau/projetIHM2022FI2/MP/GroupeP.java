@@ -59,8 +59,8 @@ public class GroupeP implements Groupe {
         
         // Attribution à tous les étudiant du groupe Racine (groupId = 1)
         try{
-            PreparedStatement pst1 = this.cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
-            PreparedStatement pst2 = this.cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
+            PreparedStatement pst1 = cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
+            PreparedStatement pst2 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
             ResultSet rs = pst1.executeQuery();
             while(rs.next()){
                 pst2.SetInt(1,rs.getInt(1));
@@ -160,10 +160,10 @@ public class GroupeP implements Groupe {
 
         //Chaque éléve du groupe pere appartient desormais aussi à la partition
         try{
-            PreparedStatement pst1 = this.cnx.PrepareStatement("SELECT id FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            PreparedStatement pst1 = cnx.PrepareStatement("SELECT id FROM PJIHM__StudentsGroups WHERE groupId = ?");
             pst1.setInt(1,pere.getId());
             
-            PreparedStatement pst2 = this.cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
+            PreparedStatement pst2 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
             ResultSet rs = pst1.executeQuery();
             while(rs.next()){
                 pst2.SetInt(1,rs.getInt(1));
@@ -173,13 +173,20 @@ public class GroupeP implements Groupe {
         }
     }
     
-    /**
-     * permet de récupérer l'identifiant de l'étudiant.
-     * @return l'identifiant.
-     */
     public boolean addEtudiant(Etudiant e) {
-        Objects.requireNonNull(e,"On ne peut pas ajouter un Étudiant qui est null");
-        return this.setEtudiants.add(e)
+        //Connexion
+        Connection cnx;
+        try{
+            cnx = this.connectToDataBase();
+        }catch(IllegalStateException ex){
+            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
+            throw newEx;
+        }
+
+        try{
+            PreparedStatement pst1 = 
+        }
+        return this.setEtudiants.add(e);
     }
 
     public boolean removeEtudiant(Etudiant e) {
@@ -279,25 +286,15 @@ public class GroupeP implements Groupe {
    *2. Le Hash de cette addition sera l'ID du groupe
    *On s'assure ainsi que l'Id est unique même si:
    * - 2 Admin sur des machines différentes créent un groupe au même moment (grâce à l'adresse MAC)
-   *  - 2 Admin sur la même machine créent un groupe au même moment (grâce au Pid)
-   *  - l'Admin crée 2 groupes à la suite depuis la même machine et le même programme (grâce au TimeStamp)
+   * - 2 Admin sur la même machine créent un groupe au même moment (grâce au Pid)
+   * - L'Admin crée 2 groupes à la suite depuis la même machine et le même programme (grâce au TimeStamp)
    * @exception IllegalStateException Si une valeur de la somme n'a pas pu être récupérée
    */
 
     private int createId() throws IllegalStateException{
-        //Récuperer pid
-
-        //Récuperer timeStamp
+        //Récupere le timeStamp
         Date date = new Date();
-        long timeStamp = date.getTime();
-
-        //Récuperer adresse MAC
-        InetAddress localHost = InetAddress.getLocalHost();
-        NetworkInterface netInterface = NetworkInterface.getByInetAddress(localHost);
-        byte[] hardwareAddress = ni.getHardwareAddress();
-        //Additioner et Hasher
-
-        //Retourner
-
+        Long timeStamp = new Long(date.getTime());
+        return timeStamp.hashCode();
     }
 }
