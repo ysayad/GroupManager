@@ -5,6 +5,9 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
 
 public class Admin {
     public static void main(String[] args) {
@@ -126,6 +129,8 @@ public class Admin {
         acces.setIcon(new ImageIcon("../Img/acces.png"));
         acces.setSelectedIcon(new ImageIcon("../Img/acces-hover.png"));
         acces.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
+        acces.setName("entrer");
+
         JPanel pacces = new JPanel();
         pacces.setBackground(Color.WHITE);
         pacces.add(acces);
@@ -148,8 +153,7 @@ public class Admin {
         quitter.setIcon(new ImageIcon("../Img/quitter.png"));
         quitter.setSelectedIcon(new ImageIcon("../Img/quitter-hover.png"));
         quitter.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
-        quitter.setName("1");
-        quitter.addListener
+        quitter.setName("quitter");
 
         JPanel pquitter = new JPanel();
         pquitter.setBackground(Color.WHITE);
@@ -163,10 +167,14 @@ public class Admin {
         panneau.add(panneauBouton, gbcpanneau);
 
 
-
-        fenetre.add(panneau);
         fenetre.setMinimumSize(new Dimension(1280,850));
-
+        CardLayout cardLayout = new CardLayout();
+        fenetre.setLayout(cardLayout);
+        Menu menu = new Menu();
+        acces.addMouseListener(new ButtonListener(fenetre,cardLayout,acces));
+        quitter.addMouseListener(new ButtonListener(fenetre,cardLayout,quitter));
+        fenetre.add(panneau, "Accueil");
+        fenetre.add(menu.test, "Menu"); 
         fenetre.setVisible(true);
     }
 }
