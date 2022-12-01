@@ -5,87 +5,38 @@ import java.util.*;
 import org.mariadb.jdbc.*;
 
 /**
- * L'implémentation de l'interface Groupe.java de l'API
+ * L'implémentation de l'interface Groupe.java de l'API,
+ * représente un groupe en local, la gestion de la persistance des données(BdD) est gérée par la factory
  * @see fr.iutfbleau.projetIHM2022FI2.API.Groupe.java
  *
- * @author Adam Meddahi
- * @author Youcef Sayad
- * @author Yanis Bouarroudj
+ * @author Adam Meddahi, Youcef Sayad et Yanis Bouarroudj
  */
 public class GroupeP implements Groupe {
-
+    
+    private int id;
     private String nom;
     private TypeGroupe type;
-    private int id;
     private int min;
     private int max;
     private Groupe father;
     private Set<Etudiant> students;
     private Set<Groupe> subGroups;
 
-    //Dans GroupeP : un constucteur pour créer un groupe via un id (permet de créer un objet Groupe en local pour un groupe existant sur la bdd)
-    //Dans GroupeFactoryP : une méthode pour récuperer un groupes déja existant qui appellera donc le constructeur expliqué juste au dessus 
     /**
      * Constructeur de la classe GroupeP, crée un nouveau groupe vide de type ROOT sans étudiants, sans sous-Groupe
      * @param name - Le nom du groupe
      * @param min - Le nombre minimum d'étudiants souhaités dans le groupe
      * @param max - Le nombre maximum d'étudiants souhaités dans le groupe 
-     * @exceptions
      */
-     public GroupeP(String name, int min, int max) throws IllegalStateException{ //1
-        //Connection à la Bdd 
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-
-        // Création et initialisation du groupe racine dans la BdD
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJIHM_Groups(id,name,type,min,max,fatherId) VALUES(?,?,?,?,?,?)");
-            pst1.setInt(1,1);
-            pst1.setString(2,name);
-            pst1.setString(3,"ROOT");
-            pst1.setInt(4,min);
-            pst1.setInt(5,max);
-            pst1.setInt(6,1);
-            pst1.executeUpdate();
-        }catch(SQLException ex){
-            this.endConnection(cnx);
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-        
-        // Attribution à tous les étudiant du groupe Racine (groupId = 1)
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("SELECT * FROM PJIHM__Students");
-            PreparedStatement pst2 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
-            ResultSet rs = pst1.executeQuery();
-            while(rs.next()){
-                //Ajoute l'étudiant au groupe sur la bd
-                pst2.SetInt(1,rs.getInt(1));
-                pst2.SetInt(2,1);
-                pst2.executeUpdate();
-
-                //Ajoute l'étudiant au groupe en local
-                Etudiant students = new Etudiant(rs.getString(3), rs.getString(2), rs.getInt(1)); //nom prenom id
-                this.students.add(student);
-            }
-        }catch(SQLException ex){
-            this.endConnection(cnx);
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-
-        //Initialisation en local des attributs du groupes 
+     public GroupeP(String name, int min, int max){ //1
+        this.id = 1;
         this.nom = name;
         this.type = TypeGroupe.ROOT;
-        this.id = 1;
         this.min = min;
         this.max = max;
         this.father = this;
+        this.students = new LinkedHashSet<Etudiant>();
+        this.subGroups = new LinkedHashSet<Groupe>();
      }
      
     /**
@@ -96,182 +47,74 @@ public class GroupeP implements Groupe {
      * @param max - Le nombre maximum d'étudiants souhaités dans le groupe 
      */
      public GroupeP(Groupe pere, String name, int min, int max){ //2
-
         this.id = this.createId();
         this.name = name;
+        this.type = TypeGroupe.FREE;
         this.min = min;
         this.max = max;
-        this.type = TypeGroupe.FREE;
         this.father = pere;
-        //Connection à la Bdd 
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-
-        //Création du groupe dans la BdD
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJIHM_Groups(id,name,type,min,max,fatherId) VALUES(?,?,?,?,?,?)");
-            pst1.setInt(1,this.id);
-            pst1.setString(2,name);
-            pst1.setString(3,"FREE");
-            pst1.setInt(4,min);
-            pst1.setInt(5,max);
-            pst1.setInt(6,pere.getId());
-            pst1.executeUpdate();
-        }catch(SQLException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-
+        this.subGroups = new LinkedHashSet<Groupe>();
+        this.students = new LinkedHashSet<Etudiant>();
     }
 
     /**
-    * Surcharge du constructeur de la classe GroupeP, crée un nouveau groupe de type PARTITION dupliquant le groupe passé en paramètre (pour servir de racine à une partition de ce groupe de type FREE passé en paramètre).
+    * Surcharge du constructeur de la classe GroupeP, crée un nouveau groupe de type PARTITION dupliquant
+    * le groupe passé en paramètre
     * @param pere - Le groupe pere du groupe à créer
     */
-    public GroupeP(Groupe pere){
-        
+    public GroupeP(Groupe pere){ 
         this.id = this.createId();
         this.name = pere.getName()+"_PARTITION_"+this.id;
+        this.type = TypeGroupe.PARTITION;
         this.min = pere.getMin();
         this.max = pere.getMax();
-        this.type = TypeGroupe.PARTITION;
         this.father = pere;
-
-        //Connection à la Bdd 
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-        //Création dans la BdD du nouveau groupe de type PARTITION
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJIHM_Groups(id,name,type,min,max,fatherId) VALUES(?,?,?,?,?,?)");
-            pst1.setInt(1,1);//A MODIFIER (PEUT ETRE AUTO INCREMENT)
-            pst1.setString(2,this.name);
-            pst1.setString(3,"PARTITION");
-            pst1.setInt(4,pere.getMin());
-            pst1.setInt(5,pere.getMax());
-            pst1.setInt(6,pere.getId());
-        }catch(SQLException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
-        }
-
-        //Chaque éléve du groupe pere appartient desormais aussi à la partition
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("SELECT studentsId FROM PJIHM__StudentsGroups WHERE groupId = ?");
-            pst1.setInt(1,pere.getId());
-            PreparedStatement pst2 = cnx.PrepareStatement("SELECT nom,prenom FROM PJIHM__Students WHERE id=?");
-            PreparedStatement pst3 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
-            ResultSet rs1 = pst1.executeQuery();
-            while(rs1.next()){
-                //Ajoute l'étudiant au groupe sur la bd
-                pst3.SetInt(1,rs1.getInt(1));
-                pst3.SetInt(2,this.getId());
-                pst3.executeUpdate();
-                //Ajoute l'étudiant au groupe en local
-                pst2.setInt(rs1.getInt(1));
-                ResultSet rs2 = pst2.executeQuery();
-                rs2.next();
-                Etudiant student = new Etudiant(rs2.getString(1), rs2.getString(2), rs1.getInt(1));
-                this.students.add(student);
-            }
-        }
+        this.subGroups = new Set<Groupe>();
+        this.students = pere.getEtudiants();
     }
-    
+
+    /**
+     * Ajoute un étudiant. Se comporte comme add de l'interface Set.
+     * @param e - L'objet Etudiant à ajouter au groupe
+     * @return true iff e est ajouté
+     */
     public boolean addEtudiant(Etudiant e) {
-        if((!this.students.contains(e)) || this.students.size()==this.max || (!this.students.add(e)))
-            return false;
-        
-        //Connexion
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-           this.endConnection(cnx);
-           return false;
-        }
-
-        //Ajouter l'étudiant sur la bd
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJHIHM__StudentsGroups VALUES(?,?)");
-            pst1.setInt(1,e.getId());
-            pst1.setInt(2,this.getId());
-            pst1.executeUpdate();
-        }catch(SQLException ex){
-            this.endConnection(cnx);
-            return false;
-        }
-
-        return true;
+        if(this.students.contains(e)) return false; // On ne peut pas ajouter un étudiant qui appartient déja au groupe
+        if(this.students.getSize()==this.max) return false; // On ne peut pas avoir plus d'étudiants que la limite supérieure du groupe
+        return this.students.add(e);
     }
 
+   /**
+    * Enlève un étudiant. Se comporte comme remove de l'interface Set.
+    * @param e - L'objet Etudiant à retirer du groupe
+    * @return true iff e est enlevé
+    */
     public boolean removeEtudiant(Etudiant e) {
-        if((!this.students.contains(e)) || this.students.size()==this.min || (!this.students.remove(e)))
-        return false;
-
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-           this.endConnection(cnx);
-           return false;
-        }
-        
-        //Ajouter l'étudiant sur la bd
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("DELETE FROM PJHIHM__StudentsGroups WHERE studentsId=? AND groupsId=?");
-            pst1.setInt(1,e.getId());
-            pst1.setInt(2,this.getId());
-            pst1.executeUpdate();
-        }catch(SQLException ex){
-            this.endConnection(cnx);
-            return false;
-        }
-
-        return true;
+        if(!this.students.contains(e)) return false; // On ne peut pas retirer un étudiant qui n(appartient pas au groupe
+        if(this.students.getSize()==this.min) return false; // On ne peut pas avoir moins d'étudiants que la limite inférieure du groupe
+        return this.students.remove(e);
     }
 
+   /**
+    * Ajoute un sous-groupe. Se comporte comme add de l'interface Set.
+    * vérifie que le groupe passé en argument a bien renseigné this comme son père.
+    * @param g - L'objet Groupe à ajouter en tant que sous-groupe de this
+    * @return true iff g est ajouté
+    */
     public boolean addSousGroupe(Groupe g){
-        if(this.setSousGroupes == null){
-            this.setSousGroupes = new HashSet<Groupe>(1);
-        }
-        this.setSousGroupes.
-        return false;
+        if(this.subGroups.contains(g)) return false; // On ne peut pas ajouter un groupe déja sous-groupe de this
+        if( !this.equals(g.getPointPoint()) ) return false;
+        return this.subGroups.add(g);
     }
 
+    /**
+     * Enlève un groupe. Se comporte comme remove de l'interface Set.
+     * @param g - Le sous-groupe à retirer
+     * @return true iff e est enlevé
+     */
     public boolean removeSousGroupe(Groupe g) {
-        if((!this.subGroups.contains(g)) || this.subGroups.remove(g))
-            return false;
-
-        Connection cnx;
-        try{
-            cnx = this.connectToDataBase();
-        }catch(IllegalStateException ex){
-        this.endConnection(cnx);
-        return false;
-        }
-        
-        //Ajouter l'étudiant sur la bd
-        try{
-            PreparedStatement pst1 = cnx.PrepareStatement("DELETE FROM PJHIHM__StudentsGroups WHERE studentsId=? AND groupsId=?");
-            pst1.setInt(1,e.getId());
-            pst1.setInt(2,this.getId());
-            pst1.executeUpdate();
-        }catch(SQLException ex){
-            this.endConnection(cnx);
-            return false;
-        }
-
-        return true;
-         
+        if(!this.subGroups.contains(g)) return false; // On ne peut pas enlever un groupe qui n'est pas un sous-groupe de this
+        return this.subGroups.remove(g);
     }
 
     /**
@@ -282,71 +125,76 @@ public class GroupeP implements Groupe {
         return this.id;
     }
 
-    /**
-     * permet de récupérer le nom du groupe.
-     * @return l'identifiant.
-     */
+   /**
+    * permet de récupérer le nom du groupe.
+    * @return l'identifiant.
+    */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * permet de récupérer l'identifiant de l'étudiant.
-     * @return l'identifiant.
+   /**
+     * permet de récupérer le nombre minimum d'étudiants souhaités dans le groupe.
+     * @return le minimum souhaité
      */
-    public int getMin() {
+    public int getMin(){
         return this.min;
     }
 
-    public int getMax() {
+    /**
+     * permet de récupérer le nombre maximum d'étudiants souhaités dans un groupe.
+     * @return le maximum souhaité
+     */
+    public int getMax(){
         return this.max;
     }
 
-    public int getSize() {
+    /**
+     * permet de récupérer le nombre d'étudiants dans ce groupe.
+     * @return le nombre de places prises (pas forcément limité entre Min et Max, mais c'est le but)
+     */
+    public int getSize(){
         return this.students.size();
-    }
-
-    public TypeGroupe getType() {
-        return this.type;
-    }
-
-    public Groupe getPointPoint() {
-        return this.father;
-    }
-
-    public Set<Groupe> getSousGroupes() {
-        return this.subGroups;
-    }
-
-    public Set<Etudiant> getEtudiants() {
-        return this.students;
     }
     
     /**
-     * Permet de se connecter à la base de données
-     * @throws IllegalStateException si la connexion a échouée, la connexion est fermée 
+     * permet de récupérer la nature du groupe
+     * @return le type du groupe
      */
-    private Connection connectToDataBase() throws IllegalStateException{
-       Connection cnx;
-       try{
-        cnx = DriverManager.getConnection("jdbc:mariadb://dwarves.iut-fbleau.fr/meddahi","meddahi", "jaimelespizza");
-        Class.forName("org.mariadb.jdbc.Driver");
-        return cnx;
-       } catch(SQLException ex){
-            throw new IllegalStateException("Erreur lors de la connexion à la base de données : "+ex.getMessage());
-       } catch(ClassNotFoundException ex){
-            throw new IllegalStateException("Le pilote pour se connecter à la base de données n'est pas disponible : "+ex.getMessage());
-       }finally{
-            this.endConnection(cnx);
-       }
+    public TypeGroupe getType(){
+        return this.type;
     }
 
     /**
-     * Permet de se déconnecter de la base de données en nettoyant correctement les ressources occupées  
+     * permet de récupérer le groupe père
+     * un groupe racine devrait retourner lui-même
+     *
+     * @return le père
      */
-    private void endConnection(Connection cnx){
-        cnx.close();
+    public Groupe getPointPoint(){
+        return this.father;
     }
+
+    /**
+     * Potentiellement "vide"
+     * Attention nous renvoyons l'ensemble sans le copier
+     *
+     * @return l'ensemble des sous-groupes.
+     */
+    public Set<Groupe> getSousGroupes(){
+        return this.subGroups;
+    }
+
+    /**
+     * Potentiellement "vide"
+     * Attention nous renvoyons l'ensemble sans le copier
+     *
+     * @return l'ensemble des étudiants.
+     */
+    public Set<Etudiant> getEtudiants(){
+        return this.students;
+    }
+
 
   /**
    *Permet de définir l'Id d'un groupe, il faut s'assurer que l'Id soit unique, car il identifie chaque groupe, la méthode est la suivante :
@@ -358,7 +206,6 @@ public class GroupeP implements Groupe {
    * - L'Admin crée 2 groupes à la suite depuis la même machine et le même programme (grâce au TimeStamp)
    * @exception IllegalStateException Si une valeur de la somme n'a pas pu être récupérée
    */
-
     private int createId() throws IllegalStateException{
         //Récupere le timeStamp
         Date date = new Date();
