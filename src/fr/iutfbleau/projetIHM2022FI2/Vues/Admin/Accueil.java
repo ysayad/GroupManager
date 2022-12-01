@@ -171,14 +171,39 @@ public class Accueil {
         panneau.add(panneauBouton, gbcpanneau);
 
 
-        fenetre.setMinimumSize(new Dimension(1280,850));
+        //fenetre.setMinimumSize(new Dimension(1280,850));
         CardLayout cardLayout = new CardLayout();
         fenetre.setLayout(cardLayout);
-        Menu menu = new Menu(fenetre, cardLayout);
+        Menu menu = new Menu(fenetre, cardLayout, "Groupes    ","Administrtateur");
         acces.addMouseListener(new ButtonListener(fenetre,cardLayout,acces));
         quitter.addMouseListener(new ButtonListener(fenetre,cardLayout,quitter));
         fenetre.add(panneau, "Accueil");
-        fenetre.add(menu.drawMenu(), "Menu"); 
+
+        GridLayout gridLayout = new GridLayout(1,2);
+        gridLayout.setHgap(0);
+        gridLayout.setVgap(0);
+
+        GridLayout gridLayout2 = new GridLayout(1,1);
+        gridLayout2.setHgap(0);
+        gridLayout2.setVgap(0);
+
+        JPanel menuPanneau = new JPanel();
+        menuPanneau.setLayout(gridLayout2);
+        menuPanneau.add(menu.drawMenu());
+        //menuPanneau.setPreferredSize(new Dimension(300,700));
+        JPanel menuContainer = new JPanel();
+        menuContainer.setLayout(gridLayout);
+        menuContainer.add(menuPanneau);
+        menuContainer.add(new JPanel());
+
+        fenetre.add(menuContainer, "Menu");
         fenetre.setVisible(true);
+        fenetre.addComponentListener(new ComponentAdapter() {
+        public void componentResized(ComponentEvent componentEvent) {
+            menu.setPreferredSize(new Dimension(300, fenetre.getHeight()));
+            menu.setSize(new Dimension(400, fenetre.getHeight()));
+            fenetre.revalidate();
+        }
+        });
     }
 }
