@@ -31,6 +31,24 @@ public class ButtonListener implements MouseListener{
             System.out.println("Entrer");
             this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
+
+
+        if (this.button.getName() == "Groupes") {
+            System.out.println("Groupes");
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
+        }
+        if (this.button.getName() == "Etudiants") {
+            System.out.println("Etudiants");
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
+        }
+        if (this.button.getName() == "Changements") {
+            System.out.println("Changements");
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
+        }
+        if (this.button.getName() == "Deconnexion") {
+            System.out.println("Deconnexion");
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
