@@ -20,6 +20,8 @@ public class GroupeP implements Groupe {
     private int min;
     private int max;
     private Groupe father;
+    private Set<Etudiant> students;
+    private Set<Groupe> subGroups;
 
     //Dans GroupeP : un constucteur pour créer un groupe via un id (permet de créer un objet Groupe en local pour un groupe existant sur la bdd)
     //Dans GroupeFactoryP : une méthode pour récuperer un groupes déja existant qui appellera donc le constructeur expliqué juste au dessus 
@@ -31,7 +33,6 @@ public class GroupeP implements Groupe {
      * @exceptions
      */
      public GroupeP(String name, int min, int max) throws IllegalStateException{ //1
-
         //Connection à la Bdd 
         Connection cnx;
         try{
@@ -63,9 +64,14 @@ public class GroupeP implements Groupe {
             PreparedStatement pst2 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
             ResultSet rs = pst1.executeQuery();
             while(rs.next()){
+                //Ajoute l'étudiant au groupe sur la bd
                 pst2.SetInt(1,rs.getInt(1));
                 pst2.SetInt(2,1);
                 pst2.executeUpdate();
+
+                //Ajoute l'étudiant au groupe en local
+                Etudiant students = new Etudiant(rs.getString(3), rs.getString(2), rs.getInt(1)); //nom prenom id
+                this.students.add(student);
             }
         }catch(SQLException ex){
             this.endConnection(cnx);
@@ -160,41 +166,80 @@ public class GroupeP implements Groupe {
 
         //Chaque éléve du groupe pere appartient desormais aussi à la partition
         try{
-            PreparedStatement pst1 = cnx.PrepareStatement("SELECT id FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            PreparedStatement pst1 = cnx.PrepareStatement("SELECT studentsId FROM PJIHM__StudentsGroups WHERE groupId = ?");
             pst1.setInt(1,pere.getId());
-            
-            PreparedStatement pst2 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
-            ResultSet rs = pst1.executeQuery();
-            while(rs.next()){
-                pst2.SetInt(1,rs.getInt(1));
-                pst2.SetInt(2,this.getId());
-                pst2.executeUpdate();
+            PreparedStatement pst2 = cnx.PrepareStatement("SELECT nom,prenom FROM PJIHM__Students WHERE id=?");
+            PreparedStatement pst3 = cnx.PrepareStatement("INSERT INTO PJIHM_StudentsGroups VALUES(?,?)");
+            ResultSet rs1 = pst1.executeQuery();
+            while(rs1.next()){
+                //Ajoute l'étudiant au groupe sur la bd
+                pst3.SetInt(1,rs1.getInt(1));
+                pst3.SetInt(2,this.getId());
+                pst3.executeUpdate();
+                //Ajoute l'étudiant au groupe en local
+                pst2.setInt(rs1.getInt(1));
+                ResultSet rs2 = pst2.executeQuery();
+                rs2.next();
+                Etudiant student = new Etudiant(rs2.getString(1), rs2.getString(2), rs1.getInt(1));
+                this.students.add(student);
             }
         }
     }
     
     public boolean addEtudiant(Etudiant e) {
+        if((!this.students.contains(e)) || this.students.size()==this.max || (!this.students.add(e)))
+            return false;
+        
         //Connexion
         Connection cnx;
         try{
             cnx = this.connectToDataBase();
         }catch(IllegalStateException ex){
-            IllegalStateException newEx = new IllegalStateException(ex.getMessage());
-            throw newEx;
+           this.endConnection(cnx);
+           return false;
         }
 
+        //Ajouter l'étudiant sur la bd
         try{
-            PreparedStatement pst1 = 
+            PreparedStatement pst1 = cnx.PrepareStatement("INSERT INTO PJHIHM__StudentsGroups VALUES(?,?)");
+            pst1.setInt(1,e.getId());
+            pst1.setInt(2,this.getId());
+            pst1.executeUpdate();
+        }catch(SQLException ex){
+            this.endConnection(cnx);
+            return false;
         }
-        return this.setEtudiants.add(e);
+
+        return true;
     }
 
     public boolean removeEtudiant(Etudiant e) {
-         Objects.requireNonNull(e,"On ne peut pas enlever un Étudiant qui est null");
-         return this.setEtudiants.remove(e);
+        if((!this.students.contains(e)) || this.students.size()==this.min || (!this.students.remove(e)))
+        return false;
+
+        Connection cnx;
+        try{
+            cnx = this.connectToDataBase();
+        }catch(IllegalStateException ex){
+           this.endConnection(cnx);
+           return false;
+        }
+        
+        //Ajouter l'étudiant sur la bd
+        try{
+            PreparedStatement pst1 = cnx.PrepareStatement("DELETE FROM PJHIHM__StudentsGroups WHERE studentsId=? AND groupsId=?");
+            pst1.setInt(1,e.getId());
+            pst1.setInt(2,this.getId());
+            pst1.executeUpdate();
+        }catch(SQLException ex){
+            this.endConnection(cnx);
+            return false;
+        }
+
+        return true;
     }
 
-    public boolean addSousGroupe(Groupe g) {
+    public boolean addSousGroupe(Groupe g){
         if(this.setSousGroupes == null){
             this.setSousGroupes = new HashSet<Groupe>(1);
         }
@@ -203,7 +248,30 @@ public class GroupeP implements Groupe {
     }
 
     public boolean removeSousGroupe(Groupe g) {
+        if((!this.subGroups.contains(g)) || this.subGroups.remove(g))
+            return false;
+
+        Connection cnx;
+        try{
+            cnx = this.connectToDataBase();
+        }catch(IllegalStateException ex){
+        this.endConnection(cnx);
         return false;
+        }
+        
+        //Ajouter l'étudiant sur la bd
+        try{
+            PreparedStatement pst1 = cnx.PrepareStatement("DELETE FROM PJHIHM__StudentsGroups WHERE studentsId=? AND groupsId=?");
+            pst1.setInt(1,e.getId());
+            pst1.setInt(2,this.getId());
+            pst1.executeUpdate();
+        }catch(SQLException ex){
+            this.endConnection(cnx);
+            return false;
+        }
+
+        return true;
+         
     }
 
     /**
@@ -219,7 +287,7 @@ public class GroupeP implements Groupe {
      * @return l'identifiant.
      */
     public String getName() {
-        return this.nom;
+        return this.name;
     }
 
     /**
@@ -235,7 +303,7 @@ public class GroupeP implements Groupe {
     }
 
     public int getSize() {
-        return this.setEtudiants.size();
+        return this.students.size();
     }
 
     public TypeGroupe getType() {
@@ -247,11 +315,11 @@ public class GroupeP implements Groupe {
     }
 
     public Set<Groupe> getSousGroupes() {
-        return this.setSousGroupes;
+        return this.subGroups;
     }
 
     public Set<Etudiant> getEtudiants() {
-        return this.setEtudiants;
+        return this.students;
     }
     
     /**
@@ -297,4 +365,5 @@ public class GroupeP implements Groupe {
         Long timeStamp = new Long(date.getTime());
         return timeStamp.hashCode();
     }
+
 }
