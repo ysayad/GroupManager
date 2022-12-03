@@ -21,14 +21,15 @@ public class SearchBar extends JFrame {
     public JPanel drawSearchBar(){
         JPanel searchbarpanel = new JPanel();
 
-        GridLayout gridLayout = new GridLayout(1,2);
-        gridLayout.setHgap(0);
-        gridLayout.setVgap(0);
-        searchbarpanel.setLayout(gridLayout);
-
+        //GridLayout gridLayout = new GridLayout(1,2);
+        //gridLayout.setHgap(0);
+        //gridLayout.setVgap(0);
+        //searchbarpanel.setLayout(gridLayout);
+        searchbarpanel.setLayout(new BoxLayout(searchbarpanel, BoxLayout.X_AXIS ));
 
         searchbarpanel.setBackground(new Color(200,0,255));
         JTextField searchbar = new JTextField("Rechercher par Nom");
+        searchbar.setBounds(20,20,20,20);
         
         searchbar.setMinimumSize(new Dimension(300,45));
         searchbar.setSize(300, 45);
@@ -38,12 +39,18 @@ public class SearchBar extends JFrame {
         searchbar.setBorder(border);
         searchbar.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
         JButton ok = new JButton("OK");
+        ok.setMinimumSize(new Dimension(30,45));
+        ok.setSize(30, 45);
+        ok.setPreferredSize( new Dimension( 50, 45 ) );
 
 
-        searchbarpanel.add(searchbar);
+        JPanel test =new JPanel();
+        test.add(searchbar);
+        searchbarpanel.add(test);
         searchbarpanel.add(ok);
         ok.addMouseListener(new SearchBarButtonListener(searchbar,ok));
         searchbar.addMouseListener(new SearchBarListener(searchbar));
+
 
         return searchbarpanel;
     }

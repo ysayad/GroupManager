@@ -197,12 +197,14 @@ public class Accueil {
 
 
         JPanel menuP = new JPanel();
-        GridLayout gridLayout3 = new GridLayout(1,2);
+        GridLayout gridLayout3 = new GridLayout(2,1);
         gridLayout3.setHgap(0);
         gridLayout3.setVgap(0);
         menuP.setLayout(gridLayout3);
         SearchBar searchbar = new SearchBar(menu,fenetre);
         menuP.add(searchbar.drawSearchBar());
+        CarteGroupe carteGroupe = new CarteGroupe(menu,fenetre);
+        menuP.add(carteGroupe.drawCarteGroupe());
 
 
 
