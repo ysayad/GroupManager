@@ -1,4 +1,4 @@
-package fr.iutfbleau.projetIHM2022FI2.MODELE;
+package fr.iutfbleau.projetIHM2022FI2.MP;
 import java.util.*;
 /**
  * Usine abstraite gérant l'ensemble des groupes.
