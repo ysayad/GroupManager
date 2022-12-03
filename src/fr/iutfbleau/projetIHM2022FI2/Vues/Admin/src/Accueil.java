@@ -193,8 +193,22 @@ public class Accueil {
         //menuPanneau.setPreferredSize(new Dimension(300,700));
         JPanel menuContainer = new JPanel();
         menuContainer.setLayout(gridLayout);
+
+
+
+        JPanel menuP = new JPanel();
+        GridLayout gridLayout3 = new GridLayout(1,2);
+        gridLayout3.setHgap(0);
+        gridLayout3.setVgap(0);
+        menuP.setLayout(gridLayout3);
+        SearchBar searchbar = new SearchBar(menu,fenetre);
+        menuP.add(searchbar.drawSearchBar());
+
+
+
         menuContainer.add(menuPanneau);
-        menuContainer.add(new JPanel());
+        menuContainer.add(menuP);
+
 
         fenetre.add(menuContainer, "Menu");
         fenetre.setVisible(true);

@@ -10,12 +10,14 @@ import java.util.*;
 import javax.swing.*;
 
 public class Menu extends JFrame {
-    JPanel menu = new JPanel();
+    JPanel menu;
     JFrame window;
     CardLayout cardLayout;
     String content;
     String typeUtilisateur;
+
     public Menu(JFrame window,CardLayout cardLayout,String content, String typeUtilisateur){
+        this.menu = new JPanel();
         this.menu.setBackground(new Color(64,0,128));
         this.window = window;
         this.cardLayout = cardLayout;
@@ -23,6 +25,17 @@ public class Menu extends JFrame {
         this.content = content;
         this.typeUtilisateur = typeUtilisateur;
     }
+
+
+    public JPanel drawSearchBar(){
+        JPanel searchbarpanel = new JPanel();
+        searchbarpanel.setBackground(new Color(200,0,255));
+        JTextField searchbar = new JTextField("Rechercher par Nom");
+        searchbar.setMinimumSize(new Dimension(300,75));
+        searchbarpanel.add(searchbar);
+        return searchbarpanel;
+    }
+
 
     public JPanel drawButton(String name, String ic){
         JPanel buttonpanel = new JPanel();
@@ -120,7 +133,6 @@ public class Menu extends JFrame {
         copyright.setForeground(Color.WHITE);
         copyright.setFont(new Font("Verdana", Font.PLAIN, 9));
         this.menu.add(copyright);
-
         //this.menu.setResizeHorizontal(false);
         //this.menu.setResizeVertical(true);
         this.menu.setPreferredSize(new Dimension(300, this.window.getHeight()));

@@ -54,8 +54,18 @@ public class ButtonListener implements MouseListener{
             //menuPanneau.setPreferredSize(new Dimension(300,700));
             JPanel menuContainer = new JPanel();
             menuContainer.setLayout(gridLayout);
+
+
+            
             menuContainer.add(menuPanneau);
-            menuContainer.add(new JPanel());
+            JPanel menuP = new JPanel();
+            GridLayout gridLayout3 = new GridLayout(1,2);
+            gridLayout3.setHgap(0);
+            gridLayout3.setVgap(0);
+            menuP.setLayout(gridLayout3);
+            SearchBar searchbar = new SearchBar(this.menu,this.window);
+            menuP.add(searchbar.drawSearchBar());
+            menuContainer.add(menuP);
 
             this.window.add(menuContainer, "Menu");
 

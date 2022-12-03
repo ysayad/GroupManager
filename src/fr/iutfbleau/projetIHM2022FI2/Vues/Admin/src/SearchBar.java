@@ -1,0 +1,29 @@
+// package fr.iutfbleau.projetIHM2022FI2.Vues;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.UIManager.*;
+import javax.swing.border.Border;
+import java.io.*;
+import java.lang.Thread;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+
+public class SearchBar extends JFrame {
+    Menu menu;
+    JFrame window;
+    public SearchBar(Menu menu, JFrame window){
+        this.menu = menu;
+        this.window = window;
+    }
+    
+    
+    public JPanel drawSearchBar(){
+        JPanel searchbarpanel = new JPanel();
+        searchbarpanel.setBackground(new Color(200,0,255));
+        JTextField searchbar = new JTextField("Rechercher par Nom");
+        searchbar.setMinimumSize(new Dimension(300,75));
+        searchbarpanel.add(searchbar);
+        return searchbarpanel;
+    }
+}
