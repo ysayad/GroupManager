@@ -23,13 +23,7 @@ public class SearchBarListener implements MouseListener{
 
 
 
-    public void mouseClicked(MouseEvent e) {
-        if (this.val == 0) {
-            this.searchbar.setFocusable(true);
-            this.searchbar.setText("");
-            this.val = 1;
-        }
-    }
+    public void mouseClicked(MouseEvent e) {}
 
     public void mouseEntered(MouseEvent e) {
             this.searchbar.setFocusable(true);
@@ -37,13 +31,19 @@ public class SearchBarListener implements MouseListener{
 
     public void mouseExited(MouseEvent e) {
         if(this.searchbar.getText().equals("") && this.val == 1){
-            this.searchbar.setText("    Rechercher par Nom");
+            this.searchbar.setText("Rechercher par Nom");
             this.searchbar.setFocusable(false);
             this.val = 0;
         }
     }
 
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+                if (this.val == 0) {
+            this.searchbar.setFocusable(true);
+            this.searchbar.setText("");
+            this.val = 1;
+        }
+    }
 
     public void mouseReleased(MouseEvent e) {}
 

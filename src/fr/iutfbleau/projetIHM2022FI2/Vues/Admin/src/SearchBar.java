@@ -20,8 +20,15 @@ public class SearchBar extends JFrame {
     
     public JPanel drawSearchBar(){
         JPanel searchbarpanel = new JPanel();
+
+        GridLayout gridLayout = new GridLayout(1,2);
+        gridLayout.setHgap(0);
+        gridLayout.setVgap(0);
+        searchbarpanel.setLayout(gridLayout);
+
+
         searchbarpanel.setBackground(new Color(200,0,255));
-        //JTextField searchbar = new JTextField("    Rechercher par Nom");
+        JTextField searchbar = new JTextField("Rechercher par Nom");
         
         searchbar.setMinimumSize(new Dimension(300,45));
         searchbar.setSize(300, 45);
@@ -29,8 +36,15 @@ public class SearchBar extends JFrame {
         searchbar.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
         Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
         searchbar.setBorder(border);
+        searchbar.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+        JButton ok = new JButton("OK");
+
+
         searchbarpanel.add(searchbar);
+        searchbarpanel.add(ok);
+        ok.addMouseListener(new SearchBarButtonListener(searchbar,ok));
         searchbar.addMouseListener(new SearchBarListener(searchbar));
+
         return searchbarpanel;
     }
 }
