@@ -35,3 +35,5 @@ runMNP:
 admin: jarAdmin 
 	java -jar test-admin.jar 
 
+clean:
+	rm -rf ${BUILD}/* *.jar
