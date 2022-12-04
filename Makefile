@@ -28,7 +28,6 @@ jarMNP:
 jarAdmin: classes
 	jar cvfe test-admin.jar fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test.Admin -C build fr -C build org -C src/fr/iutfbleau/projetIHM2022FI2/Vues/Img .
 
-
 runMNP: 
 	java -jar test-mnp.jar 
 
