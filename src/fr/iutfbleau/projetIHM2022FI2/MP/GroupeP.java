@@ -48,7 +48,7 @@ public class GroupeP implements Groupe {
      */
      public GroupeP(Groupe pere, String name, int min, int max){ //2
         this.id = this.createId();
-        this.name = name;
+        this.nom = name;
         this.type = TypeGroupe.FREE;
         this.min = min;
         this.max = max;
@@ -64,12 +64,12 @@ public class GroupeP implements Groupe {
     */
     public GroupeP(Groupe pere){ 
         this.id = this.createId();
-        this.name = pere.getName()+"_PARTITION_"+this.id;
+        this.nom = pere.getName()+"_PARTITION_"+this.id;
         this.type = TypeGroupe.PARTITION;
         this.min = pere.getMin();
         this.max = pere.getMax();
         this.father = pere;
-        this.subGroups = new Set<Groupe>();
+        this.subGroups = new LinkedHashSet<Groupe>();
         this.students = pere.getEtudiants();
     }
 
@@ -80,7 +80,7 @@ public class GroupeP implements Groupe {
      */
     public boolean addEtudiant(Etudiant e) {
         if(this.students.contains(e)) return false; // On ne peut pas ajouter un étudiant qui appartient déja au groupe
-        if(this.students.getSize()==this.max) return false; // On ne peut pas avoir plus d'étudiants que la limite supérieure du groupe
+        if(this.students.size()==this.max) return false; // On ne peut pas avoir plus d'étudiants que la limite supérieure du groupe
         return this.students.add(e);
     }
 
@@ -91,7 +91,7 @@ public class GroupeP implements Groupe {
     */
     public boolean removeEtudiant(Etudiant e) {
         if(!this.students.contains(e)) return false; // On ne peut pas retirer un étudiant qui n(appartient pas au groupe
-        if(this.students.getSize()==this.min) return false; // On ne peut pas avoir moins d'étudiants que la limite inférieure du groupe
+        if(this.students.size()==this.min) return false; // On ne peut pas avoir moins d'étudiants que la limite inférieure du groupe
         return this.students.remove(e);
     }
 
@@ -130,7 +130,7 @@ public class GroupeP implements Groupe {
     * @return l'identifiant.
     */
     public String getName() {
-        return this.name;
+        return this.nom;
     }
 
    /**

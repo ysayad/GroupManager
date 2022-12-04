@@ -10,6 +10,9 @@ import java.util.*;
 
 public class ChangementNP implements Changement {
 
+    //auto-incrément des changements
+    private static int nextId=0;
+
     private int id;
     private Groupe a,b;
     private Etudiant e;
@@ -18,8 +21,8 @@ public class ChangementNP implements Changement {
         Objects.requireNonNull(a,"On ne peut pas créer un changement avec un groupe à quitter null");
         Objects.requireNonNull(b,"On ne peut pas créer un changement avec un groupe à rejoindre null");
         Objects.requireNonNull(e,"On ne peut pas créer un changement concernant un étudiant null");
-        // Nous n'utilisons dans l'immédiat pas le champs id qui vaut 0 pour tous les changements.
-        this.id=0;
+
+        this.id=++this.nextId;
         this.a=a;
         this.b=b;
         this.e=e;
@@ -46,7 +49,7 @@ public class ChangementNP implements Changement {
      * @return ce groupe.
      */
     public Groupe getB(){
-        return this.a;
+        return this.b;
     }
 
     /**

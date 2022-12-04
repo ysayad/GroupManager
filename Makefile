@@ -13,7 +13,6 @@ DOC = doc/fr/iutfbleau/projetIHM2022FI2
 
 # CHOIX NOMS
 JAR_MNP = test-mnp.jar
-JAR_MP = test-mp.jar
 
 # BUTS FACTICES #
 .PHONY : run clean doc
@@ -27,7 +26,7 @@ doc :
 	javadoc -d doc src/fr/iutfbleau/projetIHM2022FI2/API/*.java src/fr/iutfbleau/projetIHM2022FI2/MNP/*.java
 
 clean :
-	rm -rf ${BUILD}/* *.jar doc/*
+	rm -rf ${BUILD}/* *.jar
 
 
 # REGLES DE DEPENDANCE #
@@ -87,6 +86,11 @@ ${BUILD}/MNP/AbstractGroupeFactoryNP.class : ${SRC}/MNP/AbstractGroupeFactoryNP.
 				${BUILD}/API/AbstractGroupeFactory.class 
 	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/AbstractGroupeFactoryNP.java
 
+${BUILD}/MNP/AbstractChangementFactoryNP.class : ${SRC}/MNP/AbstractChangementFactoryNP.java \
+				${BUILD}/API/AbstractChangementFactory.class \
+				${BUILD}/API/Changement.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/AbstractChangementFactoryNP.java
+
 
 ###...
 
@@ -96,21 +100,11 @@ ${BUILD}/MNP/AbstractGroupeFactoryNP.class : ${SRC}/MNP/AbstractGroupeFactoryNP.
 			 ${BUILD}/MNP/EtudiantNP.class \
 			 ${BUILD}/MNP/GroupeNP.class \
 			 ${BUILD}/MNP/ChangementNP.class \
-                         ${BUILD}/MNP/AbstractGroupeFactoryNP.class
+                         ${BUILD}/MNP/AbstractGroupeFactoryNP.class \
+                         ${BUILD}/MNP/AbstractChangementFactoryNP.class	
 	${JAVAC} -Xlint:deprecation ${JAVAC_OPTIONS} ${SRC}/Test/TestTexteMNP.java
-
- ${BUILD}/Test/TestTexteMP.class : ${SRC}/Test/TestTexteMP.java \
-			 ${BUILD}/MP/EtudiantP.class \
-			 ${BUILD}/MP/GroupeP.class \
-			 ${BUILD}/MP/ChangementP.class \
-                         ${BUILD}/MP/AbstractGroupeFactoryP.class
-	${JAVAC} -Xlint:deprecation ${JAVAC_OPTIONS} ${SRC}/Test/TestTexteMP.java
 
 # ## JARS ##
 
  ${JAR_MNP} : ${BUILD}/Test/TestTexteMNP.class
 	${JAR} cvfe ${JAR_MNP} fr.iutfbleau.projetIHM2022FI2.Test.TestTexteMNP -C build fr
-
- ${JAR_MP} : ${BUILD}/Test/TestTexteMP.class
-	${JAR} cvfe ${JAR_MP} fr.iutfbleau.projetIHM2022FI2.Test.TestTexteMP -C build fr
-

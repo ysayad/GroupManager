@@ -10,16 +10,27 @@ public interface AbstractChangementFactory {
 
     /**
      * permet de récupérer une usine abstraite pour les groupes qui fonctionne en tandem avec cette usine abstraite
-     * @return cette usine abstraite
+     * @return cette usine abstraite pour les groupes
      */
     public AbstractGroupeFactory getGroupeFactory();
     
     /**
      * permet de récupérer les changements 
-     * @return tous les changements en attente
+     * @return l'ensemble de tous les changements en attente
+     *
+     * NB. Attention. C'était Iterator<Changement> dans la version beta.
      */
-    public Iterator<Changement> getAllChangements();
+    public Set<Changement> getAllChangements();
 
+    /**
+     * permet de mettre en oeuvre un changement connu de l'usine abstraite.
+     * En cas de succès, le changement est oublié (détruit).
+     *
+     * @throws java.lang.NullPointerException si un argument est null
+     * @throws java.lang.IllegalArgumentException si inconnu de l'usine abstraite
+     */
+    public void applyChangement(Changement c);
+    
     /**
      * permet de supprimer un changement connu de l'usine abstraite.
      *

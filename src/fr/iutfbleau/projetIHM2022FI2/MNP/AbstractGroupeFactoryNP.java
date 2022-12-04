@@ -18,7 +18,6 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
 
 
 
-
     /**
      * Le constructeur fabrique le groupe promotion vide.
      * Il faut ensuite y ajouter les étudiants.
@@ -29,20 +28,11 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
         this.brain=new HashMap<Integer,Groupe>();
         this.brain.put(Integer.valueOf(this.promo.getId()),this.promo);
     }
-
-
-
-
-
-
-
-
-
     
     /**
-     * Test pltôt optimiste. Si la clé est identique alors on fait comme si c'était le bon groupe.
+     * Test plutôt optimiste. Si la clé est identique alors on fait comme si c'était le bon groupe.
      */
-    private Boolean knows(Groupe g){
+    public Boolean knows(Groupe g){
         return this.brain.containsKey(Integer.valueOf(g.getId()));
     }
 
@@ -141,13 +131,20 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
         // création des sous-groupes
         int min = 0;
         int max = ((int) Math.floor(pere.getSize()/n))+1;
+        List<Groupe> groupes = new ArrayList<Groupe>(n);
         for(int i = 0; i<n; i++){
             Groupe g = new GroupeNP(copiePereRacinePartition,name+"_"+i,min,max);
+            groupes.add(i,g);// ajout dans le tableau des groupes
             copiePereRacinePartition.addSousGroupe(g);
             this.brain.put(Integer.valueOf(g.getId()),g);
         }
-        
-
+        // Partage des étudiants (on ne prête pas attention aux min et max)
+        int i=0;
+        for (Etudiant s: pere.getEtudiants()){
+            copiePereRacinePartition.addEtudiant(s);
+            groupes.get(i).addEtudiant(s);
+            i = (i+1) %n;
+        }
     }
 
     /**
@@ -180,7 +177,12 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalArgumentException la factory ne connaît pas g
      */
     public void dropFromGroupe(Groupe g, Etudiant e){
-        throw new UnsupportedOperationException("pas encore implanté");
+        Objects.requireNonNull(g,"Le groupe ne peut pas être null");
+        Objects.requireNonNull(e,"L'étudiant ne peut pas être null");
+        if (!this.knows(g)){
+            throw new IllegalArgumentException("Impossible d'ajouter l'étudiant car le est groupe inconnu");
+        }
+        g.removeEtudiant(e);
     }
 
      /**

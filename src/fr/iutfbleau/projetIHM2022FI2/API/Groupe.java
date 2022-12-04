@@ -110,7 +110,7 @@ public interface Groupe extends MonPrint {
             sb.append("\t _ "+ s.monPrint());
             sb.append("\n");
         }
-        sb.append(" ** Sous Groupess **\n");
+        sb.append(" ** Sous Groupes **\n");
         for (Groupe g: getSousGroupes()){
             sb.append("\t _ "+ g.getName() + " (" + g.getType() + ", capacité " + g.getMin() + " à " + g.getMax()  +", id " + g.getId()+")");
             sb.append("\n");

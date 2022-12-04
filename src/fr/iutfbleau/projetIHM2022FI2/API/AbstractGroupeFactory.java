@@ -13,6 +13,15 @@ public interface AbstractGroupeFactory {
      */
     public Groupe getPromotion();
 
+
+    /**
+     * Test si le groupe g est connu de l'usine (connu maintenant).
+     * Si la réponse est true, les méthodes avec ce groupe en paramètre devraient bien fonctionner.
+     * Si la réponse est false, le comportement n'est pas garanti.
+     */
+    public Boolean knows(Groupe g);
+
+    
     /**
      * permet de supprimer un groupe connu de l'usine abstraite qui ne contient pas de groupes.
      * Pour détruire un groupe connu qui en contient d'autres il faut le faire récursivement.

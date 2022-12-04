@@ -97,6 +97,10 @@ public class TestTexteMNP{
         AbstractGroupeFactory agf = new AbstractGroupeFactoryNP("BUT2 FI", 15, 92);
         System.out.println("terminé.");
 
+        System.out.print("Création de l\'usine à changement");
+        AbstractChangementFactory acf = new AbstractChangementFactoryNP(agf);
+        System.out.println("terminé.");
+
         System.out.print("Ajout des étudiants dans le groupe de la promotion racine");
 
         agf.addToGroupe(agf.getPromotion(),e1);
@@ -175,12 +179,57 @@ public class TestTexteMNP{
 
         System.out.println("==========================");
         System.out.println("Partition du groupe racine en 3 groupes TD.");
-        agf.createPartition(agf.getPromotion(), "TD",3);
-        
-        System.out.println(agf.getPromotion().monPrint());
+        agf.createPartition(agf.getPromotion(), "TD",4);
+        //System.out.println(agf.getPromotion().monPrint());
 
         Groupe racineDeLaPartition = agf.getPromotion().getSousGroupes().iterator().next();
         System.out.println(racineDeLaPartition.monPrint());
+
+        System.out.println("== Cette version ajoute les étudiants automatiquement pour une partition ");
+        for(Groupe g : racineDeLaPartition.getSousGroupes()){
+            System.out.println(g.monPrint());
+        }
+
+        System.out.println("==========================");
+        System.out.println("Création d'un changement");
+        Iterator<Groupe> itgr = racineDeLaPartition.getSousGroupes().iterator();
+        Groupe A = itgr.next(); // premier sous-groupe
+        Groupe B = itgr.next(); // second sous-groupe
+        B = itgr.next(); // troisième sous-groupe
+        Etudiant e = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
+        acf.createChangement(A,e,B);
+        System.out.println("Récupération des changements (en fait un seul pour l'instant)");
+        Iterator<Changement> itch = acf.getAllChangements().iterator();
+        Changement c = itch.next();
+        System.out.println(c.monPrint());
+        System.out.println("Application du changement");
+        acf.applyChangement(c);
+        System.out.println("==========================");
+        System.out.println("== nouveau contenu des groupes de la partition ");
+        for(Groupe g : racineDeLaPartition.getSousGroupes()){
+            System.out.println(g.monPrint());
+        }
+
+        System.out.println("==========================");
+        System.out.println("Création de 2 changements");
+        itgr = racineDeLaPartition.getSousGroupes().iterator();
+        A = itgr.next(); // premier sous-groupe
+        B = itgr.next(); // second sous-groupe
+        Etudiant etu1 = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
+        Etudiant etu2 = B.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
+        acf.createChangement(A,etu1,B);
+        acf.createChangement(B,etu2,A);
+        // Impression des changements.
+        for (Changement cgt : acf.getAllChangements()){
+            System.out.println(cgt.monPrint());
+        }
+        itch = acf.getAllChangements().iterator();
+        c = itch.next();
+        System.out.println("Suppression d'un changement. Il reste :");
+        acf.deleteChangement(itch.next());
+        for (Changement cgt : acf.getAllChangements()){
+            System.out.println(cgt.monPrint());
+        }
     }
 
 

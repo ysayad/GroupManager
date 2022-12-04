@@ -3,7 +3,7 @@ package fr.iutfbleau.projetIHM2022FI2.API;
  * Un étudiant
  */
 
-public interface Etudiant extends MonPrint {
+public interface Etudiant extends MonPrint{
 
     /**
      * permet de récupérer l'identifiant de l'étudiant.

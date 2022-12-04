@@ -42,7 +42,7 @@ public interface Changement extends MonPrint {
      */ 
     public default String monPrint() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Changement de " + this.getEtu().monPrint() + " depuis le groupe " + this.getA().getName() + " vers le groupe " + this.getA().getName());
+        sb.append("Changement de " + this.getEtu().monPrint() + " depuis le groupe " + this.getA().getName() + " vers le groupe " + this.getB().getName());
         return sb.toString();
     }
 
