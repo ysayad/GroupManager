@@ -23,9 +23,23 @@ public class CarteGroupe extends JFrame {
     public JPanel drawCarte(){
         JPanel carte = new JPanel();
         Cadmin test = new Cadmin(false);
-
+        test.createGroup("Groupe");
+        test.createGroup("Groupe 1");
+        test.createGroup("Groupe 3");
+        test.createGroup("Groupe 4");
+        test.createGroup("Groupe 5");
+        test.createGroup("Groupe 6");
+        test.createGroup("Groupe 7");
+        test.createGroup("Groupe 8");
+        test.createGroup("Groupe 9");
+        test.createGroup("Groupe 10");
+        test.createGroup("Groupe 11");
+        test.createGroup("Groupe 12");
         for (Groupe t : test.getAllGroup() ) {
-            carte.add(new JLabel(t.getName()));
+            JButton groupbutton = new JButton();
+            groupbutton.add(new JLabel(t.getName()));
+            carte.add(groupbutton);
+            groupbutton.addMouseListener(new ButtonGroupeListener(groupbutton,this.menu , this.window));
         }
         return carte;
     }
@@ -33,8 +47,8 @@ public class CarteGroupe extends JFrame {
 
     public JPanel drawCarteGroupe(){
         JPanel searchbarpanel = new JPanel();
-        searchbarpanel.setBackground(Color.BLACK);
-        
+        searchbarpanel.setBackground(Color.WHITE);
+        searchbarpanel.add(drawCarte());
         return searchbarpanel;
     }
 }

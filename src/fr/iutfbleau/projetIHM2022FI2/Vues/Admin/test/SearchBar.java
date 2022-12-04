@@ -27,7 +27,7 @@ public class SearchBar extends JFrame {
         //searchbarpanel.setLayout(gridLayout);
         searchbarpanel.setLayout(new BoxLayout(searchbarpanel, BoxLayout.X_AXIS ));
 
-        searchbarpanel.setBackground(new Color(200,0,255));
+        searchbarpanel.setBackground(Color.WHITE);
         JTextField searchbar = new JTextField("Rechercher par Nom");
         searchbar.setBounds(20,20,20,20);
         

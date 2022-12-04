@@ -95,7 +95,7 @@ public class Accueil {
         gbcpanneau.gridwidth = 1;
         gbcpanneau.gridheight = 1;
         JPanel panneauLogo = new JPanel();
-        JLabel logoupec = new JLabel(new ImageIcon("../Img/logo-upec.png"));
+        JLabel logoupec = new JLabel(new ImageIcon(getClass().getResource("/logo-upec.png")));
         panneauLogo.setBackground(Color.WHITE);
         panneauLogo.add(logoupec);
         panneau.add(panneauLogo, gbcpanneau);
@@ -130,8 +130,8 @@ public class Accueil {
         acces.setForeground(Color.WHITE);
         acces.setPreferredSize(new Dimension(125, 37));
 
-        acces.setIcon(new ImageIcon("../Img/acces.png"));
-        acces.setSelectedIcon(new ImageIcon("../Img/acces-hover.png"));
+        acces.setIcon(new ImageIcon(getClass().getResource("/acces.png")));
+        acces.setSelectedIcon(new ImageIcon(getClass().getResource("/acces-hover.png")));
         acces.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
         acces.setName("entrer");
 
@@ -154,8 +154,8 @@ public class Accueil {
         quitter.setForeground(Color.WHITE);
         acces.setPreferredSize(new Dimension(125, 37));
 
-        quitter.setIcon(new ImageIcon("../Img/quitter.png"));
-        quitter.setSelectedIcon(new ImageIcon("../Img/quitter-hover.png"));
+        quitter.setIcon(new ImageIcon(getClass().getResource("/quitter.png")));
+        quitter.setSelectedIcon(new ImageIcon(getClass().getResource("/quitter-hover.png")));
         quitter.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.GRAY));
         quitter.setName("quitter");
 

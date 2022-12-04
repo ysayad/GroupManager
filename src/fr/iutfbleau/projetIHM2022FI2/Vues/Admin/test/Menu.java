@@ -53,7 +53,7 @@ public class Menu extends JFrame {
         button.setFont(new Font("Verdana", Font.PLAIN, 15));
         button.setName(name);
 
-        ImageIcon icfaon = new ImageIcon(ic);
+        ImageIcon icfaon = new ImageIcon(getClass().getResource("/"+ic));
         Image image = icfaon.getImage();
         Image aze = image.getScaledInstance(25, 25, Image.SCALE_DEFAULT); 
         icfaon = new ImageIcon(aze);
@@ -103,7 +103,7 @@ public class Menu extends JFrame {
 
 
 
-        ImageIcon icfaon = new ImageIcon("../Img/logo-upec.png");
+        ImageIcon icfaon = new ImageIcon(getClass().getResource("/logo-upec.png"));
         Image image = icfaon.getImage();
         Image aze = image.getScaledInstance(188, 80, Image.SCALE_DEFAULT); 
         icfaon = new ImageIcon(aze);
@@ -112,9 +112,9 @@ public class Menu extends JFrame {
         this.menu.add(this.vide());
         this.menu.add(new JLabel(icfaon));
         this.menu.add(this.vide());
-        this.menu.add(this.drawButton("Groupes    ","../Img/groupe.png"));
-        this.menu.add(this.drawButton("Etudiants  ","../Img/etudiant.png"));
-        this.menu.add(this.drawButton("Changements","../Img/changement.png"));
+        this.menu.add(this.drawButton("Groupes    ","groupe.png"));
+        this.menu.add(this.drawButton("Etudiants  ","etudiant.png"));
+        this.menu.add(this.drawButton("Changements","changement.png"));
 
 
 
@@ -123,7 +123,7 @@ public class Menu extends JFrame {
         this.menu.add(this.vide());
         this.menu.add(this.vide());
         this.menu.add(this.vide());
-        this.menu.add(this.drawButton("Deconnexion","../Img/deconnexion.png"));
+        this.menu.add(this.drawButton("Deconnexion","deconnexion.png"));
 
         JLabel copyright = new JLabel("");
 

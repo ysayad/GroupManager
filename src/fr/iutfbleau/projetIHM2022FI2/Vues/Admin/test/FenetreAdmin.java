@@ -99,7 +99,7 @@ public class FenetreAdmin extends JFrame {
         this.gbcpanneau.gridwidth = 1;
         this.gbcpanneau.gridheight = 1;
         JPanel panneauLogo = new JPanel();
-        JLabel logoupec = new JLabel(new ImageIcon("../Img/logo-upec.png"));
+        JLabel logoupec = new JLabel(new ImageIcon("./logo-upec.png"));
         panneauLogo.setBackground(Color.WHITE);
         panneauLogo.add(logoupec);
         this.panneau.add(panneauLogo, this.gbcpanneau);
