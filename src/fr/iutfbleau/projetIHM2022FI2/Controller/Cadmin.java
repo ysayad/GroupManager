@@ -1,7 +1,7 @@
 package fr.iutfbleau.projetIHM2022FI2.Controller;
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import fr.iutfbleau.projetIHM2022FI2.MNP.*;
-import fr.iutfbleau.projetIHM2022FI2.MP.*;
+//import fr.iutfbleau.projetIHM2022FI2.MP.*;
 import java.util.*;
 
 public class Cadmin {
@@ -16,7 +16,7 @@ public class Cadmin {
         }
         else {
             this.groupeFactory = new AbstractGroupeFactoryNP("Promotion actuelle", 15, 92);
-            this.changementFactory = new AbstractChangementFactoryP();
+            this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
         }
     }

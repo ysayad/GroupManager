@@ -1,0 +1,152 @@
+# COMMANDES #
+JAVAC = javac
+# note $$ to get a single shell $
+JAVAC_OPTIONS = -d build -cp build:$$CLASSPATH -implicit:none
+JAVA = java
+JAR = jar
+EXEC_JAR = ${JAVA} -jar
+
+# CHEMINS RELATIFS
+SRC = src/fr/iutfbleau/projetIHM2022FI2
+BUILD = build/fr/iutfbleau/projetIHM2022FI2
+DOC = doc/fr/iutfbleau/projetIHM2022FI2
+
+# CHOIX NOMS
+JAR_MNP = test-mnp.jar
+JAR_ADMIN = test-admin.jar
+
+# BUTS FACTICES #
+.PHONY : runadmin runtest clean doc
+
+# BUT PAR DEFAUT #
+runadmin : ${JAR_ADMIN}
+	${EXEC_JAR} ${JAR_ADMIN}
+
+runtest : ${JAR_MNP}
+	${EXEC_JAR} ${JAR_MNP}
+
+# AUTRE BUTS
+doc :
+	javadoc -d doc src/fr/iutfbleau/projetIHM2022FI2/API/*.java src/fr/iutfbleau/projetIHM2022FI2/MNP/*.java
+
+clean :
+	rm -rf ${BUILD}/* *.jar
+
+
+# REGLES DE DEPENDANCE #
+
+## API ##
+${BUILD}/API/MonPrint.class : ${SRC}/API/MonPrint.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/MonPrint.java
+
+${BUILD}/API/TypeGroupe.class : ${SRC}/API/TypeGroupe.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/TypeGroupe.java
+
+${BUILD}/API/Groupe.class : ${SRC}/API/Groupe.java \
+	  		     ${BUILD}/API/TypeGroupe.class\
+			     ${BUILD}/API/MonPrint.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/Groupe.java
+
+${BUILD}/API/Etudiant.class : ${SRC}/API/Etudiant.java \
+                            ${BUILD}/API/MonPrint.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/Etudiant.java
+
+${BUILD}/API/Changement.class : ${SRC}/API/Changement.java \
+	  		            ${BUILD}/API/Etudiant.class \
+	  		     	    ${BUILD}/API/Groupe.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/Changement.java
+
+${BUILD}/API/AbstractGroupeFactory.class : ${SRC}/API/AbstractGroupeFactory.java \
+				${BUILD}/API/Groupe.class \
+	  		         ${BUILD}/API/Etudiant.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/AbstractGroupeFactory.java
+
+${BUILD}/API/AbstractChangementFactory.class : ${SRC}/API/AbstractChangementFactory.java \
+	  		            ${BUILD}/API/AbstractGroupeFactory.class \
+				    ${BUILD}/API/Changement.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/API/AbstractChangementFactory.java
+
+## MNP ##
+
+${BUILD}/MNP/EtudiantNP.class : ${SRC}/MNP/EtudiantNP.java \
+                              ${BUILD}/API/Etudiant.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/EtudiantNP.java
+
+
+${BUILD}/MNP/GroupeNP.class : ${SRC}/MNP/GroupeNP.java \
+                              ${BUILD}/API/Groupe.class \
+			      ${BUILD}/API/TypeGroupe.class \
+                              ${BUILD}/API/Etudiant.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/GroupeNP.java
+
+
+${BUILD}/MNP/ChangementNP.class : ${BUILD}/API/Changement.class \
+				${SRC}/MNP/ChangementNP.java \
+                              ${BUILD}/API/Groupe.class \
+                              ${BUILD}/API/Etudiant.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/ChangementNP.java
+
+${BUILD}/MNP/AbstractGroupeFactoryNP.class : ${SRC}/MNP/AbstractGroupeFactoryNP.java \
+				${BUILD}/API/AbstractGroupeFactory.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/AbstractGroupeFactoryNP.java
+
+${BUILD}/MNP/AbstractChangementFactoryNP.class : ${SRC}/MNP/AbstractChangementFactoryNP.java \
+				${BUILD}/API/AbstractChangementFactory.class \
+				${BUILD}/API/Changement.class 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/MNP/AbstractChangementFactoryNP.java
+
+
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Controller/*.java
+	
+	
+
+
+## Vues ##
+
+${BUILD}/Vues/Admin/src/Accueil.class : ${SRC}/Vues/Admin/src/Accueil.java \
+			 ${BUILD}/Vues/Admin/src/Menu.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/Accueil.java
+
+${BUILD}/Vues/Admin/src/ButtonListener.class : ${SRC}/Vues/Admin/src/ButtonListener.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/ButtonListener.java
+
+${BUILD}/Vues/Admin/src/CarteGroupe.class : ${SRC}/Vues/Admin/src/CarteGroupe.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/CarteGroupe.java
+
+${BUILD}/Vues/Admin/src/FenetreAdmin.class : ${SRC}/Vues/Admin/src/FenetreAdmin.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/FenetreAdmin.java
+
+${BUILD}/Vues/Admin/src/Menu.class : ${SRC}/Vues/Admin/src/Menu.java \
+			 ${BUILD}/Vues/Admin/src/ButtonListener.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/Menu.java
+
+${BUILD}/Vues/Admin/src/SearchBar.class : ${SRC}/Vues/Admin/src/SearchBar.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/SearchBar.java
+
+${BUILD}/Vues/Admin/src/SearchBarListener.class : ${SRC}/Vues/Admin/src/SearchBarListener.java
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/SearchBarListener.java
+
+${BUILD}/Vues/Admin/src/SearchBarButtonListener.class : ${SRC}/Vues/Admin/src/SearchBarButtonListener.java 
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/SearchBarButtonListener.java
+
+${BUILD}/Vues/Admin/src/Admin.class : ${SRC}/Vues/Admin/src/Admin.java \
+			 ${BUILD}/Vues/Admin/src/Accueil.class
+	${JAVAC} ${JAVAC_OPTIONS} ${SRC}/Vues/Admin/src/Admin.java
+
+## TEST ##
+
+ ${BUILD}/Test/TestTexteMNP.class : ${SRC}/Test/TestTexteMNP.java \
+			 ${BUILD}/MNP/EtudiantNP.class \
+			 ${BUILD}/MNP/GroupeNP.class \
+			 ${BUILD}/MNP/ChangementNP.class \
+                         ${BUILD}/MNP/AbstractGroupeFactoryNP.class \
+                         ${BUILD}/MNP/AbstractChangementFactoryNP.class	
+	${JAVAC} -Xlint:deprecation ${JAVAC_OPTIONS} ${SRC}/Test/TestTexteMNP.java
+
+# ## JARS ##
+
+ ${JAR_ADMIN} : ${BUILD}/Vues/Admin/src/Admin.class
+	${JAR} cvfe ${JAR_ADMIN} fr.iutfbleau.projetIHM2022FI2.Vues.Admin.src.Admin -C build fr
+
+ ${JAR_MNP} : ${BUILD}/Test/TestTexteMNP.class
+	${JAR} cvfe ${JAR_MNP} fr.iutfbleau.projetIHM2022FI2.Test.TestTexteMNP -C build fr

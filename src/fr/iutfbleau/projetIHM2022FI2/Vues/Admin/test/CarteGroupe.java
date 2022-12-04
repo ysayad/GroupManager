@@ -1,3 +1,4 @@
+package fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;

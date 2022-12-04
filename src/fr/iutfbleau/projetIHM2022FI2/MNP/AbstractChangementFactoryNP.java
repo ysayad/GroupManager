@@ -59,7 +59,7 @@ public class AbstractChangementFactoryNP implements AbstractChangementFactory {
         
         if (!agf.knows(b)) throw new IllegalStateException("Le groupe d'arrivée du changement est inconnu. Impossible à mettre en oeuvre.");
         // pas encore implanté.
-        // if(!agf.getGroupesOfEtudiant(e).contains(a)) throw new IllegalStateException("Le groupe de départ ne contient pas l'étudiant. Impossible à mettre en oeuvre.");
+        if(!agf.getGroupesOfEtudiant(e).contains(a)) throw new IllegalStateException("Le groupe de départ ne contient pas l'étudiant. Impossible à mettre en oeuvre.");
             
         agf.dropFromGroupe(a,e);
         agf.addToGroupe(b,e);

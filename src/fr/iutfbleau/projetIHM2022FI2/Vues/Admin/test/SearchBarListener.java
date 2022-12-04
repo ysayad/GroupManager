@@ -1,8 +1,8 @@
+package fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.Cursor;
-// package fr.iutfbleau.projetIHM2022FI2.Vues;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;

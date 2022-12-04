@@ -218,7 +218,14 @@ public class AbstractGroupeFactoryNP implements AbstractGroupeFactory {
      * @throws java.lang.NullPointerException si le String est null.
      */
     public Set<Groupe> getGroupesOfEtudiant(Etudiant etu){
-        throw new UnsupportedOperationException("pas encore implanté");
+        Collection<Groupe> listgrp = brain.values();
+        Set<Groupe> setgrp = new LinkedHashSet<Groupe>();
+
+        for (Groupe groupe : listgrp) {
+            if(groupe.getEtudiants().contains(etu)) setgrp.add(groupe);
+        }
+
+        return setgrp;
     }
     
     
