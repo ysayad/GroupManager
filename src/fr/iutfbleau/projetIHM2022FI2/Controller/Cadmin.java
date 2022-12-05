@@ -18,6 +18,37 @@ public class Cadmin {
             this.groupeFactory = new AbstractGroupeFactoryNP("Promotion actuelle", 15, 92);
             this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
+
+            String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            StringBuilder nom = new StringBuilder();
+            StringBuilder prenom = new StringBuilder();
+        
+            Random random = new Random();
+
+
+            for (int i = 0; i < 50; i++) {
+                for(int j = 0; i < 5; i++) {
+                    int index = random.nextInt(alphabet.length());
+              
+                    char randomChar = alphabet.charAt(index);
+
+                    nom.append(randomChar);
+
+                    index = random.nextInt(alphabet.length());
+
+                    randomChar = alphabet.charAt(index);
+              
+                    prenom.append(randomChar);        
+                }
+
+                promo.addEtudiant(new EtudiantNP(nom.toString(), prenom.toString()));
+            }
+
+            this.createGroup("Groupe 1");
+            this.createGroup("Groupe 2");
+            this.createGroup("Groupe 3");
+
         }
     }
 
@@ -43,6 +74,14 @@ public class Cadmin {
             if (groupe.getName() == name) return groupe;
         }
         return null;
+    }
+
+    public int getGroupeSize(int id){
+        Set<Groupe> sousGroupe = promo.getSousGroupes();
+        for (Groupe groupe : sousGroupe){
+            if (groupe.getId() == id) return groupe.getSize();
+        }
+        return 0;
     }
 
     public Set<Groupe> getAllGroup(){
@@ -88,6 +127,23 @@ public class Cadmin {
 
         groupeFactory.dropFromGroupe(getGroupe(groupID), getEtudiant(etuID));
         groupeFactory.addToGroupe(getGroupe(groupID), getEtudiant(etuID));
+    }
+
+    public Set<Etudiant> search(String name, int groupid){
+        Set<Etudiant> list = new LinkedHashSet<Etudiant>();
+        boolean match = true;
+        for (Etudiant etudiant : list) {
+            for (int i = 0; i < name.length(); i++) {
+                if (etudiant.getNom().charAt(i) == name.charAt(i)) {
+                    match = true;
+                } else {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) list.add(etudiant);
+        }
+        return list;
     }
 
 
