@@ -21,34 +21,67 @@ public class CarteGroupe extends JFrame {
     
     
     public JPanel drawCarte(){
-        JPanel carte = new JPanel();
-        Cadmin test = new Cadmin(false);
-        test.createGroup("Groupe");
-        test.createGroup("Groupe 1");
-        test.createGroup("Groupe 3");
-        test.createGroup("Groupe 4");
-        test.createGroup("Groupe 5");
-        test.createGroup("Groupe 6");
-        test.createGroup("Groupe 7");
-        test.createGroup("Groupe 8");
-        test.createGroup("Groupe 9");
-        test.createGroup("Groupe 10");
-        test.createGroup("Groupe 11");
-        test.createGroup("Groupe 12");
-        for (Groupe t : test.getAllGroup() ) {
-            JButton groupbutton = new JButton();
-            groupbutton.add(new JLabel(t.getName()));
-            carte.add(groupbutton);
-            groupbutton.addMouseListener(new ButtonGroupeListener(groupbutton,this.menu , this.window));
-        }
-        return carte;
+        JPanel carte = new JPanel(){
+        final ImageIcon icon = new ImageIcon(getClass().getResource("/carte-background.png"));
+      Image img = icon.getImage();
+      // initialiseur d'instance
+      {setOpaque(false);}
+      public void paintComponent(Graphics graphics) 
+      {
+        graphics.drawImage(img, 0, 0, this);
+        super.paintComponent(graphics); 
+      }
+    };
+
+
+        //carte.setBackground(gamePanel);
+        // Cadmin test = new Cadmin(false);
+        // for (Groupe t : test.getAllGroup() ) {
+        //     JButton groupbutton = new JButton();
+        //     groupbutton.add(new JLabel(t.getName()));
+        //     carte.add(groupbutton);
+        //     groupbutton.addMouseListener(new ButtonGroupeListener(groupbutton,this.menu , this.window));
+        // }
+
+        carte.setLayout(new GridLayout(10,1));
+        carte.setPreferredSize(new Dimension(150,150));
+        carte.setSize(new Dimension(150,150));
+        carte.setMinimumSize(new Dimension(150,150));
+        carte.setBackground(Color.WHITE);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        JLabel td = new JLabel("TD1");
+        td.setFont(new Font("Verdana", Font.PLAIN, 14));
+        td.setHorizontalAlignment(SwingConstants.CENTER);
+        carte.add(td,BorderLayout.CENTER);
+
+        carte.add(new JLabel(""),BorderLayout.CENTER);
+        JLabel nbetudiant = new JLabel("15/35 etudiant");
+        nbetudiant.setFont(new Font("Verdana", Font.PLAIN, 14));
+        nbetudiant.setHorizontalAlignment(SwingConstants.CENTER);
+        carte.add(nbetudiant,BorderLayout.CENTER);
+
+        FlowLayout layout = new FlowLayout();
+        layout.setVgap(0);
+        layout.setHgap(0);
+        JPanel test = new JPanel(layout);
+        test.setBackground(Color.WHITE);
+        test.add(carte);
+        //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
+        return test;
     }
     
 
     public JPanel drawCarteGroupe(){
         JPanel searchbarpanel = new JPanel();
-        searchbarpanel.setBackground(Color.WHITE);
-        searchbarpanel.add(drawCarte());
+        //searchbarpanel.setBackground(Color.WHITE);
+        for (int i = 0; i < 10 ; i+=1 ) {
+           searchbarpanel.add(drawCarte()); 
+        }
         return searchbarpanel;
     }
 }

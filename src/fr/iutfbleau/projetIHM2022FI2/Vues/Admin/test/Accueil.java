@@ -183,32 +183,21 @@ public class Accueil {
         gridLayout.setHgap(0);
         gridLayout.setVgap(0);
 
-        GridLayout gridLayout2 = new GridLayout(1,1);
-        gridLayout2.setHgap(0);
-        gridLayout2.setVgap(0);
 
-        JPanel menuPanneau = new JPanel();
-        menuPanneau.setLayout(gridLayout2);
-        menuPanneau.add(menu.drawMenu());
-        //menuPanneau.setPreferredSize(new Dimension(300,700));
-        JPanel menuContainer = new JPanel();
-        menuContainer.setLayout(gridLayout);
+        JPanel menuContainer = new JPanel(new BorderLayout());
 
 
 
-        JPanel menuP = new JPanel();
-        GridLayout gridLayout3 = new GridLayout(2,1);
-        gridLayout3.setHgap(0);
-        gridLayout3.setVgap(0);
-        menuP.setLayout(gridLayout3);
+        JPanel menuP = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,fenetre);
-        menuP.add(searchbar.drawSearchBar());
+        menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
         CarteGroupe carteGroupe = new CarteGroupe(menu,fenetre);
         menuP.add(carteGroupe.drawCarteGroupe());
 
 
 
-        menuContainer.add(menuPanneau);
+        menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
         menuContainer.add(menuP);
 
 
