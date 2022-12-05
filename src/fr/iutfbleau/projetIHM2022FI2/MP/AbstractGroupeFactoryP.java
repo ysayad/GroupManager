@@ -13,6 +13,10 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
     // la racine (promotion)
     private Groupe promo;
 
+    //Retient tous les groupes (facon pas opti car duplication des données mais cet facon correspond mieux à l'essence de l'api)
+    private HashMap<Integer,Groupe> groupsTable;
+ 
+
    /**
     * Constructeur de AbstractGroupeFactoryp;
     * On utilise cette version quand on veut totalement créer le groupe Promotion (c'est à dire qu'il n'existe pas sur la BdD)
@@ -57,7 +61,6 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 studentTmp = new Etudiant(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2),rsGetAllStudents.getInt(1));
                 this.promo.addEtudiant(student);
             }
-            
             this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
@@ -95,7 +98,7 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 Etudiant student = new Etudiant(rsGetPromotionStudents.getString(3),rsGetPromotionStudents.getString(2),rsGetPromotionStudents.getInt(1));
                 this.promo.addEtudiant(student);
             }
-            
+            this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
@@ -118,24 +121,19 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalArgumentException si le groupe n'est pas connu de l'usine abstraite ou bien si le groupe est celui de toute la promotion (renvoyé par getPromotion)
      */
     public void deleteGroupe(Groupe g){
+        //Vérifications
         Objects.requireNonNull(g,"On ne peut pas enlever un groupe null car null n'est pas un groupe autorisé");
-        if (!this.knows(g)){
-            throw new IllegalArgumentException("Impossible d'enlever un groupe inconnu");
-        }
-        if (this.getPromotion().equals(g)){
-            throw new IllegalArgumentException("Impossible de détruire le groupe de toute la promotion");
-        }
-        if (g.getSize()>0){
-            throw new IllegalStateException("Impossible de détruire un groupe contenant un groupe");
-        }
-
+        if (!this.knows(g)) throw new IllegalArgumentException("Impossible d'enlever un groupe inconnu");
+        if (this.getPromotion().equals(g)) throw new IllegalArgumentException("Impossible de détruire le groupe de toute la promotion");
+        if (g.getSize()>0) throw new IllegalStateException("Impossible de détruire un groupe contenant un groupe");
+        
+        //On s'assure d'abord de supprimer le groupe sur la BdD puis on le supprime en local, on est ainsi sur que les données locales et distantes sont concordantes
         ConnectionSingleton singleton;
         try{
             singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
         }catch(IllegalStateException ex){
             throw ex;
         }
-
         //Supprimer le groupe et chaque liaison groupe<->etudiant avec ce groupe
         try{
             PreparedStatement pstDeleteGroupFromDB = singleton.cnx.PrepareStatement("DELETE FROM PJIHM__Groups WHERE id = ?");
@@ -148,6 +146,9 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
+        //Suppression en local
+        g.getPointPoint().removeSousGroupe(g);
+        this.groupsTable.remove(Integer.valueOf(g.getId()));
     }
 
     /**
@@ -161,30 +162,38 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      *                                            ou si il n'y a pas 0 < min <= max 
      */
     public void createGroupe(Groupe pere, String name, int min, int max){
-        //Vérification
-        //Créer le groupe en local (constructeur de groupe FREE)
-            //Ensuite faire pere.AddSousGroupe(nouveauGroupe)
-        
-        //Créer le groupe sur la bdd qui correspond au GroupeP qu'on vient de créer
+        //Vérifications
+        Objects.requireNonNull(pere,"Le groupe pere ne peut pas être null");
+        Objects.requireNonNull(name,"Le nouveau groupe ne peut pas avoir null comme nom");
+        if(pere.getType() == TypeGroupe.PARTITION) throw new IllegalArgumentException("Impossible d'ajouter un sous-groupe à une partition");
+        if(min<0 || min>max) throw new IllegalArgumentException(" min ne peut ni être > à max ni < 0");
+        if(!this.knows(pere)) throw new IllegalArgumentException(" On ne peut pas ajouter de sous-groupes à un groupe inconnu");
 
-        //Ajouter le groupe dans la bd
-        /**
-        On doit créer le groupe en local et en distanciel, si on le fait qu'en distanciel on n'utilise pas d'objet Groupe
-        La factory n'a pas besoin de connaitres tous les groupes car on utilisa la factory pour créer un groupe  
-         */
+        GroupeP newSubGroup = new GroupeP(pere,name,min,max);
         ConnectionSingleton singleton;
         try{
             singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
-
         }catch(IllegalStateException ex){
             throw ex;
         }
-
+        //Création du groupe dans la bd
         try{
-            
+            PreparedStatement pstCreateGroupOnDB = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            pstCreateGroupOnDB.setInt(1,newSubGroup.getId());
+            pstCreateGroupOnDB.setString(2,newSubGroup.getName());
+            pstCreateGroupOnDB.setString(3,"FREE");
+            pstCreateGroupOnDB.setInt(4,newSubGroup.getMin());
+            pstCreateGroupOnDB.setInt(5,newSubGroup.getMax());
+            pstCreateGroupOnDB.setInt(6,newSubGroup.getPointPoint().getId());
+            pstCreateGroupOnDB.executeUpdate();
+        }catch(SQLException ex){
+            throw new IllegalStateException(ex.getMessage());
         }
-
+        //Création du groupe en local
+        pere.addSousGroupe(newSubGroup);//Ajoute le sous groupe au pere
+        this.groupsTable.add(Integer.valueOf(newSubGroup.getId()),newSubGroup);//Ajoute le nouveau groupe au groupsTable
     }
+
     /**
      * permet de créer une partition automatiquement sous un groupe donné.
      *
@@ -201,7 +210,59 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      *       min = 0 et 
      *       max = partie entière de N/n plus 1, où N est le nombre max du groupe pere.   
      */
-    public void createPartition(Groupe pere, String name, int n);
+    public void createPartition(Groupe pere, String name, int n){
+        //Vérifications
+        Objects.requireNonNull(pere,"Le groupe pere ne peut pas être null");
+        Objects.requireNonNull(name,"Le nouveau groupe ne peut pas avoir null comme nom");
+        if(pere.getType()==TypeGroupe.PARTITION) throw new IllegalArgumentException("Impossible de partitionner une partition");
+        if(n<=0) throw new IllegalArgumentException("Le nombre de sous-groupes de la partition doit être >0");
+
+        GroupeP newPartition = new GroupeP(pere);
+        Set<Etudiant> fatherStudents = pere.getEtudiants();
+        for(Etudiant studentTmp : fatherStudents){//Parcourir le groupe pere pour copier chaque eleve dans la partition
+            newPartition.addEtudiant(studentTmp);
+        }
+
+        ConnectionSingleton singleton;
+        try{
+            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+        //Création de la partition dans la BdD avant de l'ajouter à this.groupsTable afin de ne pas se retrouver avec un groupe existant en local mais pas sur la BdD
+        try{
+            //Création du nouveau groupe de type partition
+            PreparedStatement pstCreatePartition = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            pstCreatePartition.setInt(1,newPartition.getId());
+            pstCreatePartition.setString(2,newPartition.getName());
+            pstCreatePartition.setString(3,"PARTITION");
+            pstCreatePartition.setInt(4,newPartition.getMin());
+            pstCreatePartition.setInt(5,newPartition.getMax());
+            pstCreatePartition.setInt(6,newPartition.getPointPoint().getId());
+            pstCreatePartition.executeUpdate();
+
+            //Ajout des étudiants à ce nouveau groupe
+            PreparedStatement pstAddStudentsToPartition = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
+            pstAddStudentsToPartition.setInt(2,newPartition.getId());
+
+            PreparedStatement pstGetAllStudentsOfFather = singleton.cnx.PrepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            pstGetAllStudentsOfFather.setInt(1,pere.getId());
+            ResultSet rsGetAllStudentsOfFather = pstGetAllStudentsOfFather.executeQuery();
+            while(rsGetAllStudentsOfFather.next()){
+                pstAddStudentsToPartition.setInt(1,rsGetAllStudentsOfFather.getInt(1));
+                pstAddStudentsToPartition.executeUpdate();
+            }    
+        }catch(SQLException ex){
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        this.groupsTable.add(Integer.valueOf(newPartition.getId(),newPartition));
+        //On crée ensuite les sous groupes (local et BdD), on est donc sur qu'avant de créer ces sous-groupes, leur père (la partition) existe bien en local et sur la BdD
+        int subGroupsMax = (pere.getMax()/n)+1;
+        for(int i=0;i<n;i++){
+            this.createGroupe(newPartition,name+"_"+i,n,subGroupsMax);
+        }
+    }
     /**
      * permet d'ajouter un étudiant à un groupe.
      *
@@ -212,7 +273,11 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalArgumentException la factory ne connaît pas g
      * @throws java.lang.IllegalStateException le père de g ne contient pas e
      */
-    public void addToGroupe(Groupe g, Etudiant e);
+    public void addToGroupe(Groupe g, Etudiant e){
+        //On ne peut ajouter qu'un eleve qui appartient au groupe pere de celui dans lequel on veut l'ajouter
+        //Ajouter l'étudiant sur la bd
+        //Ajouter l'étudiant dans g 
+    }
     /**
      * permet d'enlever un étudiant d'un groupe.
      *
@@ -246,17 +311,4 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.NullPointerException si le String est null.
      */
     public Set<Groupe> getGroupesOfEtudiant(Etudiant etu);
-
-    public String typeToString(TypeGroupe type){
-        switch(type){
-            case TypeGroupe.ROOT:
-                return "ROOT";
-                break;
-            case TypeGroupe.PARTITION:
-                return "PARTITION"
-                break;
-            default:
-                return "FREE";
-        }
-    }
 }
