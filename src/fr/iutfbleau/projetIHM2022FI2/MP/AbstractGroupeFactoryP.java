@@ -13,10 +13,6 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
     // la racine (promotion)
     private Groupe promo;
 
-    // On utilise une table de hachage pour retrouver facilement un groupe (à partir de son id).
-    // Si il y a beaucoup de groupes c'est plus rapide que de parcourir toute une liste.
-    private HashMap<Integer,Groupe> groupsTable;
-
    /**
     * Constructeur de AbstractGroupeFactoryp;
     * On utilise cette version quand on veut totalement créer le groupe Promotion (c'est à dire qu'il n'existe pas sur la BdD)
@@ -59,13 +55,11 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 pstAddStudentsToPromotion.executeUpdate();
                 //... en local
                 studentTmp = new Etudiant(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2),rsGetAllStudents.getInt(1));
-                this.promo.add(student);
+                this.promo.addEtudiant(student);
             }
             
-            this.groupsTable = new HashMap<Integer,Groupe>();
             this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
         }catch(SQLException ex){
-            singleton.cnx.close();
             throw new IllegalStateException(ex.getMessage());
         }
     }
@@ -99,13 +93,10 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
             
             while(rsGetPromotionStudents.next()){
                 Etudiant student = new Etudiant(rsGetPromotionStudents.getString(3),rsGetPromotionStudents.getString(2),rsGetPromotionStudents.getInt(1));
-                this.promo.add(student);
+                this.promo.addEtudiant(student);
             }
             
-            this.groupsTable = new HashMap<Integer,Groupe>();
-            this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
         }catch(SQLException ex){
-            singleton.cnx.close();
             throw new IllegalStateException(ex.getMessage());
         }
     }
@@ -123,17 +114,40 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * Pour détruire un groupe connu qui en contient d'autres il faut le faire récursivement.
      *
      * @throws java.lang.NullPointerException si un argument est null
-     * @throws java.lang.IllegalStateException si le groupe contient des groupes
+     * @throws java.lang.IllegalStateException si le groupe contient des groupes ou que le groupe n'a pas pu être supprimé sur la BdD
      * @throws java.lang.IllegalArgumentException si le groupe n'est pas connu de l'usine abstraite ou bien si le groupe est celui de toute la promotion (renvoyé par getPromotion)
      */
     public void deleteGroupe(Groupe g){
-        //Verifier que le groupe g n'est pas null
-        //Verifier que le groupe ne contienne pas de sous groupes
-        //Verifier que le groupe à supprimer n'est ni la promo ni un groupe inconnu
-        //Supprimer le groupe de la bdd
-            //1. Chercher le groupe avec l'id correspondant et le dl
-            //2. Supprimer tous les tuples de PJIHM__StudentsGroups contenant l'id du groupe dans son champ groupId
-        //Supprimer le groupe en local (le supprimer de this.groupsTable)
+        Objects.requireNonNull(g,"On ne peut pas enlever un groupe null car null n'est pas un groupe autorisé");
+        if (!this.knows(g)){
+            throw new IllegalArgumentException("Impossible d'enlever un groupe inconnu");
+        }
+        if (this.getPromotion().equals(g)){
+            throw new IllegalArgumentException("Impossible de détruire le groupe de toute la promotion");
+        }
+        if (g.getSize()>0){
+            throw new IllegalStateException("Impossible de détruire un groupe contenant un groupe");
+        }
+
+        ConnectionSingleton singleton;
+        try{
+            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+
+        //Supprimer le groupe et chaque liaison groupe<->etudiant avec ce groupe
+        try{
+            PreparedStatement pstDeleteGroupFromDB = singleton.cnx.PrepareStatement("DELETE FROM PJIHM__Groups WHERE id = ?");
+            pstDeleteGroupFromDB.setInt(g.getId());
+            pstDeleteGroupFromDB.executeUpdate();
+
+            PreparedStatement pstDeleteStudentsOfThisGroup = singleton.cnx.PreparedStatement("DELETE FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            pstDeleteStudentsOfThisGroup.setInt(g.getInt());
+            pstDeleteStudentsOfThisGroup.executeUpdate();
+        }catch(SQLException ex){
+            throw new IllegalStateException(ex.getMessage());
+        }
     }
 
     /**
@@ -146,7 +160,31 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalArgumentException si le groupe pere est de type PARTITION
      *                                            ou si il n'y a pas 0 < min <= max 
      */
-    public void createGroupe(Groupe pere, String name, int min, int max);
+    public void createGroupe(Groupe pere, String name, int min, int max){
+        //Vérification
+        //Créer le groupe en local (constructeur de groupe FREE)
+            //Ensuite faire pere.AddSousGroupe(nouveauGroupe)
+        
+        //Créer le groupe sur la bdd qui correspond au GroupeP qu'on vient de créer
+
+        //Ajouter le groupe dans la bd
+        /**
+        On doit créer le groupe en local et en distanciel, si on le fait qu'en distanciel on n'utilise pas d'objet Groupe
+        La factory n'a pas besoin de connaitres tous les groupes car on utilisa la factory pour créer un groupe  
+         */
+        ConnectionSingleton singleton;
+        try{
+            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+
+        try{
+            
+        }
+
+    }
     /**
      * permet de créer une partition automatiquement sous un groupe donné.
      *
