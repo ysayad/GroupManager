@@ -48,14 +48,16 @@ public class Cadmin {
                 promo.addEtudiant(new EtudiantNP(nom.toString(), prenom.toString()));
             }
 
-            Groupe racineDeLaPartition = groupeFactory.getPromotion().getSousGroupes().iterator().next();
-
             //init groupe
-            this.createGroup("Groupe 1");
-            this.createGroup("Groupe 2");
-            this.createGroup("Groupe 3");
+            groupeFactory.createPartition(promo, "TD", 4);
 
             //init changements
+            Iterator<Groupe> itgr = promo.getSousGroupes().iterator();
+            Groupe A = itgr.next(); // premier sous-groupe
+            Groupe B = itgr.next(); // second sous-groupe
+            B = itgr.next(); // troisième sous-groupe
+            Etudiant e = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
+            changementFactory.createChangement(A,e,B);
 
         }
     }
@@ -117,6 +119,11 @@ public class Cadmin {
         groupeFactory.createGroupe(promo, name, 15, 92);
     }
 
+    // Créer une partition
+    public void createPartition(String name, int groupeid, int n){
+        groupeFactory.createPartition(getGroupe(groupeid), name, n);
+    }
+
     // Supprimer un groupe
     public void deleteGroup(int id){
         promo.removeSousGroupe(getGroupe(id));
@@ -146,6 +153,7 @@ public class Cadmin {
         groupeFactory.addToGroupe(getGroupe(groupID), getEtudiant(etuID));
     }
 
+    // Rechercher un étudiant avec les premières lettres
     public Set<Etudiant> search(String name, int groupid){
         Set<Etudiant> list = new LinkedHashSet<Etudiant>();
         boolean match = true;
