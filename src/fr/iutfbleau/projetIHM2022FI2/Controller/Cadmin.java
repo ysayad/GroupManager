@@ -19,6 +19,7 @@ public class Cadmin {
             this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
 
+            // Random name
             String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             StringBuilder nom = new StringBuilder();
@@ -26,7 +27,7 @@ public class Cadmin {
         
             Random random = new Random();
 
-
+            //init etudiant
             for (int i = 0; i < 50; i++) {
                 for(int j = 0; i < 5; i++) {
                     int index = random.nextInt(alphabet.length());
@@ -45,9 +46,14 @@ public class Cadmin {
                 promo.addEtudiant(new EtudiantNP(nom.toString(), prenom.toString()));
             }
 
+            Groupe racineDeLaPartition = groupeFactory.getPromotion().getSousGroupes().iterator().next();
+
+            //init groupe
             this.createGroup("Groupe 1");
             this.createGroup("Groupe 2");
             this.createGroup("Groupe 3");
+
+            //init changements
 
         }
     }
