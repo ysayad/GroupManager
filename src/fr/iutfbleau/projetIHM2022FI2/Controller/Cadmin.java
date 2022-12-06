@@ -6,11 +6,12 @@ import java.util.*;
 
 public class Cadmin {
 
+    public static Cadmin instance = null;
     AbstractGroupeFactory groupeFactory;
     AbstractChangementFactory changementFactory;
     Groupe promo;
 
-    public Cadmin(boolean persist){
+    private Cadmin(boolean persist){
         if(persist){
             //this.groupeFactory = new AbstractGroupeFactoryP();
             //this.changementFactory = new AbstractChangementFactoryP();
@@ -52,14 +53,21 @@ public class Cadmin {
             groupeFactory.createPartition(promo, "TD", 4);
 
             //init changements
-            Iterator<Groupe> itgr = promo.getSousGroupes().iterator();
+            /*Iterator<Groupe> itgr = promo.getSousGroupes().iterator();
             Groupe A = itgr.next(); // premier sous-groupe
             Groupe B = itgr.next(); // second sous-groupe
             B = itgr.next(); // troisième sous-groupe
             Etudiant e = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
-            changementFactory.createChangement(A,e,B);
+            changementFactory.createChangement(A,e,B);*/
 
         }
+    }
+
+    public Cadmin Instance(boolean bool){
+        if (instance == null) {
+            instance = new Cadmin(bool);
+        }
+        return instance;
     }
 
     public AbstractChangementFactory getChangementFactory(){
