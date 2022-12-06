@@ -32,7 +32,7 @@ public class Cadmin {
 
             //init etudiant
             for (int i = 0; i < 50; i++) {
-                for(int j = 0; j < 5; i++) {
+                for(int j = 0; j < 5; j++) {
                     int index = random.nextInt(alphabet.length());
               
                     char randomChar = alphabet.charAt(index);
@@ -46,7 +46,11 @@ public class Cadmin {
                     prenom.append(randomChar);        
                 }
 
+
                 promo.addEtudiant(new EtudiantNP(nom.toString(), prenom.toString()));
+
+                prenom = new StringBuilder();
+                nom = new StringBuilder();
             }
 
             //init groupe
