@@ -63,7 +63,7 @@ public class Cadmin {
         }
     }
 
-    public Cadmin Instance(boolean bool){
+    public static Cadmin Instance(boolean bool){
         if (instance == null) {
             instance = new Cadmin(bool);
         }
