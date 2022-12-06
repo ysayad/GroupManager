@@ -41,8 +41,10 @@ BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY),
             BorderFactory.createMatteBorder(0, 0, 0, 3, Color.GRAY)
         )
-
+        
         );
+        JPanel defaultcolor = new JPanel();
+        //this.carte.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 5, defaultcolor.getBackground ()));
         this.carte.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 

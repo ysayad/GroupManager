@@ -71,25 +71,32 @@ public class CarteGroupe extends JFrame {
     
 
     public JPanel drawCarteGroupe(){
-        JPanel searchbarpanel = new JPanel();
+        JPanel cartecontainer = new JPanel();
         //searchbarpanel.setBackground(Color.WHITE);
 
-  //carte.setBackground(gamePanel);
-        // Cadmin test = new Cadmin(false);
-        // for (Groupe t : test.getAllGroup() ) {
-        //     JButton groupbutton = new JButton();
-        //     groupbutton.add(new JLabel(t.getName()));
-        //     carte.add(groupbutton);
-        //     groupbutton.addMouseListener(new ButtonGroupeListener(groupbutton,this.menu , this.window));
-        // }
 
-        for (int i = 0; i < 10 ; i+=1 ) {
-            JPanel test = new JPanel();
-            test.add(drawCarte("TD",i));
+Cadmin admin = Cadmin.Instance(false);
+Groupe grp = admin.getAllGroup().iterator().next();
+Set<Groupe> list = grp.getSousGroupes();
+for(Groupe g : list){
+         JPanel panneaucarte = new JPanel();
+         panneaucarte.add(drawCarte(g.getName(),g.getSize()));
 
-           searchbarpanel.add(test);
+        cartecontainer.add(panneaucarte);
+}
+// Cadmin admin = new Cadmin.Instance(false);
+// Groupe grp = admin.getAllGroup().iterator().next();
+// Set<Groupe> list = grp.getSousGroupes();
+
+//          for (Groupe t : list ) {
+
+//         System.out.println(t.getName());
+//         JPanel panneaucarte = new JPanel();
+//         panneaucarte.add(drawCarte("test",12));
+
+//        cartecontainer.add(panneaucarte);
             
-        }
-        return searchbarpanel;
+//          }
+        return cartecontainer;
     }
 }
