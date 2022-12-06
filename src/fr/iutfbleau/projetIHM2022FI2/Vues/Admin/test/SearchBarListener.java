@@ -31,16 +31,21 @@ public class SearchBarListener implements MouseListener{
 
     public void mouseExited(MouseEvent e) {
         if(this.searchbar.getText().equals("") && this.val == 1){
+            this.searchbar.setForeground(Color.GRAY);
             this.searchbar.setText("Rechercher par Nom");
             this.searchbar.setFocusable(false);
             this.val = 0;
+        }else if(this.searchbar.getText().equals("Rechercher par Nom")){
+            this.searchbar.setFocusable(false);
+            this.searchbar.setForeground(Color.GRAY);
         }
     }
 
     public void mousePressed(MouseEvent e) {
-                if (this.val == 0) {
+        if (this.val == 0) {
             this.searchbar.setFocusable(true);
             this.searchbar.setText("");
+            this.searchbar.setForeground(Color.BLACK);
             this.val = 1;
         }
     }

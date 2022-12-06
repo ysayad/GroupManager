@@ -59,9 +59,10 @@ public class CarteEtudiant extends JFrame {
         nbetudiant.setHorizontalAlignment(SwingConstants.CENTER);
         carte.add(nbetudiant,BorderLayout.CENTER);
 
-        FlowLayout layout = new FlowLayout();
+        GridLayout layout = new GridLayout();
         layout.setVgap(0);
         layout.setHgap(0);
+
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
         test.add(carte);
@@ -71,7 +72,7 @@ public class CarteEtudiant extends JFrame {
     }
     
 
-    public JPanel drawCarteGroupe(){
+    public JScrollPane drawCarteGroupe(){
         JPanel cartecontainer = new JPanel();
         //searchbarpanel.setBackground(Color.WHITE);
 
@@ -87,6 +88,11 @@ for(Etudiant e : grp.getEtudiants()){
 }
 
 
-        return cartecontainer;
+
+
+        JScrollPane scroll = new JScrollPane(cartecontainer);
+        
+
+        return scroll;
     }
 }
