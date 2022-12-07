@@ -7,6 +7,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
 import javax.swing.border.Border;
+
+import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.Controller.*;
+
 import java.io.*;
 import java.lang.Thread;
 import java.awt.event.*;
@@ -57,7 +61,8 @@ public class ButtonListener implements MouseListener{
             SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
             CarteGroupe carteGroupe = new CarteGroupe(menu,this.window,this.cardLayout);
-            menuP.add(carteGroupe.drawCarteGroupe());
+            Cadmin admin = Cadmin.Instance(false);
+            menuP.add(carteGroupe.drawCarteGroupe(admin.getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
 
 
 

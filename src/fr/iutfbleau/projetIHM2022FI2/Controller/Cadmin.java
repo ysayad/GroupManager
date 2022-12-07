@@ -55,6 +55,7 @@ public class Cadmin {
 
             //init groupe
             groupeFactory.createPartition(promo, "TD", 4);
+            groupeFactory.createGroupe(groupeFactory.getPromotion().getSousGroupes().iterator().next().getSousGroupes().iterator().next(), "Frites", 15, 92);
 
             //init changements
             Iterator<Groupe> itgr = promo.getSousGroupes().iterator().next().getSousGroupes().iterator();

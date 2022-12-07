@@ -83,19 +83,6 @@ public void refresh(String name, Set<Etudiant> liste){
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
    
     
 

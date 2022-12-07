@@ -65,7 +65,7 @@ public class CarteGroupe extends JFrame {
         layout.setHgap(0);
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
-        test.addMouseListener(new ButtonGroupeListener(test,this.menu,this.window,g));
+        test.addMouseListener(new ButtonGroupeListener(test,this.menu, cardLayout,this.window,g));
         test.add(carte);
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 
@@ -73,15 +73,12 @@ public class CarteGroupe extends JFrame {
     }
     
 
-    public JPanel drawCarteGroupe(){
-        JPanel cartecontainer = new JPanel(new BorderLayout());
+    public JPanel drawCarteGroupe(Groupe pere){
+        JPanel cartecontainer = new JPanel();
         //cartecontainer.add(new JButton("Créer un groupe"),BorderLayout.PAGE_START);
         //searchbarpanel.setBackground(Color.WHITE);
+        Set<Groupe> list = pere.getSousGroupes();
 
-
-        Cadmin admin = Cadmin.Instance(false);
-        Groupe grp = admin.getAllGroup().iterator().next();
-        Set<Groupe> list = grp.getSousGroupes();
         for(Groupe g : list){
                 JPanel panneaucarte = new JPanel();
                 panneaucarte.add(drawCarte(g.getName(),g.getSize(), g));

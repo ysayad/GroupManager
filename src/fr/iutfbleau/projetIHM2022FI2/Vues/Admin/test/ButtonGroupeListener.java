@@ -20,18 +20,55 @@ public class ButtonGroupeListener implements MouseListener{
     JFrame window;
     Menu menu;
     JPanel carte;
+    CardLayout cardLayout;
     Groupe g;
 
-    public ButtonGroupeListener(JPanel carte , Menu menu, JFrame window, Groupe g) {
+    public ButtonGroupeListener(JPanel carte , Menu menu, CardLayout cardLayout, JFrame window, Groupe g) {
         this.window=window;
         this.button = button;
         this.menu = menu;
         this.carte = carte;
+        this.cardLayout = cardLayout;
         this.g = g;
     }
 
 
+    public void refresh(String name, Groupe g){
+        this.window.remove(menu);
 
+
+        Menu menu = new Menu(this.window, cardLayout, name, "Administrtateur");
+        GridLayout gridLayout = new GridLayout(1,2);
+        gridLayout.setHgap(0);
+        gridLayout.setVgap(0);
+
+
+        JPanel menuContainer = new JPanel(new BorderLayout());
+
+
+
+        JPanel menuP = new JPanel(new BorderLayout());
+        SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
+        menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
+        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout);
+
+        menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
+
+
+
+        menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
+        menuContainer.add(menuP);
+
+
+        this.window.add(menuContainer, "Menu");
+
+
+        this.window.revalidate();
+        this.window.repaint();
+        this.window.invalidate();
+        this.window.validate();
+    }
 
   
 
@@ -58,6 +95,8 @@ BorderFactory.createCompoundBorder(
 
     public void mousePressed(MouseEvent e) {
         System.out.println(g.getName());
+        this.refresh("Groupes    ",g);
+        this.cardLayout.show(this.window.getContentPane(), "Menu");
     }
 
     public void mouseReleased(MouseEvent e) {}
