@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.util.*;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
+import fr.iutfbleau.projetIHM2022FI2.API.Changement;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 
@@ -31,23 +32,23 @@ public class CarteChangement extends JFrame {
     public JPanel drawCarte(String nomChangement){
         this.carte = new JPanel();
         
-        this.carte.setLayout(new GridLayout(1,3));
 
 
 
       
 
-        this.carte.setPreferredSize(new Dimension(300,50));
-        this.carte.setSize(new Dimension(300,50));
-        this.carte.setMinimumSize(new Dimension(300,50));
-        this.carte.setBackground(Color.WHITE);
         JLabel td = new JLabel(nomChangement);
+        this.carte.setPreferredSize(new Dimension(800,60));
+        this.carte.setSize(new Dimension(800,60));
+        this.carte.setMaximumSize(new Dimension(1000,60));
+        this.carte.setBackground(Color.WHITE);
         td.setFont(new Font("Verdana", Font.PLAIN, 14));
         td.setHorizontalAlignment(SwingConstants.CENTER);
         this.carte.add(td,BorderLayout.CENTER);
 
         this.yes = new JButton("yes");
         this.yes.setMinimumSize(new Dimension(50,50));
+        this.yes.setMaximumSize(new Dimension(50,50));
         this.yes.setSize(50, 50);
         this.yes.setPreferredSize( new Dimension( 50, 50 ) );
         this.yes.setBackground(Color.WHITE);
@@ -57,6 +58,7 @@ public class CarteChangement extends JFrame {
 
         this.no = new JButton("no");
         this.no.setMinimumSize(new Dimension(50,50));
+        this.no.setMaximumSize(new Dimension(50,50));
         this.no.setSize(50, 50);
         this.no.setPreferredSize( new Dimension( 50, 50 ) );
         this.no.setBackground(Color.WHITE);
@@ -86,18 +88,17 @@ public class CarteChangement extends JFrame {
 
 int h = 0;
 Cadmin admin = Cadmin.Instance(false);
-Groupe grp = admin.getAllGroup().iterator().next();
-Set<Changement> liste = Cadmin.getAllChangements();
+Set<Changement> liste = admin.getAllChangements();
 for(Changement e : liste ){
         
          this.panneaucarte = new JPanel();
-         this.panneaucarte.add(drawCarte("Demaine n"+i));
+         this.panneaucarte.add(drawCarte("Changement " + e.getEtu().getNom() + " " + e.getEtu().getPrenom() + "vers groupe " + e.getB()));
 
         this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window));
         this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window)); 
          h+=300;
         this.cartecontainer.add(this.panneaucarte);
-}
+} 
 
 
 
