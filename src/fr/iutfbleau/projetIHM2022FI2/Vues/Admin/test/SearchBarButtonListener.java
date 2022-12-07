@@ -30,7 +30,7 @@ public class SearchBarButtonListener implements MouseListener{
     public void mouseClicked(MouseEvent e) {
         String name = searchbar.getText();
         Cadmin admin = Cadmin.Instance(false);
-        Set<Etudiant> liste = admin.getGroupeFactory().getEtudiants(name);
+        Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
         for (Etudiant etu : liste) {
             System.out.println(etu.getNom() + " " + etu.getPrenom());
         }    

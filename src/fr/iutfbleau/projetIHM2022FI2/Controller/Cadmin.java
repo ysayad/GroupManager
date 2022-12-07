@@ -63,6 +63,7 @@ public class Cadmin {
             B = itgr.next(); // troisième sous-groupe
             Etudiant e = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
             changementFactory.createChangement(A,e,B);
+            changementFactory.createChangement(B,B.getEtudiants().iterator().next(),A);
 
         }
     }
@@ -166,8 +167,9 @@ public class Cadmin {
     }
 
     // Rechercher un étudiant avec les premières lettres
-    public Set<Etudiant> search(String name, int groupid){
-        Set<Etudiant> list = new LinkedHashSet<Etudiant>();
+    public Set<Etudiant> search(String name, Groupe grp){
+        Set<Etudiant> list = grp.getEtudiants();
+        Set<Etudiant> out = new LinkedHashSet<Etudiant>();
         boolean match = true;
         for (Etudiant etudiant : list) {
             for (int i = 0; i < name.length(); i++) {
@@ -178,9 +180,9 @@ public class Cadmin {
                     break;
                 }
             }
-            if (match) list.add(etudiant);
+            if (match) out.add(etudiant);
         }
-        return list;
+        return out;
     }
 
 
