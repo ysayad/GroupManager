@@ -9,7 +9,7 @@ public class Cadmin {
     public static Cadmin instance = null;
     AbstractGroupeFactory groupeFactory;
     AbstractChangementFactory changementFactory;
-    public Groupe promo;
+    Groupe promo;
 
     private Cadmin(boolean persist){
         if(persist){
