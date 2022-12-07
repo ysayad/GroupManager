@@ -7,6 +7,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
 import javax.swing.border.Border;
+
+import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.API.*;
+
 import java.io.*;
 import java.lang.Thread;
 import java.awt.event.*;
@@ -24,7 +28,12 @@ public class SearchBarButtonListener implements MouseListener{
 
 
     public void mouseClicked(MouseEvent e) {
-        System.out.println(searchbar.getText());
+        String name = searchbar.getText();
+        Cadmin admin = Cadmin.Instance(false);
+        Set<Etudiant> liste = admin.getGroupeFactory().getEtudiants(name);
+        for (Etudiant etu : liste) {
+            System.out.println(etu.getNom() + " " + etu.getPrenom());
+        }    
     }
 
     public void mouseEntered(MouseEvent e) {

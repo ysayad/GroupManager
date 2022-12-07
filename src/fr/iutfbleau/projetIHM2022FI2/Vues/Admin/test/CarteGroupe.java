@@ -71,7 +71,8 @@ public class CarteGroupe extends JFrame {
     
 
     public JPanel drawCarteGroupe(){
-        JPanel cartecontainer = new JPanel();
+        JPanel cartecontainer = new JPanel(new BorderLayout());
+        cartecontainer.add(new JButton("Créer un groupe"),BorderLayout.PAGE_START);
         //searchbarpanel.setBackground(Color.WHITE);
 
 
