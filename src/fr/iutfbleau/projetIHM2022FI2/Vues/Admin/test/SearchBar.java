@@ -81,10 +81,15 @@ public class SearchBar extends JFrame {
         test.add(searchbar);
         test.add(ok);
         searchbarpanel.add(test);
+<<<<<<< HEAD
         ok.addMouseListener(new SearchBarButtonListener(searchbar,ok));
         SearchBarListener listener = new SearchBarListener(searchbar);
         searchbar.addMouseListener(listener);
         searchbar.addKeyListener(listener);
+=======
+        ok.addMouseListener(new SearchBarButtonListener(searchbar,ok,this.window,this.menu));
+        searchbar.addMouseListener(new SearchBarListener(searchbar));
+>>>>>>> c581f21ec00cc45cf9cc453417bfe8df81fe853a
 
 
         return searchbarpanel;
