@@ -20,7 +20,7 @@ public class CarteGroupe extends JFrame {
     }
     
     
-    public JPanel drawCarte(String name , int num){
+    public JPanel drawCarte(String name , int num, Groupe g){
         JPanel carte = new JPanel(){
         final ImageIcon icon = new ImageIcon(getClass().getResource("/carte-background.png"));
       Image img = icon.getImage();
@@ -63,28 +63,28 @@ public class CarteGroupe extends JFrame {
         layout.setHgap(0);
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
+        test.addMouseListener(new ButtonGroupeListener(test,this.menu,this.window,g));
         test.add(carte);
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-        test.addMouseListener(new ButtonGroupeListener(test,this.menu,this.window));
+
         return test;
     }
     
 
     public JPanel drawCarteGroupe(){
         JPanel cartecontainer = new JPanel(new BorderLayout());
-        cartecontainer.add(new JButton("Créer un groupe"),BorderLayout.PAGE_START);
+        //cartecontainer.add(new JButton("Créer un groupe"),BorderLayout.PAGE_START);
         //searchbarpanel.setBackground(Color.WHITE);
 
 
-Cadmin admin = Cadmin.Instance(false);
-Groupe grp = admin.getAllGroup().iterator().next();
-Set<Groupe> list = grp.getSousGroupes();
-for(Groupe g : list){
-         JPanel panneaucarte = new JPanel();
-         panneaucarte.add(drawCarte(g.getName(),g.getSize()));
-
-        cartecontainer.add(panneaucarte);
-}
+        Cadmin admin = Cadmin.Instance(false);
+        Groupe grp = admin.getAllGroup().iterator().next();
+        Set<Groupe> list = grp.getSousGroupes();
+        for(Groupe g : list){
+                JPanel panneaucarte = new JPanel();
+                panneaucarte.add(drawCarte(g.getName(),g.getSize(), g));
+                cartecontainer.add(panneaucarte);
+        }
 // Cadmin admin = new Cadmin.Instance(false);
 // Groupe grp = admin.getAllGroup().iterator().next();
 // Set<Groupe> list = grp.getSousGroupes();
@@ -98,6 +98,7 @@ for(Groupe g : list){
 //        cartecontainer.add(panneaucarte);
             
 //          }
+    
         return cartecontainer;
     }
 }

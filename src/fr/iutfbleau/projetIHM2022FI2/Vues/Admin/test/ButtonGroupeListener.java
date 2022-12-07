@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
+import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
@@ -18,12 +20,14 @@ public class ButtonGroupeListener implements MouseListener{
     JFrame window;
     Menu menu;
     JPanel carte;
+    Groupe g;
 
-    public ButtonGroupeListener(JPanel carte , Menu menu, JFrame window) {
+    public ButtonGroupeListener(JPanel carte , Menu menu, JFrame window, Groupe g) {
         this.window=window;
         this.button = button;
         this.menu = menu;
         this.carte = carte;
+        this.g = g;
     }
 
 
@@ -52,7 +56,9 @@ BorderFactory.createCompoundBorder(
                 this.carte.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
     }
 
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+        System.out.println(g.getName());
+    }
 
     public void mouseReleased(MouseEvent e) {}
 

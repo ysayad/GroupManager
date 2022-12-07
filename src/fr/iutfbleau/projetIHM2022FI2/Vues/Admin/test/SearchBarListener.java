@@ -58,15 +58,7 @@ public class SearchBarListener implements MouseListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        String name = searchbar.getText();
-        if (name.length() != 0) {
-            Cadmin admin = Cadmin.Instance(false);
-            Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
-            for (Etudiant etu : liste) {
-                System.out.println(etu.getNom() + " " + etu.getPrenom());
-            }    
-        }
-        
+
     }
 
 
@@ -82,6 +74,14 @@ public class SearchBarListener implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         // TODO Auto-generated method stub
+        String name = searchbar.getText();
+        if (name.length() != 0) {
+            Cadmin admin = Cadmin.Instance(false);
+            Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
+            for (Etudiant etu : liste) {
+                System.out.println(etu.getNom() + " " + etu.getPrenom());
+            }    
+        }
         
     }
 

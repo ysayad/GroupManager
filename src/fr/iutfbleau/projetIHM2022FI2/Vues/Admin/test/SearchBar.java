@@ -22,7 +22,7 @@ public class SearchBar extends JFrame {
 
 
     public void refresh(String name, Set<Etudiant> etu){
- if (name == "Etudiants  ") {
+    if (name == "Etudiants  ") {
     System.out.println("test");
                             this.window.remove(menu);
 

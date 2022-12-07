@@ -67,7 +67,7 @@ public class CarteEtudiant extends JFrame {
         test.setBackground(Color.WHITE);
         test.add(carte);
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-        test.addMouseListener(new ButtonGroupeListener(test,this.menu,this.window));
+        //test.addMouseListener(new ButtonEtudiantListener(test,this.menu,this.window));
         return test;
     }
     
