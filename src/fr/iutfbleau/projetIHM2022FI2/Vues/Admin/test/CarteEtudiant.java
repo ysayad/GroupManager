@@ -74,24 +74,30 @@ public class CarteEtudiant extends JFrame {
 
     public JScrollPane drawCarteGroupe(){
         JPanel cartecontainer = new JPanel();
+        cartecontainer.setLayout(new FlowLayout());
+
         //searchbarpanel.setBackground(Color.WHITE);
 
-
+int h = 0;
 Cadmin admin = Cadmin.Instance(false);
 Groupe grp = admin.getAllGroup().iterator().next();
 for(Etudiant e : grp.getEtudiants()){
         
          JPanel panneaucarte = new JPanel();
          panneaucarte.add(drawCarte(e.getNom(),e.getPrenom()));
-
+         h+=300;
         cartecontainer.add(panneaucarte);
 }
 
 
 
+        cartecontainer.setPreferredSize(new Dimension(this.getWidth(),h/5));
+        cartecontainer.setSize(new Dimension(this.getWidth(),h/5));
+        cartecontainer.setMaximumSize(new Dimension(this.getWidth(),h/5));
 
-        JScrollPane scroll = new JScrollPane(cartecontainer);
-        
+        JScrollPane scroll = new JScrollPane(cartecontainer,
+                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         return scroll;
     }
