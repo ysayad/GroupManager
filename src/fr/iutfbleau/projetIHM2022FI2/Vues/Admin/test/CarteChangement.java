@@ -92,7 +92,7 @@ Set<Changement> liste = admin.getAllChangements();
 for(Changement e : liste ){
         
          this.panneaucarte = new JPanel();
-         this.panneaucarte.add(drawCarte("Changement " + e.getEtu().getNom() + " " + e.getEtu().getPrenom() + "vers groupe " + e.getB()));
+         this.panneaucarte.add(drawCarte("Changement " + e.getEtu().getNom() + " " + e.getEtu().getPrenom() + " vers groupe " + e.getB().getName()));
 
         this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window));
         this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window)); 
