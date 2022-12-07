@@ -25,12 +25,13 @@ public class SearchBar extends JFrame {
         //gridLayout.setHgap(0);
         //gridLayout.setVgap(0);
         //searchbarpanel.setLayout(gridLayout);
-        searchbarpanel.setLayout(new BoxLayout(searchbarpanel, BoxLayout.X_AXIS ));
+        //searchbarpanel.setLayout(new BoxLayout(searchbarpanel, BoxLayout.LINE_AXIS ));
 
-        searchbarpanel.setBackground(Color.WHITE);
+        //searchbarpanel.setBackground(Color.WHITE);
+        searchbarpanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         JTextField searchbar = new JTextField("Rechercher par Nom");
         searchbar.setBounds(20,20,20,20);
-        
+        searchbar.setForeground(Color.GRAY);
         searchbar.setMinimumSize(new Dimension(300,45));
         searchbar.setSize(300, 45);
         searchbar.setPreferredSize( new Dimension( 500, 45 ) );
@@ -38,13 +39,45 @@ public class SearchBar extends JFrame {
         Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
         searchbar.setBorder(border);
         searchbar.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
-        JButton ok = new JButton("OK");
+        JButton ok = new JButton("");
         ok.setMinimumSize(new Dimension(30,45));
         ok.setSize(30, 45);
         ok.setPreferredSize( new Dimension( 50, 45 ) );
+        
+        ok.setBackground(Color.WHITE);
+
+
+
+
+
+        ok.setFont(new Font("Verdana", Font.PLAIN, 15));
+        ok.setName("OK");
+
+        ImageIcon icfaon = new ImageIcon(getClass().getResource("/loupe.png"));
+        Image image = icfaon.getImage();
+        Image aze = image.getScaledInstance(25, 25, Image.SCALE_DEFAULT); 
+        icfaon = new ImageIcon(aze);
+
+        ok.setBorderPainted(false);
+        ok.setFocusPainted(false);
+        ok.setHorizontalAlignment(SwingConstants.LEFT);
+
+        ok.setContentAreaFilled(false);
+
+        
+
+        ok.setIcon(icfaon);
+
+
+
+
+
+
+
 
 
         JPanel test =new JPanel();
+        test.setBackground(Color.WHITE);
         test.add(searchbar);
         test.add(ok);
         searchbarpanel.add(test);

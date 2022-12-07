@@ -74,13 +74,27 @@ public class GroupeP implements Groupe {
     }
 
     /**
+    * Surcharge du constructeur de la classe GroupeP, crée un objet groupe correspondant à un groupe sur la base de données
+    *
+    * @param pere - Le groupe pere du groupe à créer
+    */
+    public GroupeP(int id, String name, TypeGroupe type, int min, int max){ 
+        this.id = id;
+        this.nom = name;
+        this.type = type;
+        this.min = min;
+        this.max = max;
+        this.subGroups = new LinkedHashSet<Groupe>();
+        this.students = new LinkedHashSet<Etudiant>();
+    }
+
+
+    /**
      * Ajoute un étudiant. Se comporte comme add de l'interface Set.
      * @param e - L'objet Etudiant à ajouter au groupe
      * @return true iff e est ajouté
      */
     public boolean addEtudiant(Etudiant e) {
-        if(this.students.contains(e)) return false; // On ne peut pas ajouter un étudiant qui appartient déja au groupe
-        if(this.students.size()==this.max) return false; // On ne peut pas avoir plus d'étudiants que la limite supérieure du groupe
         return this.students.add(e);
     }
 
@@ -90,8 +104,6 @@ public class GroupeP implements Groupe {
     * @return true iff e est enlevé
     */
     public boolean removeEtudiant(Etudiant e) {
-        if(!this.students.contains(e)) return false; // On ne peut pas retirer un étudiant qui n(appartient pas au groupe
-        if(this.students.size()==this.min) return false; // On ne peut pas avoir moins d'étudiants que la limite inférieure du groupe
         return this.students.remove(e);
     }
 
@@ -102,8 +114,7 @@ public class GroupeP implements Groupe {
     * @return true iff g est ajouté
     */
     public boolean addSousGroupe(Groupe g){
-        if(this.subGroups.contains(g)) return false; // On ne peut pas ajouter un groupe déja sous-groupe de this
-        if( !this.equals(g.getPointPoint()) ) return false;
+        if(!this.equals(g.getPointPoint())) return false;
         return this.subGroups.add(g);
     }
 
@@ -211,6 +222,10 @@ public class GroupeP implements Groupe {
         Date date = new Date();
         Long timeStamp = new Long(date.getTime());
         return timeStamp.hashCode();
+    }
+
+    public void setFather(Groupe father){
+        this.pointPoint = father;
     }
 
 }

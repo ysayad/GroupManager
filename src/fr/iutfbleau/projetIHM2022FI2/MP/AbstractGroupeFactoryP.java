@@ -61,10 +61,11 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 studentTmp = new Etudiant(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2),rsGetAllStudents.getInt(1));
                 this.promo.addEtudiant(student);
             }
-            this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
+        this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
+
     }
 
    /**
@@ -93,15 +94,60 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
             ResultSet rsGetPromotionStudents = pstGetPromotionStudents.executeQuery();
             
             Etudiant studentTmp;
-            
             while(rsGetPromotionStudents.next()){
                 Etudiant student = new Etudiant(rsGetPromotionStudents.getString(3),rsGetPromotionStudents.getString(2),rsGetPromotionStudents.getInt(1));
                 this.promo.addEtudiant(student);
             }
             this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
+
+            //Créer en local les groupes déja existant
+
+            //Je recupere les groupes de la bd
+            PreparedStatement pstgetAllGroups = singleton.cnx.PrepareStatement("SELECT * FROM PJIHM__Groups");
+            ResultSet rsgetAllGroups = pstgetAllGroups.executeQuery();
+
+            HashMap<Integer,Groupe> groups = new HashMap<Integer,Groupe>();
+            while(rsgetAllGroups.next()){//Liste remplie de groupes sans pere, etudiant et sous groupes
+                Groupe grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), rsgetAllGroups.getString(3),rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
+                this.groupsTable.add(Integer.valueOf(id),grp);
+            }
+
+            //On attribue les groupes et sous-groupes 
+            PreparedStatement pstGetAllGroupsFather = singleton.cnx.PrepareStatement("SELECT id,fatherId FROM PJIHM__Groups");
+            ResultSet rsGetAllGroupsFather = pstgetAllGroups.executeQuery();
+            rs.setAuDebut();
+            while(rsGetAllGroupsFather.next()){
+                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroupsFather.getInt(1)));
+                Groupe fatherTmp = groupsTable.get(Integer.valueOf(rsGetAllGroupsFather.getInt(2)));
+                groupTmp.setFather(fatherTmp);
+                fatherTmp.addSousGroupe(groupTmp); 
+            }
+
+            //Recup ts les etudiants
+            HashMap<Etudiant> allStudents = new HashMap<Etudiant>();
+            for(Etudiant studentTmp : this.promo.getEtudiants() ){
+                allStudents.add(studentTmp.getId(), studentTmp);
+            }
+                
+            //On attribue les étudiants au groupe, (groupTmp.getEtudiant() renvoit vide ici)
+            PreparedStatement pstGetStudentsOfGroup = singleton.cnx.PrepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            for(Groupe groupTmp : this.groupsTable){
+                pstGetStudentsOfGroup.setInt(groupTmp.getId());
+                ResultSet rsGetStudentsOfGroup = pstGetStudentsOfGroup.executeQuery();
+                rsGetStudentsOfGroup.next();
+                //Récuperer le bon Etudiant depuis promo via son id
+                //L'ajouter à ce groupe
+                groupTmp.addEtudiant(allStudents.get(rsGetStudentsOfGroup.getInt(1)));
+            }
+                
+                //Créer le nouveau groupe
+                
+                //l'ajouter à this.groupsTable
+            }
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
+
     }
     
     /**
@@ -274,9 +320,29 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalStateException le père de g ne contient pas e
      */
     public void addToGroupe(Groupe g, Etudiant e){
-        //On ne peut ajouter qu'un eleve qui appartient au groupe pere de celui dans lequel on veut l'ajouter
-        //Ajouter l'étudiant sur la bd
-        //Ajouter l'étudiant dans g 
+        Objects.requireNonNull(g,"Le groupe ne peut pas être null");
+        Objects.requireNonNull(e,"L'étudiant ne peut pas être null");
+        if(!this.knows(g)) throw new IllegalArgumentException("On ne peut pas ajouter d'étudiants à un groupe inconnu");
+        if(!g.getPointPoint().getEtudiants().contains(e)) throw new IllegalStateException("Le groupe père ne contient pas l'étudiant");
+        if(g.getEtudiants().contains(e)) throw new IllegalStateException("Le groupe contient déja l'étudiant");
+        if(g.getSize()==g.getMax()) throw new IllegalStateException("On ne peut pas dépasser la limite supérieure");
+        
+        ConnectionSingleton singleton;
+        try{
+            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+
+        try{
+            PreparedStatement pstAddStudentsToGroup = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
+            pstAddStudentsToGroup.setInt(1,e.getId());
+            pstAddStudentsToGroup.setInt(2,g.getId());
+            pstAddStudentsToGroup.executeUpdate();
+        }catch(SQLException ex){
+            throw new IllegalStateException(ex.getMessage());
+        }
+        g.addEtudiant(e);
     }
     /**
      * permet d'enlever un étudiant d'un groupe.
@@ -288,7 +354,29 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      * @throws java.lang.IllegalStateException g ne contient pas e
      * @throws java.lang.IllegalArgumentException la factory ne connaît pas g
      */
-    public void dropFromGroupe(Groupe g, Etudiant e);
+    public void dropFromGroupe(Groupe g, Etudiant e){
+        //Vérifications 
+
+        if(g.getSize()==g.getMin()) throw new IllegalStateException("La limite inférieure ne peut pas être dépassée") 
+        
+        ConnectionSingleton singleton;
+        try{
+            singleton = ConnectionSingleton.getInstance();
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+
+        try{
+            PreparedStatement pstDropStudentFromGroup = singleton.cnx.PrepareStatement("DELETE FROM PJIHM__StudentsGroups WHERE studentsId=? AND groupId=?");
+            pstDropStudentFromGroup.setInt(1,e.getId());
+            pstDropStudentFromGroup.setInt(2,g.getInt());
+            pst.executeUpdate();
+        }catch(SQLException ex){
+            throw new IllegalStateException(ex.getMessage());
+        }
+        g.removeEtudiant(e);
+    }
+
      /**
      * permet de retrouver un étudiant à partir d'un String.
      *
@@ -301,7 +389,18 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      *
      * @throws java.lang.NullPointerException si le String est null.
      */
-    public Set<Etudiant> getEtudiants(String nomEtu);
+    public Set<Etudiant> getEtudiants(String nomEtu){
+        Set<Etudiant> searchResult = new LinkedHashSet<Etudiant>();
+        for (Etudiant e : this.getPromotion().getEtudiants()){
+            if(e.getNom().equals(nomEtu)){
+                    searchResult.add(e);
+                    break;
+                }else if(e.substring(0,nomEtu.length())==nomEtu){
+                    searchResult.add(e);
+                }
+        }
+        return searchResult;
+    }
     /**
      * permet de retrouver les groupes d'un étudiant.
      *
@@ -310,5 +409,14 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
      *
      * @throws java.lang.NullPointerException si le String est null.
      */
-    public Set<Groupe> getGroupesOfEtudiant(Etudiant etu);
+    public Set<Groupe> getGroupesOfEtudiant(Etudiant etu){
+        Collection<Groupe> listgrp = this.groupsTable.values();
+        Set<Groupe> setgrp = new LinkedHashSet<Groupe>();
+
+        for (Groupe groupe : listgrp) {
+            if(groupe.getEtudiants().contains(etu)) setgrp.add(groupe);
+        }
+
+        return setgrp;
+    }
 }
