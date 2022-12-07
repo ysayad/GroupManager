@@ -21,6 +21,16 @@ public class CarteGroupe extends JFrame {
         this.cardLayout = cardLayout;
     }
     
+
+    public JPanel vide(){
+        JPanel vide = new JPanel();
+        vide.setOpaque(false);
+        return vide;
+    }
+
+
+
+
     
     public JPanel drawCarte(String name , int num, Groupe g){
         JPanel carte = new JPanel(){
@@ -36,9 +46,9 @@ public class CarteGroupe extends JFrame {
     };
 
 
-      
 
-        carte.setLayout(new GridLayout(10,1));
+
+        carte.setLayout(new GridLayout(3,1));
         carte.setPreferredSize(new Dimension(150,150));
         carte.setSize(new Dimension(150,150));
         carte.setMinimumSize(new Dimension(150,150));
@@ -51,15 +61,14 @@ public class CarteGroupe extends JFrame {
 
         ImageIcon icfaon = new ImageIcon(getClass().getResource("/edit.png"));
         Image image = icfaon.getImage();
-        Image aze = image.getScaledInstance(25, 25, Image.SCALE_DEFAULT); 
+        Image aze = image.getScaledInstance(23, 23, Image.SCALE_DEFAULT); 
         icfaon = new ImageIcon(aze);
 
-        edit.setBorderPainted(true);
+        edit.setBorderPainted(false);
         edit.setFocusPainted(false);
-        edit.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(50,50,50)));
-        edit.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+        edit.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-        edit.setHorizontalAlignment(SwingConstants.LEFT);
+        edit.setHorizontalAlignment(SwingConstants.CENTER);
         edit.setContentAreaFilled(false);
         edit.setBackground(new Color(64,0,128));
         edit.setForeground(Color.WHITE);
@@ -67,36 +76,46 @@ public class CarteGroupe extends JFrame {
         //test.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
         edit.setIcon(icfaon);
 
+        edit.setPreferredSize(new Dimension(40,40));
+        edit.setSize(new Dimension(40,40));
+        edit.setMaximumSize(new Dimension(40,40));
 
 
+        edit.setComponentOrientation(
+        ComponentOrientation.RIGHT_TO_LEFT);
+        edit.setOpaque(false);
 
 
+  
+        JPanel wtf = new JPanel(new GridLayout(2,4));
+        wtf.setOpaque(false);
+        wtf.add(this.vide());
+        wtf.add(this.vide());
+        wtf.add(this.vide());
+        wtf.add(edit);
+        wtf.add(this.vide());
+        wtf.add(this.vide());
+        wtf.add(this.vide());     
+        wtf.add(this.vide());     
 
+        carte.add(wtf);
 
-
-
-
-
-
-
-
-        carte.add(edit,BorderLayout.EAST);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
-        carte.add(new JLabel(""),BorderLayout.CENTER);
         JLabel td = new JLabel(name);
         td.setFont(new Font("Verdana", Font.PLAIN, 14));
         td.setHorizontalAlignment(SwingConstants.CENTER);
-        carte.add(td,BorderLayout.CENTER);
 
-        carte.add(new JLabel(""),BorderLayout.CENTER);
+        carte.add(this.vide());
+
         JLabel nbetudiant = new JLabel(num+"/35 etudiant");
         nbetudiant.setFont(new Font("Verdana", Font.PLAIN, 14));
         nbetudiant.setHorizontalAlignment(SwingConstants.CENTER);
-        carte.add(nbetudiant,BorderLayout.CENTER);
+        JPanel test2 = new JPanel(new GridLayout(2,1));
+        test2.add(td);
+        test2.add(nbetudiant); 
+        
+        test2.setOpaque(false);
+
+        carte.add(test2,BorderLayout.CENTER);
 
         FlowLayout layout = new FlowLayout();
         layout.setVgap(0);
@@ -104,6 +123,7 @@ public class CarteGroupe extends JFrame {
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
         test.addMouseListener(new ButtonGroupeListener(test,this.menu, cardLayout,this.window,g));
+        edit.addMouseListener(new ButtonGroupeEditListener(edit,this.menu, cardLayout,this.window,g));
         test.add(carte);
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 

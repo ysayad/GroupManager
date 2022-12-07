@@ -105,7 +105,7 @@ public class Menu extends JFrame {
 
         ImageIcon icfaon = new ImageIcon(getClass().getResource("/logo-upec.png"));
         Image image = icfaon.getImage();
-        Image aze = image.getScaledInstance(188, 80, Image.SCALE_DEFAULT); 
+        Image aze = image.getScaledInstance(202, 56, Image.SCALE_DEFAULT); 
         icfaon = new ImageIcon(aze);
 
 

@@ -98,7 +98,7 @@ public class Accueil {
         gbcpanneau.gridwidth = 1;
         gbcpanneau.gridheight = 1;
         JPanel panneauLogo = new JPanel();
-        JLabel logoupec = new JLabel(new ImageIcon(getClass().getResource("/logo-upec.png")));
+        JLabel logoupec = new JLabel("");
         panneauLogo.setBackground(Color.WHITE);
         panneauLogo.add(logoupec);
         panneau.add(panneauLogo, gbcpanneau);
