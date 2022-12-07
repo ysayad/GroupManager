@@ -92,7 +92,8 @@ public class ButtonListener implements MouseListener{
             SearchBar searchbar = new SearchBar(menu,this.window);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
             CarteEtudiant carteGroupe = new CarteEtudiant(menu,this.window);
-            menuP.add(carteGroupe.drawCarteGroupe());
+
+            menuP.add(carteGroupe.drawCarteGroupe(),BorderLayout.CENTER);
 
 
 
@@ -108,6 +109,8 @@ public class ButtonListener implements MouseListener{
             this.window.repaint();
             this.window.invalidate();
             this.window.validate();
+
+
         }
     
             if (name == "Changements") {
