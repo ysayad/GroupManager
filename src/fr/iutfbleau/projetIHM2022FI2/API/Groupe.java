@@ -118,4 +118,5 @@ public interface Groupe extends MonPrint {
         return sb.toString();
     }
 
+    public void setFather(Groupe father);
 }

@@ -2,7 +2,6 @@ package fr.iutfbleau.projetIHM2022FI2.MP;
 
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.util.*;
-import org.mariadb.jdbc.*;
 
 /**
  * L'implémentation de l'interface Groupe.java de l'API,
@@ -225,7 +224,7 @@ public class GroupeP implements Groupe {
     }
 
     public void setFather(Groupe father){
-        this.pointPoint = father;
+        this.father = father;
     }
 
 }
