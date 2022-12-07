@@ -24,7 +24,7 @@ public class CarteGroupe extends JFrame {
     
     public JPanel drawCarte(String name , int num, Groupe g){
         JPanel carte = new JPanel(){
-        final ImageIcon icon = new ImageIcon(getClass().getResource("/carte-background.png"));
+        final ImageIcon icon = new ImageIcon(getClass().getResource("/carte-background-groupe.png"));
       Image img = icon.getImage();
       // initialiseur d'instance
       {setOpaque(false);}
