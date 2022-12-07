@@ -15,10 +15,13 @@ public class CarteGroupe extends JFrame {
     Menu menu;
     JFrame window;
     CardLayout cardLayout;
-    public CarteGroupe(Menu menu, JFrame window,CardLayout cardLayout){
+    JPanel navbar;
+
+    public CarteGroupe(Menu menu, JFrame window,CardLayout cardLayout, JPanel navbar){
         this.menu = menu;
         this.window = window;
         this.cardLayout = cardLayout;
+        this.navbar = navbar;
     }
     
     

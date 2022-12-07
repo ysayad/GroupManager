@@ -46,24 +46,24 @@ public class CarteChangement extends JFrame {
         td.setHorizontalAlignment(SwingConstants.CENTER);
         this.carte.add(td,BorderLayout.CENTER);
 
-        this.yes = new JButton("yes");
+        this.yes = new JButton("Oui");
         this.yes.setMinimumSize(new Dimension(50,50));
         this.yes.setMaximumSize(new Dimension(50,50));
         this.yes.setSize(50, 50);
-        this.yes.setPreferredSize( new Dimension( 50, 50 ) );
+        this.yes.setPreferredSize( new Dimension( 60, 50 ) );
         this.yes.setBackground(Color.WHITE);
         this.yes.setFont(new Font("Verdana", Font.PLAIN, 15));
-        this.yes.setName("yes");
+        this.yes.setName("Oui");
         this.carte.add(this.yes);
 
-        this.no = new JButton("no");
+        this.no = new JButton("Non");
         this.no.setMinimumSize(new Dimension(50,50));
         this.no.setMaximumSize(new Dimension(50,50));
         this.no.setSize(50, 50);
-        this.no.setPreferredSize( new Dimension( 50, 50 ) );
+        this.no.setPreferredSize( new Dimension( 60, 50 ) );
         this.no.setBackground(Color.WHITE);
         this.no.setFont(new Font("Verdana", Font.PLAIN, 15));
-        this.no.setName("no");
+        this.no.setName("Non");
 
         this.carte.add(this.no);  
 
@@ -94,8 +94,8 @@ for(Changement e : liste ){
          this.panneaucarte = new JPanel();
          this.panneaucarte.add(drawCarte("Changement " + e.getEtu().getNom() + " " + e.getEtu().getPrenom() + " vers groupe " + e.getB().getName()));
 
-        this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window));
-        this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window)); 
+        this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window, e));
+        this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window, e)); 
          h+=300;
         this.cartecontainer.add(this.panneaucarte);
 } 

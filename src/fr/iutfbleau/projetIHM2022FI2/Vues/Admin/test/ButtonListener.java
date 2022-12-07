@@ -59,8 +59,16 @@ public class ButtonListener implements MouseListener{
 
             JPanel menuP = new JPanel(new BorderLayout());
             SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window,this.cardLayout);
+            JPanel navbar = new JPanel(new BorderLayout());
+            JButton retour = new JButton("Retour");
+            JButton creer = new JButton("Créer un groupe");
+            navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+            navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
+            navbar.add(Box.createHorizontalStrut(100));
+            navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+            menuP.add(navbar,BorderLayout.PAGE_START);
+            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window,this.cardLayout, navbar);
             Cadmin admin = Cadmin.Instance(false);
             menuP.add(carteGroupe.drawCarteGroupe(admin.getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
 

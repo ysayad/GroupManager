@@ -93,7 +93,7 @@ public class SearchBar extends JFrame {
         SearchBarListener listener = new SearchBarListener(searchbar);
         searchbar.addMouseListener(listener);
         searchbar.addKeyListener(listener);
-        searchbarpanel.add(new JButton("Créer un groupe") ,BorderLayout.SOUTH);
+        
 
 
         return searchbarpanel;
