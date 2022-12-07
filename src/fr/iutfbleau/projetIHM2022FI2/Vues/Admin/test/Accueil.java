@@ -200,7 +200,7 @@ public class Accueil {
 
         menuContainer.add(menuP);
 
-
+        
         fenetre.add(menuContainer, "Menu");
         fenetre.setVisible(true);
         fenetre.addComponentListener(new ComponentAdapter() {

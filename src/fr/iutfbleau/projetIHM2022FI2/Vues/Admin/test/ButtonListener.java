@@ -35,7 +35,11 @@ public class ButtonListener implements MouseListener{
     }
 
 
+
+
     public void refresh(String name){
+
+            if(name == "Groupes    "){
             this.window.remove(menu);
 
 
@@ -44,28 +48,23 @@ public class ButtonListener implements MouseListener{
             gridLayout.setHgap(0);
             gridLayout.setVgap(0);
 
-            GridLayout gridLayout2 = new GridLayout(1,1);
-            gridLayout2.setHgap(0);
-            gridLayout2.setVgap(0);
 
-            JPanel menuPanneau = new JPanel();
-            menuPanneau.setLayout(gridLayout2);
-            menuPanneau.add(menu.drawMenu());
-            //menuPanneau.setPreferredSize(new Dimension(300,700));
-            JPanel menuContainer = new JPanel();
-            menuContainer.setLayout(gridLayout);
+            JPanel menuContainer = new JPanel(new BorderLayout());
 
 
-            
-            menuContainer.add(menuPanneau);
-            JPanel menuP = new JPanel();
-            GridLayout gridLayout3 = new GridLayout(1,2);
-            gridLayout3.setHgap(0);
-            gridLayout3.setVgap(0);
-            menuP.setLayout(gridLayout3);
-            SearchBar searchbar = new SearchBar(this.menu,this.window);
-            menuP.add(searchbar.drawSearchBar());
+
+            JPanel menuP = new JPanel(new BorderLayout());
+            SearchBar searchbar = new SearchBar(menu,this.window);
+            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
+            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window);
+            menuP.add(carteGroupe.drawCarteGroupe());
+
+
+
+            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
             menuContainer.add(menuP);
+
 
             this.window.add(menuContainer, "Menu");
 
@@ -74,6 +73,42 @@ public class ButtonListener implements MouseListener{
             this.window.repaint();
             this.window.invalidate();
             this.window.validate();
+            }
+            if (name == "Etudiants  ") {
+                            this.window.remove(menu);
+
+
+            Menu menu = new Menu(this.window, cardLayout, name, "Administrtateur");
+            GridLayout gridLayout = new GridLayout(1,2);
+            gridLayout.setHgap(0);
+            gridLayout.setVgap(0);
+
+
+            JPanel menuContainer = new JPanel(new BorderLayout());
+
+
+
+            JPanel menuP = new JPanel(new BorderLayout());
+            SearchBar searchbar = new SearchBar(menu,this.window);
+            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
+            CarteEtudiant carteGroupe = new CarteEtudiant(menu,this.window);
+            menuP.add(carteGroupe.drawCarteGroupe());
+
+
+
+            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
+            menuContainer.add(menuP);
+
+
+            this.window.add(menuContainer, "Menu");
+
+
+            this.window.revalidate();
+            this.window.repaint();
+            this.window.invalidate();
+            this.window.validate();
+            }
 }
 
 

@@ -8,19 +8,20 @@ import java.lang.Thread;
 import java.awt.event.*;
 import java.util.*;
 
+import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 
-public class CarteGroupe extends JFrame {
+public class CarteEtudiant extends JFrame {
     Menu menu;
     JFrame window;
-    public CarteGroupe(Menu menu, JFrame window){
+    public CarteEtudiant(Menu menu, JFrame window){
         this.menu = menu;
         this.window = window;
     }
     
     
-    public JPanel drawCarte(String name , int num){
+    public JPanel drawCarte(String name , String num){
         JPanel carte = new JPanel(){
         final ImageIcon icon = new ImageIcon(getClass().getResource("/carte-background.png"));
       Image img = icon.getImage();
@@ -47,20 +48,21 @@ public class CarteGroupe extends JFrame {
         carte.add(new JLabel(""),BorderLayout.CENTER);
         carte.add(new JLabel(""),BorderLayout.CENTER);
         carte.add(new JLabel(""),BorderLayout.CENTER);
-        JLabel td = new JLabel(name);
+        JLabel td = new JLabel(name+" "+num);
         td.setFont(new Font("Verdana", Font.PLAIN, 14));
         td.setHorizontalAlignment(SwingConstants.CENTER);
         carte.add(td,BorderLayout.CENTER);
 
         carte.add(new JLabel(""),BorderLayout.CENTER);
-        JLabel nbetudiant = new JLabel(num+"/35 etudiant");
+        JLabel nbetudiant = new JLabel("");
         nbetudiant.setFont(new Font("Verdana", Font.PLAIN, 14));
         nbetudiant.setHorizontalAlignment(SwingConstants.CENTER);
         carte.add(nbetudiant,BorderLayout.CENTER);
 
-        FlowLayout layout = new FlowLayout();
+        GridLayout layout = new GridLayout();
         layout.setVgap(0);
         layout.setHgap(0);
+
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
         test.add(carte);
@@ -70,33 +72,27 @@ public class CarteGroupe extends JFrame {
     }
     
 
-    public JPanel drawCarteGroupe(){
+    public JScrollPane drawCarteGroupe(){
         JPanel cartecontainer = new JPanel();
         //searchbarpanel.setBackground(Color.WHITE);
 
 
 Cadmin admin = Cadmin.Instance(false);
 Groupe grp = admin.getAllGroup().iterator().next();
-Set<Groupe> list = grp.getSousGroupes();
-for(Groupe g : list){
+for(Etudiant e : grp.getEtudiants()){
+        
          JPanel panneaucarte = new JPanel();
-         panneaucarte.add(drawCarte(g.getName(),g.getSize()));
+         panneaucarte.add(drawCarte(e.getNom(),e.getPrenom()));
 
         cartecontainer.add(panneaucarte);
 }
-// Cadmin admin = new Cadmin.Instance(false);
-// Groupe grp = admin.getAllGroup().iterator().next();
-// Set<Groupe> list = grp.getSousGroupes();
 
-//          for (Groupe t : list ) {
 
-//         System.out.println(t.getName());
-//         JPanel panneaucarte = new JPanel();
-//         panneaucarte.add(drawCarte("test",12));
 
-//        cartecontainer.add(panneaucarte);
-            
-//          }
-        return cartecontainer;
+
+        JScrollPane scroll = new JScrollPane(cartecontainer);
+        
+
+        return scroll;
     }
 }

@@ -27,7 +27,9 @@ public class SearchBarButtonListener implements MouseListener{
         System.out.println(searchbar.getText());
     }
 
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+        this.button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
 
     public void mouseExited(MouseEvent e) {}
 
