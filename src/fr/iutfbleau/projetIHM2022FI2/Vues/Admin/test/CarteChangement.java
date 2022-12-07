@@ -15,87 +15,97 @@ import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 public class CarteChangement extends JFrame {
     Menu menu;
     JFrame window;
+    JPanel carte;
+    JPanel cartect;
+    JButton yes;
+    JButton no;
+    JPanel panneaucarte;
+    JPanel cartecontainer;
     public CarteChangement(Menu menu, JFrame window){
         this.menu = menu;
         this.window = window;
     }
-    
+
+ 
     
     public JPanel drawCarte(String nomChangement){
-        JPanel carte = new JPanel();
-        carte.setLayout(new GridLayout(1,3));
+        this.carte = new JPanel();
+        
+        this.carte.setLayout(new GridLayout(1,3));
 
 
 
       
 
-        carte.setPreferredSize(new Dimension(300,50));
-        carte.setSize(new Dimension(300,50));
-        carte.setMinimumSize(new Dimension(300,50));
-        carte.setBackground(Color.WHITE);
+        this.carte.setPreferredSize(new Dimension(300,50));
+        this.carte.setSize(new Dimension(300,50));
+        this.carte.setMinimumSize(new Dimension(300,50));
+        this.carte.setBackground(Color.WHITE);
         JLabel td = new JLabel(nomChangement);
         td.setFont(new Font("Verdana", Font.PLAIN, 14));
         td.setHorizontalAlignment(SwingConstants.CENTER);
-        carte.add(td,BorderLayout.CENTER);
+        this.carte.add(td,BorderLayout.CENTER);
 
-        JButton yes = new JButton("yes");
-        yes.setMinimumSize(new Dimension(50,50));
-        yes.setSize(50, 50);
-        yes.setPreferredSize( new Dimension( 50, 50 ) );
-        yes.setBackground(Color.WHITE);
-        yes.setFont(new Font("Verdana", Font.PLAIN, 15));
-        yes.setName("yes");
-        carte.add(yes);
+        this.yes = new JButton("yes");
+        this.yes.setMinimumSize(new Dimension(50,50));
+        this.yes.setSize(50, 50);
+        this.yes.setPreferredSize( new Dimension( 50, 50 ) );
+        this.yes.setBackground(Color.WHITE);
+        this.yes.setFont(new Font("Verdana", Font.PLAIN, 15));
+        this.yes.setName("yes");
+        this.carte.add(this.yes);
 
-        JButton no = new JButton("no");
-        no.setMinimumSize(new Dimension(50,50));
-        no.setSize(50, 50);
-        no.setPreferredSize( new Dimension( 50, 50 ) );
-        no.setBackground(Color.WHITE);
-        no.setFont(new Font("Verdana", Font.PLAIN, 15));
-        no.setName("no");
+        this.no = new JButton("no");
+        this.no.setMinimumSize(new Dimension(50,50));
+        this.no.setSize(50, 50);
+        this.no.setPreferredSize( new Dimension( 50, 50 ) );
+        this.no.setBackground(Color.WHITE);
+        this.no.setFont(new Font("Verdana", Font.PLAIN, 15));
+        this.no.setName("no");
 
-        carte.add(no);  
+        this.carte.add(this.no);  
 
         GridLayout layout = new GridLayout();
         layout.setVgap(0);
         layout.setHgap(0);
 
-        JPanel test = new JPanel(layout);
-        test.setBackground(Color.WHITE);
-        test.add(carte);
-
-        yes.addMouseListener(new ButtonChangementListener(yes,test,this.menu,this.window));
-        no.addMouseListener(new ButtonChangementListener(no,test,this.menu,this.window));      
+        this.cartect = new JPanel(layout);
+        this.cartect.setBackground(Color.WHITE);
+        this.cartect.add(this.carte);
+     
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-        return test;
+        return this.cartect;
     }
     
 
     public JScrollPane drawCarteGroupe(){
-        JPanel cartecontainer = new JPanel();
-        cartecontainer.setLayout(new FlowLayout());
+        this.cartecontainer = new JPanel();
+        this.cartecontainer.setLayout(new FlowLayout());
 
         //searchbarpanel.setBackground(Color.WHITE);
 
 int h = 0;
 Cadmin admin = Cadmin.Instance(false);
 Groupe grp = admin.getAllGroup().iterator().next();
-for(int i = 0; i<25;i+=1){
+Set<Changement> liste = Cadmin.getAllChangements();
+for(Changement e : liste ){
         
-         JPanel panneaucarte = new JPanel();
-         panneaucarte.add(drawCarte("Demaine n"+i));
+         this.panneaucarte = new JPanel();
+         this.panneaucarte.add(drawCarte("Demaine n"+i));
+
+        this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window));
+        this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window)); 
          h+=300;
-        cartecontainer.add(panneaucarte);
+        this.cartecontainer.add(this.panneaucarte);
 }
 
 
 
-        cartecontainer.setPreferredSize(new Dimension(this.getWidth(),h/5));
-        cartecontainer.setSize(new Dimension(this.getWidth(),h/5));
-        cartecontainer.setMaximumSize(new Dimension(this.getWidth(),h/5));
+        this.cartecontainer.setPreferredSize(new Dimension(this.getWidth(),h/5));
+        this.cartecontainer.setSize(new Dimension(this.getWidth(),h/5));
+        this.cartecontainer.setMaximumSize(new Dimension(this.getWidth(),h/5));
 
-        JScrollPane scroll = new JScrollPane(cartecontainer,
+        JScrollPane scroll = new JScrollPane(this.cartecontainer,
                     JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
