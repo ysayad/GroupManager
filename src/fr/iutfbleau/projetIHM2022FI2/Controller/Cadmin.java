@@ -57,12 +57,12 @@ public class Cadmin {
             groupeFactory.createPartition(promo, "TD", 4);
 
             //init changements
-            /*Iterator<Groupe> itgr = promo.getSousGroupes().iterator();
+            Iterator<Groupe> itgr = promo.getSousGroupes().iterator().next().getSousGroupes().iterator();
             Groupe A = itgr.next(); // premier sous-groupe
             Groupe B = itgr.next(); // second sous-groupe
             B = itgr.next(); // troisième sous-groupe
             Etudiant e = A.getEtudiants().iterator().next();// premier étudiant du premier sous-groupe.
-            changementFactory.createChangement(A,e,B);*/
+            changementFactory.createChangement(A,e,B);
 
         }
     }
