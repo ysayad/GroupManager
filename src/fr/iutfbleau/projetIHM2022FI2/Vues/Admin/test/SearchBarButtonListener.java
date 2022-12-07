@@ -22,25 +22,93 @@ public class SearchBarButtonListener implements MouseListener{
     JFrame window;
     Menu menu;
     JButton button;
-    SearchBar searchb;
-    public SearchBarButtonListener(SearchBar searchb,JTextField searchbar, JButton button, JFrame window, Menu menu){
-        this.searchbar = searchbar;
+    CardLayout cardLayout;
+
+
+
+
+    public SearchBarButtonListener(JFrame window,CardLayout cardLayout, JButton button, Menu menu,JTextField searchbar) {
+        this.window=window;
         this.button = button;
+        this.cardLayout = cardLayout;
         this.menu = menu;
-        this.window = window;
-        this.searchb = searchb;
+        this.searchbar = searchbar;
     }
 
 
 
+
+
+
+public void refresh(String name, Set<Etudiant> liste){
+
+            if (name == "Etudiants  ") {
+                this.window.remove(menu);
+
+
+            Menu menu = new Menu(this.window, cardLayout, name, "Administrtateur");
+            GridLayout gridLayout = new GridLayout(1,2);
+            gridLayout.setHgap(0);
+            gridLayout.setVgap(0);
+
+
+            JPanel menuContainer = new JPanel(new BorderLayout());
+
+
+
+            JPanel menuP = new JPanel(new BorderLayout());
+            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
+            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
+            CarteEtudiant carteGroupe = new CarteEtudiant(menu,this.window, liste);
+
+            menuP.add(carteGroupe.drawCarteGroupe(),BorderLayout.CENTER);
+
+
+
+            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
+            menuContainer.add(menuP);
+
+
+            this.window.add(menuContainer, "Menu");
+
+
+            this.window.revalidate();
+            this.window.repaint();
+            this.window.invalidate();
+            this.window.validate();
+
+
+        }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
     
 
     public void mouseClicked(MouseEvent e) {
         String name = searchbar.getText();
         Cadmin admin = Cadmin.Instance(false);
         Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
-            
-            this.searchb.refresh("Etudiants  ",liste);
+        for (Etudiant etu : liste) {
+            System.out.println(etu.getNom() + " " + etu.getPrenom());
+        }    
+        
+        this.refresh("Etudiants  ",liste);
+        this.cardLayout.show(this.window.getContentPane(), "Menu");
 
     }
 

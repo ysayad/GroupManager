@@ -15,9 +15,21 @@ import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 public class CarteEtudiant extends JFrame {
     Menu menu;
     JFrame window;
+    Set<Etudiant> liste;
     public CarteEtudiant(Menu menu, JFrame window){
         this.menu = menu;
         this.window = window;
+        Cadmin admin = Cadmin.Instance(false);
+        Groupe grp = admin.getAllGroup().iterator().next();
+ 
+            this.liste = grp.getEtudiants();
+        
+    }
+
+    public CarteEtudiant(Menu menu, JFrame window,Set<Etudiant> liste){
+        this.menu = menu;
+        this.window = window;
+        this.liste = liste;
     }
     
     
@@ -73,29 +85,29 @@ public class CarteEtudiant extends JFrame {
     
 
     public JScrollPane drawCarteGroupe(){
+
         JPanel cartecontainer = new JPanel();
                 int h = 0;
-        Cadmin admin = Cadmin.Instance(false);
-        Groupe grp = admin.getAllGroup().iterator().next();
-        for(Etudiant e : grp.getEtudiants()){
-        h+=1;
-}
+
+
+        
+        for(Etudiant e : this.liste){
+            h+=1;
+        }
 
 
         cartecontainer.setLayout(new GridLayout(h/5,5));
         //searchbarpanel.setBackground(Color.WHITE);
 
         h = 0;
-        admin = Cadmin.Instance(false);
-        grp = admin.getAllGroup().iterator().next();
-        for(Etudiant e : grp.getEtudiants()){
+        for(Etudiant e : this.liste){
                 
-        JPanel panneaucarte = new JPanel();
-        panneaucarte.add(drawCarte(e.getNom(),e.getPrenom()));
-        
-        h+=1;
-        cartecontainer.add(panneaucarte);
-}
+            JPanel panneaucarte = new JPanel();
+            panneaucarte.add(drawCarte(e.getNom(),e.getPrenom()));
+            
+            h+=1;
+            cartecontainer.add(panneaucarte);
+        }
 
 
 
@@ -107,34 +119,8 @@ public class CarteEtudiant extends JFrame {
         return scroll;
     }
 
-    public JScrollPane drawCarteGroupe(String name ,Set<Etudiant> etu){
-        JPanel cartecontainer = new JPanel();
-                int h = 0;
-        for(Etudiant e : etu){
-        h+=1;
-}
-
-
-        cartecontainer.setLayout(new GridLayout(h/5,5));
-        //searchbarpanel.setBackground(Color.WHITE);
-
-        h = 0;
-        for(Etudiant e : etu){
-                
-        JPanel panneaucarte = new JPanel();
-        panneaucarte.add(drawCarte(e.getNom(),e.getPrenom()));
-        
-        h+=1;
-        cartecontainer.add(panneaucarte);
-}
+    
 
 
 
-        // cartecontainer.setPreferredSize(new Dimension(this.getWidth(),h/5));
-        // cartecontainer.setSize(new Dimension(this.getWidth(),h/5));
-        // cartecontainer.setMaximumSize(new Dimension(this.getWidth(),h/5));
-
-        JScrollPane scroll = new JScrollPane(cartecontainer);
-        return scroll;
-    }
 }

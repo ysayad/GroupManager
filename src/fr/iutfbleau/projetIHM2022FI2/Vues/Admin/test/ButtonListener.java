@@ -43,7 +43,7 @@ public class ButtonListener implements MouseListener{
             this.window.remove(menu);
 
 
-            Menu menu = new Menu(this.window, cardLayout, name, "Administrtateur");
+            Menu menu = new Menu(this.window, this.cardLayout, name, "Administrtateur");
             GridLayout gridLayout = new GridLayout(1,2);
             gridLayout.setHgap(0);
             gridLayout.setVgap(0);
@@ -54,9 +54,9 @@ public class ButtonListener implements MouseListener{
 
 
             JPanel menuP = new JPanel(new BorderLayout());
-            SearchBar searchbar = new SearchBar(menu,this.window);
+            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window);
+            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window,this.cardLayout);
             menuP.add(carteGroupe.drawCarteGroupe());
 
 
@@ -89,7 +89,7 @@ public class ButtonListener implements MouseListener{
 
 
             JPanel menuP = new JPanel(new BorderLayout());
-            SearchBar searchbar = new SearchBar(menu,this.window);
+            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
             CarteEtudiant carteGroupe = new CarteEtudiant(menu,this.window);
 
@@ -128,7 +128,7 @@ public class ButtonListener implements MouseListener{
 
 
             JPanel menuP = new JPanel(new BorderLayout());
-            SearchBar searchbar = new SearchBar(menu,this.window);
+            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
             CarteChangement carteGroupe = new CarteChangement(menu,this.window);
             menuP.add(carteGroupe.drawCarteGroupe());

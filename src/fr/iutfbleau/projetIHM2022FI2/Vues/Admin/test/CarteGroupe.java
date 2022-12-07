@@ -14,9 +14,11 @@ import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 public class CarteGroupe extends JFrame {
     Menu menu;
     JFrame window;
-    public CarteGroupe(Menu menu, JFrame window){
+    CardLayout cardLayout;
+    public CarteGroupe(Menu menu, JFrame window,CardLayout cardLayout){
         this.menu = menu;
         this.window = window;
+        this.cardLayout = cardLayout;
     }
     
     

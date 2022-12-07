@@ -15,52 +15,15 @@ import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 public class SearchBar extends JFrame {
     Menu menu;
     JFrame window;
-    public SearchBar(Menu menu, JFrame window){
+    CardLayout cardLayout;
+    public SearchBar(Menu menu, JFrame window,CardLayout cardLayout){
         this.menu = menu;
         this.window = window;
+        this.cardLayout = cardLayout;
     }
 
 
-    public void refresh(String name, Set<Etudiant> etu){
-    if (name == "Etudiants  ") {
-    System.out.println("test");
-                            this.window.remove(menu);
-
-
-            Menu menu = new Menu(this.window, this.menu.cardLayout, name, "Administrtateur");
-            GridLayout gridLayout = new GridLayout(1,2);
-            gridLayout.setHgap(0);
-            gridLayout.setVgap(0);
-
-
-            JPanel menuContainer = new JPanel(new BorderLayout());
-
-
-
-            JPanel menuP = new JPanel(new BorderLayout());
-            SearchBar searchbar = new SearchBar(menu,this.window);
-            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-            CarteEtudiant carteGroupe = new CarteEtudiant(menu,this.window);
-
-            menuP.add(carteGroupe.drawCarteGroupe(name,etu),BorderLayout.CENTER);
-
-
-
-            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
-
-            menuContainer.add(menuP);
-
-
-            this.window.add(menuContainer, "Menu");
-
-
-            this.window.revalidate();
-            this.window.repaint();
-            this.window.invalidate();
-            this.window.validate();
-
-
-        }}
+ 
     
     
     public JPanel drawSearchBar(){
@@ -126,12 +89,10 @@ public class SearchBar extends JFrame {
         test.add(searchbar);
         test.add(ok);
         searchbarpanel.add(test);
-        ok.addMouseListener(new SearchBarButtonListener(this,searchbar,ok,this.window,this.menu));
+        ok.addMouseListener(new SearchBarButtonListener(this.window,this.cardLayout, ok,this.menu,searchbar));
         SearchBarListener listener = new SearchBarListener(searchbar);
         searchbar.addMouseListener(listener);
         searchbar.addKeyListener(listener);
-        ok.addMouseListener(new SearchBarButtonListener(this,searchbar,ok,this.window,this.menu));
-        searchbar.addMouseListener(new SearchBarListener(searchbar));
 
 
         return searchbarpanel;

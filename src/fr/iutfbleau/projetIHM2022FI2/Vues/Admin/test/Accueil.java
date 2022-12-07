@@ -189,9 +189,9 @@ public class Accueil {
 
 
         JPanel menuP = new JPanel(new BorderLayout());
-        SearchBar searchbar = new SearchBar(menu,fenetre);
+        SearchBar searchbar = new SearchBar(menu,fenetre,cardLayout);
         menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-        CarteGroupe carteGroupe = new CarteGroupe(menu,fenetre);
+        CarteGroupe carteGroupe = new CarteGroupe(menu,fenetre,cardLayout);
         menuP.add(carteGroupe.drawCarteGroupe());
 
 
