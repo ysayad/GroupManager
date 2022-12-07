@@ -43,6 +43,44 @@ public class CarteGroupe extends JFrame {
         carte.setSize(new Dimension(150,150));
         carte.setMinimumSize(new Dimension(150,150));
         carte.setBackground(Color.WHITE);
+
+
+        JButton edit = new JButton("");
+        edit.setFont(new Font("Verdana", Font.PLAIN, 15));
+        edit.setName("edit");
+
+        ImageIcon icfaon = new ImageIcon(getClass().getResource("/edit.png"));
+        Image image = icfaon.getImage();
+        Image aze = image.getScaledInstance(25, 25, Image.SCALE_DEFAULT); 
+        icfaon = new ImageIcon(aze);
+
+        edit.setBorderPainted(true);
+        edit.setFocusPainted(false);
+        edit.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(50,50,50)));
+        edit.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+
+        edit.setHorizontalAlignment(SwingConstants.LEFT);
+        edit.setContentAreaFilled(false);
+        edit.setBackground(new Color(64,0,128));
+        edit.setForeground(Color.WHITE);
+        //JLabel test = new JLabel(icfaon);
+        //test.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+        edit.setIcon(icfaon);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        carte.add(edit,BorderLayout.EAST);
         carte.add(new JLabel(""),BorderLayout.CENTER);
         carte.add(new JLabel(""),BorderLayout.CENTER);
         carte.add(new JLabel(""),BorderLayout.CENTER);
