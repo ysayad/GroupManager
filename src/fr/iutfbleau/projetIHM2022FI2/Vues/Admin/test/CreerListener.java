@@ -6,32 +6,35 @@ import java.awt.Cursor;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
-import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class ButtonGroupeListener implements MouseListener{
+public class CreerListener implements MouseListener {
     JButton button;
     JFrame window;
     Menu menu;
-    JPanel carte;
     CardLayout cardLayout;
     Groupe g;
+    JDialog dialog;
+    JTextField saisi_renommer;
 
-    public ButtonGroupeListener(JPanel carte , Menu menu, CardLayout cardLayout, JFrame window, Groupe g) {
+    
+
+    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JTextField saisi_renommer) {
         this.window=window;
         this.button = button;
         this.menu = menu;
-        this.carte = carte;
         this.cardLayout = cardLayout;
         this.g = g;
+        this.dialog = dialog;
+        this.saisi_renommer = saisi_renommer;
     }
-
 
     public void refresh(String name, Groupe g){
         this.window.remove(menu);
@@ -52,7 +55,7 @@ public class ButtonGroupeListener implements MouseListener{
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
         JButton retour = new JButton("Retour");
         JButton creer = new JButton("Créer un groupe");
-        //creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
+        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
         navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
@@ -76,9 +79,8 @@ public class ButtonGroupeListener implements MouseListener{
 
         menuContainer.add(menuP);
 
-        
+
         this.window.add(menuContainer, "Menu");
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
 
 
         this.window.revalidate();
@@ -87,35 +89,37 @@ public class ButtonGroupeListener implements MouseListener{
         this.window.validate();
     }
 
-  
 
-
-    public void mouseClicked(MouseEvent e) {}
-
-    public void mouseEntered(MouseEvent e) {
-
-        this.carte.setBorder(
-BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY),
-            BorderFactory.createMatteBorder(0, 0, 0, 3, Color.GRAY)
-        )
-        
-        );
-        JPanel defaultcolor = new JPanel();
-        //this.carte.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 5, defaultcolor.getBackground ()));
-        this.carte.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // TODO Auto-generated method stub
+        Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisi_renommer.getText(), 12, 95);
+        dialog.dispose();
+        this.refresh("Groupes   ", g);
+        cardLayout.show(window.getContentPane(), "Menu");
     }
 
-    public void mouseExited(MouseEvent e) {
-                this.carte.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
-    }
-
+    @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println(g.getName());
-        this.refresh("Groupes    ",g);
-        this.cardLayout.show(this.window.getContentPane(), "Menu");
+        // TODO Auto-generated method stub
+        
     }
 
-    public void mouseReleased(MouseEvent e) {}
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
 
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }             
 }
