@@ -143,7 +143,20 @@ public class ButtonGroupeEditListener implements MouseListener {
 
 
             desc = new JLabel("Partitionner");
-            JSpinner nbr = new JSpinner();
+
+
+
+
+
+
+       
+            SpinnerModel v = new SpinnerNumberModel(1, 1, 100000, 1);
+            JSpinner nbr = new JSpinner(v);
+
+
+
+
+
             nbr.setForeground(Color.GRAY);
             nbr.setMinimumSize(new Dimension(100,45));
             nbr.setSize(200, 45);
