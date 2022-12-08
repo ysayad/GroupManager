@@ -27,13 +27,25 @@ jarMNP:
 	jar cvfe test-mnp.jar fr.iutfbleau.projetIHM2022FI2.Test.TestTexteMNP -C build fr
 
 jarAdmin: classes
-	jar cvfe test-admin.jar fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test.Admin -C build fr -C build org -C src/fr/iutfbleau/projetIHM2022FI2/Vues/Img .
+	jar cvfe admin.jar fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test.Admin -C build fr -C build org -C src/fr/iutfbleau/projetIHM2022FI2/Vues/Img .
+
+jarEleve: classes
+	jar cvfe eleve.jar fr.iutfbleau.projetIHM2022FI2.Vues.Eleve.test.Eleve -C build fr -C build org -C src/fr/iutfbleau/projetIHM2022FI2/Vues/Img .
+
+jarProf: classes
+	jar cvfe prof.jar fr.iutfbleau.projetIHM2022FI2.Vues.Prof.test.Prof -C build fr -C build org -C src/fr/iutfbleau/projetIHM2022FI2/Vues/Img .
 
 runMNP: 
 	java -jar test-mnp.jar 
 
 admin: jarAdmin 
-	java -jar test-admin.jar 
+	java -jar admin.jar 
+
+eleve: jarEleve 
+	java -jar eleve.jar 
+
+prof: jarProf 
+	java -jar prof.jar 
 
 clean:
 	rm -rf ${BUILD}/* *.jar
