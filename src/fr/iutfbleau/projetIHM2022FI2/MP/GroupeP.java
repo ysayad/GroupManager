@@ -223,8 +223,6 @@ public class GroupeP implements Groupe {
         return timeStamp.hashCode();
     }
 
-    public void setFather(Groupe father){
-        this.father = father;
-    }
+
 
 }
