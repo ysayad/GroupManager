@@ -166,7 +166,7 @@ public class CreerListener implements MouseListener {
 
         }
         dialog.dispose();
-        this.refresh("Groupes   ", g);
+        this.refresh("Groupes    ", g);
         this.cardLayout.show(this.window.getContentPane(), "Menu");
         
     }
