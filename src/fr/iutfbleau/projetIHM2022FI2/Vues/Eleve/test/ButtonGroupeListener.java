@@ -65,19 +65,6 @@ public class ButtonGroupeListener implements MouseListener{
 
         }
 
-        if (g.getType() == TypeGroupe.FREE) {
-            JButton creer = new JButton("Créer un groupe");
-            creer.setFocusable(false);
-            creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            creer.setFont(new Font("Verdana", Font.PLAIN, 16));
-            creer.setBackground(new Color(64,0,128));
-            creer.setForeground(Color.WHITE);
-            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
-            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
-
-
-
-        }
 
 
         

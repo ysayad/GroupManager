@@ -64,18 +64,7 @@ public class ButtonListener implements MouseListener{
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,window,cardLayout);
         Groupe promo = Controller.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
-        
-        if (promo.getType() == TypeGroupe.FREE) {
-            JButton creer = new JButton("Créer un groupe");
-            creer.setFocusable(false);
-            creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            creer.setFont(new Font("Verdana", Font.PLAIN, 16));
-            creer.setBackground(new Color(64,0,128));
-            creer.setForeground(Color.WHITE);
-            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, promo));
-            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
-
-        }   
+       
         if (promo.getType() != TypeGroupe.ROOT) {
             JButton retour = new JButton("Retour");
             retour.setFocusable(false);

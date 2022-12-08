@@ -21,7 +21,7 @@ public class Accueil {
     }
 
     public void drawAccueil(){
-        JFrame fenetre = new JFrame("Admin");
+        JFrame fenetre = new JFrame("Etudiant");
         fenetre.setSize(1280,720);
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,7 +65,7 @@ public class Accueil {
         gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
-        JLabel titreAdmin = new JLabel(" Administrateur ");
+        JLabel titreAdmin = new JLabel(" Etudiant ");
         titreAdmin.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
         titreAdmin.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
 
@@ -205,17 +205,7 @@ public class Accueil {
         }
 
 
-        if (promo.getType() != TypeGroupe.PARTITION) {
-            JButton creer = new JButton("Créer un groupe");
-            creer.setFocusable(false);
-            creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            creer.setFont(new Font("Verdana", Font.PLAIN, 16));
-            creer.setBackground(new Color(64,0,128));
-            creer.setForeground(Color.WHITE);
-            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, fenetre, promo));
-            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
-
-        }   
+    
         if (promo.getType() != TypeGroupe.ROOT) {
             JButton retour = new JButton("Retour");
             retour.setFocusable(false);
