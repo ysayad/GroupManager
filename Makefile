@@ -21,6 +21,7 @@ classes:
 	$(JC) $(SRC)MP/*.java
 	$(JC) $(SRC)Controller/*.java
 	$(JC) $(SRC)Vues/Admin/test/*.java
+	$(JC) $(SRC)Vues/Eleve/test/*.java
 
 
 jarMNP:

@@ -64,7 +64,7 @@ public class CarteChangement extends JFrame {
         this.yes.setFont(new Font("Verdana", Font.PLAIN, 15));
         this.yes.setName("Oui");
         this.yes.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        buttonc.add(this.yes);
+        //buttonc.add(this.yes);
 
         this.no = new JButton("Non");
         this.no.setMinimumSize(new Dimension(50,50));
@@ -78,7 +78,7 @@ public class CarteChangement extends JFrame {
         this.no.setFont(new Font("Verdana", Font.PLAIN, 15));
         this.no.setName("Non");
 
-        buttonc.add(this.no);  
+        //buttonc.add(this.no);  
 
 
         this.cartect = new JPanel(new BorderLayout());

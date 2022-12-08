@@ -64,9 +64,9 @@ public class CarteGroupe extends JFrame {
         edit.setFont(new Font("Verdana", Font.PLAIN, 15));
         edit.setName("edit");
 
-        ImageIcon icfaon = new ImageIcon(getClass().getResource("/edit.png"));
+        ImageIcon icfaon = new ImageIcon(getClass().getResource("/editeleve.png"));
         Image image = icfaon.getImage();
-        Image aze = image.getScaledInstance(23, 23, Image.SCALE_DEFAULT); 
+        Image aze = image.getScaledInstance(20, 20, Image.SCALE_DEFAULT); 
         icfaon = new ImageIcon(aze);
 
         edit.setBorderPainted(false);

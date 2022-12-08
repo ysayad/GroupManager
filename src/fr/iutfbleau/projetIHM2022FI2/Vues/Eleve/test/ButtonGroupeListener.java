@@ -1,4 +1,4 @@
-package fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test;
+package fr.iutfbleau.projetIHM2022FI2.Vues.Eleve.test;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
