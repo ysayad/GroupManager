@@ -10,6 +10,7 @@ import java.util.*;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 
 public class CarteEtudiant extends JFrame {
@@ -20,9 +21,14 @@ public class CarteEtudiant extends JFrame {
         this.menu = menu;
         this.window = window;
         Cadmin admin = Cadmin.Instance(false);
-        Groupe grp = admin.getAllGroup().iterator().next();
+        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion();
+        if (!promo.getSousGroupes().isEmpty()) {
+            if (promo.getSousGroupes().iterator().next().getType() == TypeGroupe.PARTITION) {
+                promo = promo.getSousGroupes().iterator().next();
+            }
+        }
  
-            this.liste = grp.getEtudiants();
+            this.liste = promo.getEtudiants();
         
     }
 

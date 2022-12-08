@@ -11,9 +11,11 @@ import javax.swing.border.Border;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.*;
+import fr.iutfbleau.projetIHM2022FI2.MP.ConnectionSingleton;
 
 import java.io.*;
 import java.lang.Thread;
+import java.sql.SQLException;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -223,6 +225,15 @@ public class ButtonListener implements MouseListener{
         }
         if (this.button.getName() == "Deconnexion") {
             System.out.println("Deconnexion de l'"+this.menu.typeUtilisateur);
+            try {
+                ConnectionSingleton.getInstance().cnx.close();
+            } catch (IllegalStateException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
             this.refresh("Deconnexion");
             this.cardLayout.show(this.window.getContentPane(), "Menu");
             

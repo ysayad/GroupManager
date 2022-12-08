@@ -12,9 +12,9 @@ public class Cadmin {
     Groupe promo;
 
     private Cadmin(boolean persist){
-        if(!persist){
+        if(persist){
             this.groupeFactory = new AbstractGroupeFactoryP();
-            this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
+            //this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
         }
         else {
