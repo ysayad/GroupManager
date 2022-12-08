@@ -197,8 +197,14 @@ public class Accueil {
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,fenetre,cardLayout);
-        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
-        
+        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion();
+        if (!promo.getSousGroupes().isEmpty()) {
+            if (promo.getSousGroupes().iterator().next().getType() == TypeGroupe.PARTITION) {
+                promo = promo.getSousGroupes().iterator().next();
+            }
+        }
+
+
         if (promo.getType() != TypeGroupe.PARTITION) {
             JButton creer = new JButton("Créer un groupe");
             creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, fenetre, promo));
