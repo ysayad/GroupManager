@@ -1,4 +1,4 @@
-package fr.iutfbleau.projetIHM2022FI2.Vues.Admin.test;
+package fr.iutfbleau.projetIHM2022FI2.Vues.Prof.test;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
@@ -21,7 +21,7 @@ public class Accueil {
     }
 
     public void drawAccueil(){
-        JFrame fenetre = new JFrame("Admin");
+        JFrame fenetre = new JFrame("Enseignant");
         fenetre.setSize(1280,720);
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -65,7 +65,7 @@ public class Accueil {
         gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
-        JLabel titreAdmin = new JLabel(" Administrateur ");
+        JLabel titreAdmin = new JLabel(" Enseignant ");
         titreAdmin.setFont(new Font("Verdana", Font.PLAIN, 20)); // définition du style de texte
         titreAdmin.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK));
 

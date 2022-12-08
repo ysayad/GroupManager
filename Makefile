@@ -22,7 +22,7 @@ classes:
 	$(JC) $(SRC)Controller/*.java
 	$(JC) $(SRC)Vues/Admin/test/*.java
 	$(JC) $(SRC)Vues/Eleve/test/*.java
-
+	$(JC) $(SRC)Vues/Prof/test/*.java
 
 jarMNP:
 	jar cvfe test-mnp.jar fr.iutfbleau.projetIHM2022FI2.Test.TestTexteMNP -C build fr
