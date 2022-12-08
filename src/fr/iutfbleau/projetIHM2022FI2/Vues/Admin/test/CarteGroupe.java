@@ -136,17 +136,31 @@ public class CarteGroupe extends JFrame {
     }
     
 
-    public JPanel drawCarteGroupe(Groupe pere){
+    public JScrollPane drawCarteGroupe(Groupe pere){
         JPanel cartecontainer = new JPanel();
+                int h = 0;
+
         //cartecontainer.add(new JButton("Créer un groupe"),BorderLayout.PAGE_START);
         //searchbarpanel.setBackground(Color.WHITE);
         Set<Groupe> list = pere.getSousGroupes();
 
+        for(Groupe g : list){
+            h+=1;
+        }
+         if (pere.getType() == TypeGroupe.FREE) {
+                    for(Etudiant e : pere.getEtudiants()){
+                    h+=1;
+                    }
+                }
+        cartecontainer.setLayout(new GridLayout(h/5,4));  
 
         for(Groupe g : list){
                 JPanel panneaucarte = new JPanel();
                 panneaucarte.add(drawCarte(g.getName(),g.getSize(), g));
                 cartecontainer.add(panneaucarte);
+
+
+
         }
 
         if (pere.getType() == TypeGroupe.FREE) {
@@ -155,6 +169,10 @@ public class CarteGroupe extends JFrame {
                 CarteEtudiant carteEtudiant = new CarteEtudiant(menu, window);
                 panneaucarte.add(carteEtudiant.drawCarte(e.getNom(),e.getPrenom()));
                 cartecontainer.add(panneaucarte);
+
+
+
+
             }
         }
 
@@ -172,7 +190,7 @@ public class CarteGroupe extends JFrame {
 //        cartecontainer.add(panneaucarte);
             
 //          }
-    
-        return cartecontainer;
+        JScrollPane scroll = new JScrollPane(cartecontainer);
+        return scroll;
     }
 }
