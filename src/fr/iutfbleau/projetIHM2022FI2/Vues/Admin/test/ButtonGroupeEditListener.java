@@ -68,28 +68,46 @@ public class ButtonGroupeEditListener implements MouseListener{
             desc = new JLabel("Ajoutez un etudiant :");
             String[] elements = {"Apple", "Banana", "Orange"};
             JComboBox comboBox = new JComboBox(elements);
-            JTextField saisi_ajoutez = new JTextField(g.getName());
-            dialog.add(comboBox);
-            saisi_ajoutez.setBounds(20,20,20,20);
-            saisi_ajoutez.setForeground(Color.GRAY);
-            saisi_ajoutez.setMinimumSize(new Dimension(100,45));
-            saisi_ajoutez.setSize(200, 45);
-            saisi_ajoutez.setPreferredSize( new Dimension( 200, 45 ) );
-            saisi_ajoutez.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
-            border = BorderFactory.createLineBorder(new Color(25,25,25));  
-            saisi_ajoutez.setBorder(border);
-            saisi_ajoutez.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+            comboBox.setEditable(true);
+            comboBox.setForeground(Color.GRAY);
+            comboBox.setMinimumSize(new Dimension(100,45));
+            comboBox.setSize(200, 45);
+            comboBox.setPreferredSize( new Dimension( 200, 45 ) );
+            comboBox.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+/*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            comboBox.setBorder(border);*/
             JButton ajouter = new JButton("Ajouter");
-            JPanel ajouter_container = new JPanel(new GridLayout(3,2));
+            JPanel ajouter_container = new JPanel(new GridLayout(2,2));
 
             ajouter_container.add(desc);
             ajouter_container.add(this.vide());
-            ajouter_container.add(saisi_ajoutez);
-
-            ajouter_container.add(ajouter);
             ajouter_container.add(comboBox);
+            ajouter_container.add(ajouter);
 
-            ajouter_container.add(this.vide());
+
+
+            desc = new JLabel("Supprimer un etudiant :");
+            String[] elements2 = {"Apple", "Banana", "Orange"};
+            JComboBox comboBox1 = new JComboBox(elements);
+            comboBox1.setEditable(true);
+            comboBox1.setForeground(Color.GRAY);
+            comboBox1.setMinimumSize(new Dimension(100,45));
+            comboBox1.setSize(200, 45);
+            comboBox1.setPreferredSize( new Dimension( 200, 45 ) );
+            comboBox1.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+/*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            comboBox1.setBorder(border);*/
+            JButton supprimer = new JButton("Supprimer");
+            JPanel supprimer_container = new JPanel(new GridLayout(2,2));
+
+            supprimer_container.add(desc);
+            supprimer_container.add(this.vide());
+            supprimer_container.add(comboBox1);
+            supprimer_container.add(supprimer);
+
+
+
+
 
 
 
@@ -97,16 +115,12 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
             JPanel big_container = new JPanel();
-
-
-
-
-
             big_container.add(saisi_container);
             big_container.add(ajouter_container);
+            big_container.add(supprimer_container);
             dialog.add(big_container);
             dialog.setSize(500, 600); 
-
+            dialog.setResizable(false);
             dialog.setVisible(true); 
     }
 
