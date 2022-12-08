@@ -17,7 +17,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-public class ButtonGroupeEditListener implements MouseListener{
+public class ButtonGroupeEditListener implements MouseListener {
     JButton button;
     JFrame window;
     Menu menu;
@@ -54,6 +54,11 @@ public class ButtonGroupeEditListener implements MouseListener{
             saisi_renommer.setBorder(border);
             saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
             JButton renommer = new JButton("Renommer");
+            renommer.setFocusable(false);
+            renommer.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            renommer.setFont(new Font("Verdana", Font.PLAIN, 16));
+            renommer.setBackground(new Color(64,0,128));
+            renommer.setForeground(Color.WHITE);
             JPanel saisi_container = new JPanel(new GridLayout(2,2));
 
             saisi_container.add(desc);
@@ -70,6 +75,9 @@ public class ButtonGroupeEditListener implements MouseListener{
             desc = new JLabel("Ajoutez un etudiant :");
             String[] elements = {"Apple", "Banana", "Orange"};
             JComboBox comboBox = new JComboBox(elements);
+
+  
+
             comboBox.setEditable(true);
             comboBox.setForeground(Color.GRAY);
             comboBox.setMinimumSize(new Dimension(100,45));
@@ -79,6 +87,11 @@ public class ButtonGroupeEditListener implements MouseListener{
 /*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
             comboBox.setBorder(border);*/
             JButton ajouter = new JButton("Ajouter");
+            ajouter.setFont(new Font("Verdana", Font.PLAIN, 16));
+            ajouter.setBackground(new Color(64,0,128));
+            ajouter.setForeground(Color.WHITE);
+            ajouter.setFocusable(false);
+            ajouter.setCursor(new Cursor(Cursor.HAND_CURSOR));
             JPanel ajouter_container = new JPanel(new GridLayout(2,2));
 
             ajouter_container.add(desc);
@@ -96,6 +109,7 @@ public class ButtonGroupeEditListener implements MouseListener{
                 i++;
             }
             JComboBox comboBox1 = new JComboBox(elements2);
+            comboBox1.setBackground(new Color(64,0,128));
             comboBox1.setEditable(true);
             comboBox1.setForeground(Color.GRAY);
             comboBox1.setMinimumSize(new Dimension(100,45));
@@ -105,6 +119,11 @@ public class ButtonGroupeEditListener implements MouseListener{
 /*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
             comboBox1.setBorder(border);*/
             JButton supprimer = new JButton("Supprimer");
+            supprimer.setFont(new Font("Verdana", Font.PLAIN, 16));
+            supprimer.setBackground(new Color(64,0,128));
+            supprimer.setForeground(Color.WHITE);
+            supprimer.setFocusable(false);
+            supprimer.setCursor(new Cursor(Cursor.HAND_CURSOR));
             JPanel supprimer_container = new JPanel(new GridLayout(2,2));
 
             supprimer_container.add(desc);
@@ -113,6 +132,27 @@ public class ButtonGroupeEditListener implements MouseListener{
             supprimer_container.add(supprimer);
 
 
+            desc = new JLabel("Partitionner");
+            JSpinner nbr = new JSpinner();
+            nbr.setForeground(Color.GRAY);
+            nbr.setMinimumSize(new Dimension(100,45));
+            nbr.setSize(200, 45);
+            nbr.setPreferredSize( new Dimension( 200, 45 ) );
+            nbr.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+/*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            nbr.setBorder(border);*/
+            JButton partitionner = new JButton("Partitionner");
+            partitionner.setFont(new Font("Verdana", Font.PLAIN, 16));
+            partitionner.setBackground(new Color(64,0,128));
+            partitionner.setForeground(Color.WHITE);
+            partitionner.setFocusable(false);
+            partitionner.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            JPanel partitionner_container = new JPanel(new GridLayout(2,2));
+
+            partitionner_container.add(desc);
+            partitionner_container.add(this.vide());
+            partitionner_container.add(nbr);
+            partitionner_container.add(partitionner);
 
 
 
@@ -125,6 +165,7 @@ public class ButtonGroupeEditListener implements MouseListener{
             big_container.add(saisi_container);
             big_container.add(ajouter_container);
             big_container.add(supprimer_container);
+            big_container.add(partitionner_container);
             dialog.add(big_container);
             dialog.setSize(500, 600); 
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
