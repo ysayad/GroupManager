@@ -1,3 +1,9 @@
+package fr.iutfbleau.projetIHM2022FI2.MP;
+
+import fr.iutfbleau.projetIHM2022FI2.API.*;
+import java.util.*;
+import java.sql.*;
+import org.mariadb.jdbc.*;
 
 /**
  * Singleton pour la connection à la base de données,
@@ -5,7 +11,7 @@
  */
 public class ConnectionSingleton {
 
-    private static ConnectionSingleton instance;
+    private static ConnectionSingleton instance = null;
     public Connection cnx;
 
     /**
@@ -26,14 +32,14 @@ public class ConnectionSingleton {
     Permet de récuperer l'instance de notre singleton 
     */
     public static ConnectionSingleton getInstance() throws IllegalStateException{
-        if(this.instance == null){ //Premiere fois qu'on utilise le singleton
+        if(instance == null){ //Premiere fois qu'on utilise le singleton
             try{
-                this.instance = new ConnectionSingleton();
+                instance = new ConnectionSingleton();
             }catch(IllegalStateException ex){
                 throw ex;
             }
         }
-        return this.instance;
+        return instance;
     }
 }
 

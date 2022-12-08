@@ -1,9 +1,10 @@
 package fr.iutfbleau.projetIHM2022FI2.MP;
 
 import fr.iutfbleau.projetIHM2022FI2.API.*;
-import fr.iutfbleau.projetIHM2022FI2.MP.ConnectionSingleton;
+import fr.iutfbleau.projetIHM2022FI2.MP.*;
 import java.util.*;
 import org.mariadb.jdbc.*;
+import java.sql.*;
 
 /**
  * Usine gérant l'ensemble des groupes.
@@ -25,30 +26,30 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
     * @param max - Le maximum d'étudiants de la promo
     * @throws IllegalStateException si une opération relative la BdD échoue 
     */
-    public AbstractGroupeFactory(String name, int min, int max) throws IllegalStateException{
+    public AbstractGroupeFactoryP(String name, int min, int max) throws IllegalStateException{
         ConnectionSingleton singleton; 
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
         try{
             //Création du groupe en local et sur la BdD
             this.promo = new GroupeP(name, min, max);
-            PreparedStatement pstCreatePromoGroup = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
-            pstCreatePromoGroup.addInt(1,this.promo.getId());
-            pstCreatePromoGroup.addString(2,this.promo.getName());
-            pstCreatePromoGroup.addString(3,this.typeToString(this.promo.getType()));
-            pstCreatePromoGroup.addInt(4,this.promo.getMin());
-            pstCreatePromoGroup.addInt(5,this.promo.getMax());
-            pstCreatePromoGroup.addInt(6,this.promo.getPointPoint().getId());
+            PreparedStatement pstCreatePromoGroup = singleton.cnx.prepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            pstCreatePromoGroup.setInt(1,this.promo.getId());
+            pstCreatePromoGroup.setString(2,this.promo.getName());
+            pstCreatePromoGroup.setString(3,"ROOT");
+            pstCreatePromoGroup.setInt(4,this.promo.getMin());
+            pstCreatePromoGroup.setInt(5,this.promo.getMax());
+            pstCreatePromoGroup.setInt(6,this.promo.getPointPoint().getId());
             pstCreatePromoGroup.executeUpdate();
 
             //Ajout des étudiants au groupe promotion sur la BdD
-            PreparedStatement pstGetAllStudents = singleton.cnx.PrepareStatement("SELECT * FROM PJIHM__Students"); // La promo contient tous les étudiants, on peut donc directement tous les récuperer au lieu de chercher les étudiant appartenants au groupe d'id 1. On économise ainsi une étape 
-            ResultSet rsGetAllStudents = pstGetPromotionStudents.executeQuery();
+            PreparedStatement pstGetAllStudents = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Students"); // La promo contient tous les étudiants, on peut donc directement tous les récuperer au lieu de chercher les étudiant appartenants au groupe d'id 1. On économise ainsi une étape 
+            ResultSet rsGetAllStudents = pstGetAllStudents.executeQuery();
             
-            PreparedStatement pstAddStudentsToPromotion = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)")
+            PreparedStatement pstAddStudentsToPromotion = singleton.cnx.prepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
             pstAddStudentsToPromotion.setInt(2,this.promo.getId());
             
             Etudiant studentTmp;
@@ -58,13 +59,14 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 pstAddStudentsToPromotion.setInt(1,rsGetAllStudents.getInt(1));
                 pstAddStudentsToPromotion.executeUpdate();
                 //... en local
-                studentTmp = new Etudiant(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2),rsGetAllStudents.getInt(1));
-                this.promo.addEtudiant(student);
+                studentTmp = new EtudiantP(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2),rsGetAllStudents.getInt(1));
+                this.promo.addEtudiant(studentTmp);
             }
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
-        this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
+        this.groupsTable = new HashMap<Integer,Groupe>();
+        this.groupsTable.put(Integer.valueOf(this.promo.getId()),this.promo);
 
     }
 
@@ -73,83 +75,82 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
     * On utilise cette version quand le groupe Promotion existe déja sur la BdD
     * @throws IllegalStateException si une opération relative la BdD échoue 
     */
-    public AbstractGroupeFactory() throws IllegalStateException{
+    public AbstractGroupeFactoryP() throws IllegalStateException{
         ConnectionSingleton singleton; 
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
 
         try{
-            //Création de l'objet GroupeP correpondant à la promotion
-            PreparedStatement pstGetMinMax = singleton.cnx.PrepareStatement("SELECT name,min,max FROM PJIHM__Groups WHERE id = ?");
-            pstGetMinMax.setInt(1,1);
-            ResultSet rsGetMinMax = pst1.executeQuery();
-            rsGetMinMax.next();
-            this.promo = new GroupeP(rsGetMinMax.getString(1),rsGetMinMax.getInt(2),rsGetMinMax.getInt(3));
-
-            //Ajout des étudiants au GroupeP correspondant à la promotion
-            PreparedStatement pstGetPromotionStudents = singleton.cnx.PrepareStatement("SELECT * FROM PJIHM__Students"); // La promo contient tous les étudiants, on peut donc directement tous les récuperer au lieu de chercher les étudiant appartenants au groupe d'id 1. On économise ainsi une étape 
-            ResultSet rsGetPromotionStudents = pstGetPromotionStudents.executeQuery();
-            
-            Etudiant studentTmp;
-            while(rsGetPromotionStudents.next()){
-                Etudiant student = new Etudiant(rsGetPromotionStudents.getString(3),rsGetPromotionStudents.getString(2),rsGetPromotionStudents.getInt(1));
-                this.promo.addEtudiant(student);
-            }
-            this.groupsTable.add(Integer.valueOf(this.promo.getId()),this.promo);
-
-            //Créer en local les groupes déja existant
-
-            //Je recupere les groupes de la bd
-            PreparedStatement pstgetAllGroups = singleton.cnx.PrepareStatement("SELECT * FROM PJIHM__Groups");
+           //Je recupere les groupes de la bd
+            PreparedStatement pstgetAllGroups = singleton.cnx.prepareStatement("SELECT id,name,type,min,max FROM PJIHM__Groups");
             ResultSet rsgetAllGroups = pstgetAllGroups.executeQuery();
 
-            HashMap<Integer,Groupe> groups = new HashMap<Integer,Groupe>();
-            while(rsgetAllGroups.next()){//Liste remplie de groupes sans pere, etudiant et sous groupes
-                Groupe grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), rsgetAllGroups.getString(3),rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
-                this.groupsTable.add(Integer.valueOf(id),grp);
+            this.groupsTable = new HashMap<Integer,Groupe>();
+            while(rsgetAllGroups.next()){//Création des groupes sans pere ni etudiants/sousgroupes
+                Groupe grp;
+                switch(rsgetAllGroups.getString(3)){
+                    case "ROOT":
+                        grp = new GroupeP(rsgetAllGroups.getString(2),rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
+                        this.promo = grp;
+                        break;
+
+                    case "PARTITION":
+                        grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), TypeGroupe.PARTITION,rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
+                        break;
+
+                    default:
+                        grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), TypeGroupe.FREE,rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
+                }                
+                this.groupsTable.put(Integer.valueOf(grp.getId()),grp);
             }
+            System.out.println("    A");
 
             //On attribue les groupes et sous-groupes 
-            PreparedStatement pstGetAllGroupsFather = singleton.cnx.PrepareStatement("SELECT id,fatherId FROM PJIHM__Groups");
-            ResultSet rsGetAllGroupsFather = pstgetAllGroups.executeQuery();
-            rs.setAuDebut();
-            while(rsGetAllGroupsFather.next()){
-                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroupsFather.getInt(1)));
-                Groupe fatherTmp = groupsTable.get(Integer.valueOf(rsGetAllGroupsFather.getInt(2)));
+            PreparedStatement pstGetAllGroups = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Groups WHERE id!=1");
+            ResultSet rsGetAllGroups = pstGetAllGroups.executeQuery();
+            while(rsGetAllGroups.next()){//Ajouter les sous-groupes de chaque groupe
+                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(1)));
+                Groupe fatherTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(6)));
                 groupTmp.setFather(fatherTmp);
                 fatherTmp.addSousGroupe(groupTmp); 
             }
-
-            //Recup ts les etudiants
-            HashMap<Etudiant> allStudents = new HashMap<Etudiant>();
-            for(Etudiant studentTmp : this.promo.getEtudiants() ){
-                allStudents.add(studentTmp.getId(), studentTmp);
-            }
-                
-            //On attribue les étudiants au groupe, (groupTmp.getEtudiant() renvoit vide ici)
-            PreparedStatement pstGetStudentsOfGroup = singleton.cnx.PrepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
-            for(Groupe groupTmp : this.groupsTable){
-                pstGetStudentsOfGroup.setInt(groupTmp.getId());
+            //Ajouter tous les étudiant à this.promotion
+            PreparedStatement pstGetAllStudents = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Students");
+            ResultSet rsGetAllStudents = pstGetAllStudents.executeQuery();
+            while(rsGetAllStudents.next()){
+                Etudiant etuTmp = new EtudiantP(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2), rsGetAllStudents.getInt(1));
+                this.promo.addEtudiant(etuTmp);
+            }  
+            //Ajoute les étudiants dans leurs groupes 
+            PreparedStatement pstGetStudentsOfGroup = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            rsGetAllGroups.beforeFirst();
+            while(rsGetAllGroups.next()){//Parcours les groupes qui existent
+                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(1)));
+                pstGetStudentsOfGroup.setInt(1,groupTmp.getId());//Récupere l'id des Etudiants de ce groupe
                 ResultSet rsGetStudentsOfGroup = pstGetStudentsOfGroup.executeQuery();
-                rsGetStudentsOfGroup.next();
-                //Récuperer le bon Etudiant depuis promo via son id
-                //L'ajouter à ce groupe
-                groupTmp.addEtudiant(allStudents.get(rsGetStudentsOfGroup.getInt(1)));
-            }
-                
-                //Créer le nouveau groupe
-                
-                //l'ajouter à this.groupsTable
-            }
-        }catch(SQLException ex){
-            throw new IllegalStateException(ex.getMessage());
-        }
-
+                while(rsGetStudentsOfGroup.next()){
+                    for(Etudiant etuTmp : this.promo.getEtudiants()){
+                        if(etuTmp.getId() == rsGetStudentsOfGroup.getInt(1)){
+                            groupTmp.addEtudiant(etuTmp);
+                        }
+                    }
+                }
+            }                
+            }catch(SQLException ex){
+                throw new IllegalStateException(ex.getMessage());
+             }
     }
-    
+
+        /**
+     * Test plutôt optimiste. Si la clé est identique alors on fait comme si c'était le bon groupe.
+     */
+    public Boolean knows(Groupe g){
+        return this.groupsTable.containsKey(Integer.valueOf(g.getId()));
+    }
+
     /**
      * permet de récupérer le Groupe qui contient les étudiants de toute la promotion
      * @return la promo.
@@ -176,18 +177,18 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         //On s'assure d'abord de supprimer le groupe sur la BdD puis on le supprime en local, on est ainsi sur que les données locales et distantes sont concordantes
         ConnectionSingleton singleton;
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
         //Supprimer le groupe et chaque liaison groupe<->etudiant avec ce groupe
         try{
-            PreparedStatement pstDeleteGroupFromDB = singleton.cnx.PrepareStatement("DELETE FROM PJIHM__Groups WHERE id = ?");
-            pstDeleteGroupFromDB.setInt(g.getId());
+            PreparedStatement pstDeleteGroupFromDB = singleton.cnx.prepareStatement("DELETE FROM PJIHM__Groups WHERE id = ?");
+            pstDeleteGroupFromDB.setInt(1,g.getId());
             pstDeleteGroupFromDB.executeUpdate();
 
-            PreparedStatement pstDeleteStudentsOfThisGroup = singleton.cnx.PreparedStatement("DELETE FROM PJIHM__StudentsGroups WHERE groupId = ?");
-            pstDeleteStudentsOfThisGroup.setInt(g.getInt());
+            PreparedStatement pstDeleteStudentsOfThisGroup = singleton.cnx.prepareStatement("DELETE FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            pstDeleteStudentsOfThisGroup.setInt(1,g.getId());
             pstDeleteStudentsOfThisGroup.executeUpdate();
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
@@ -218,26 +219,26 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         GroupeP newSubGroup = new GroupeP(pere,name,min,max);
         ConnectionSingleton singleton;
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
         //Création du groupe dans la bd
         try{
-            PreparedStatement pstCreateGroupOnDB = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
-            pstCreateGroupOnDB.setInt(1,newSubGroup.getId());
-            pstCreateGroupOnDB.setString(2,newSubGroup.getName());
-            pstCreateGroupOnDB.setString(3,"FREE");
-            pstCreateGroupOnDB.setInt(4,newSubGroup.getMin());
-            pstCreateGroupOnDB.setInt(5,newSubGroup.getMax());
-            pstCreateGroupOnDB.setInt(6,newSubGroup.getPointPoint().getId());
-            pstCreateGroupOnDB.executeUpdate();
+            PreparedStatement pstCreateGroup = singleton.cnx.prepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            pstCreateGroup.setInt(1,newSubGroup.getId());
+            pstCreateGroup.setString(2,newSubGroup.getName());
+            pstCreateGroup.setString(3,"FREE");
+            pstCreateGroup.setInt(4,newSubGroup.getMin());
+            pstCreateGroup.setInt(5,newSubGroup.getMax());
+            pstCreateGroup.setInt(6,newSubGroup.getPointPoint().getId());
+            pstCreateGroup.executeUpdate();
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
         //Création du groupe en local
         pere.addSousGroupe(newSubGroup);//Ajoute le sous groupe au pere
-        this.groupsTable.add(Integer.valueOf(newSubGroup.getId()),newSubGroup);//Ajoute le nouveau groupe au groupsTable
+        this.groupsTable.put(Integer.valueOf(newSubGroup.getId()),newSubGroup);//Ajoute le nouveau groupe au groupsTable
     }
 
     /**
@@ -264,6 +265,7 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         if(n<=0) throw new IllegalArgumentException("Le nombre de sous-groupes de la partition doit être >0");
 
         GroupeP newPartition = new GroupeP(pere);
+        pere.addSousGroupe(newPartition);
         Set<Etudiant> fatherStudents = pere.getEtudiants();
         for(Etudiant studentTmp : fatherStudents){//Parcourir le groupe pere pour copier chaque eleve dans la partition
             newPartition.addEtudiant(studentTmp);
@@ -271,14 +273,14 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
 
         ConnectionSingleton singleton;
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
         //Création de la partition dans la BdD avant de l'ajouter à this.groupsTable afin de ne pas se retrouver avec un groupe existant en local mais pas sur la BdD
         try{
             //Création du nouveau groupe de type partition
-            PreparedStatement pstCreatePartition = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            PreparedStatement pstCreatePartition = singleton.cnx.prepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
             pstCreatePartition.setInt(1,newPartition.getId());
             pstCreatePartition.setString(2,newPartition.getName());
             pstCreatePartition.setString(3,"PARTITION");
@@ -288,26 +290,39 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
             pstCreatePartition.executeUpdate();
 
             //Ajout des étudiants à ce nouveau groupe
-            PreparedStatement pstAddStudentsToPartition = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
+            PreparedStatement pstAddStudentsToPartition = singleton.cnx.prepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
             pstAddStudentsToPartition.setInt(2,newPartition.getId());
 
-            PreparedStatement pstGetAllStudentsOfFather = singleton.cnx.PrepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
+            PreparedStatement pstGetAllStudentsOfFather = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
             pstGetAllStudentsOfFather.setInt(1,pere.getId());
             ResultSet rsGetAllStudentsOfFather = pstGetAllStudentsOfFather.executeQuery();
             while(rsGetAllStudentsOfFather.next()){
                 pstAddStudentsToPartition.setInt(1,rsGetAllStudentsOfFather.getInt(1));
                 pstAddStudentsToPartition.executeUpdate();
-            }    
+            }
+
+            this.groupsTable.put(Integer.valueOf(newPartition.getId()),newPartition);
+            //On crée ensuite les sous groupes (local et BdD), on est donc sur qu'avant de créer ces sous-groupes, leur père (la partition) existe bien en local et sur la BdD
+            int subGroupsMax = (pere.getMax()/n)+1;
+            Groupe groupTmp;
+            PreparedStatement pstCreateSubGroupOfPartition = singleton.cnx.prepareStatement("INSERT INTO PJIHM__Groups VALUES (?,?,?,?,?,?)");
+            for(int i=0;i<n;i++){
+                groupTmp = new GroupeP(newPartition,name+"_"+(i+1),0,subGroupsMax);
+                pstCreateSubGroupOfPartition.setInt(1,groupTmp.getId());
+                pstCreateSubGroupOfPartition.setString(2,groupTmp.getName());
+                pstCreateSubGroupOfPartition.setString(3,"FREE");
+                pstCreateSubGroupOfPartition.setInt(4,groupTmp.getMin());
+                pstCreateSubGroupOfPartition.setInt(5,groupTmp.getMax());
+                pstCreateSubGroupOfPartition.setInt(6,groupTmp.getPointPoint().getId());
+                pstCreateSubGroupOfPartition.executeUpdate();
+                newPartition.addSousGroupe(groupTmp);
+                this.groupsTable.put(Integer.valueOf(groupTmp.getId()),groupTmp);
+        }    
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
 
-        this.groupsTable.add(Integer.valueOf(newPartition.getId(),newPartition));
-        //On crée ensuite les sous groupes (local et BdD), on est donc sur qu'avant de créer ces sous-groupes, leur père (la partition) existe bien en local et sur la BdD
-        int subGroupsMax = (pere.getMax()/n)+1;
-        for(int i=0;i<n;i++){
-            this.createGroupe(newPartition,name+"_"+i,n,subGroupsMax);
-        }
+        
     }
     /**
      * permet d'ajouter un étudiant à un groupe.
@@ -329,13 +344,13 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         
         ConnectionSingleton singleton;
         try{
-            singleton = ConnectionSingleton.getInstance("meddahi","jaimelespizza");
+            singleton = ConnectionSingleton.getInstance();
         }catch(IllegalStateException ex){
             throw ex;
         }
 
         try{
-            PreparedStatement pstAddStudentsToGroup = singleton.cnx.PrepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
+            PreparedStatement pstAddStudentsToGroup = singleton.cnx.prepareStatement("INSERT INTO PJIHM__StudentsGroups VALUES (?,?)");
             pstAddStudentsToGroup.setInt(1,e.getId());
             pstAddStudentsToGroup.setInt(2,g.getId());
             pstAddStudentsToGroup.executeUpdate();
@@ -357,7 +372,7 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
     public void dropFromGroupe(Groupe g, Etudiant e){
         //Vérifications 
 
-        if(g.getSize()==g.getMin()) throw new IllegalStateException("La limite inférieure ne peut pas être dépassée") 
+        if(g.getSize()==g.getMin()) throw new IllegalStateException("La limite inférieure ne peut pas être dépassée");
         
         ConnectionSingleton singleton;
         try{
@@ -367,10 +382,10 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         }
 
         try{
-            PreparedStatement pstDropStudentFromGroup = singleton.cnx.PrepareStatement("DELETE FROM PJIHM__StudentsGroups WHERE studentsId=? AND groupId=?");
+            PreparedStatement pstDropStudentFromGroup = singleton.cnx.prepareStatement("DELETE FROM PJIHM__StudentsGroups WHERE studentId=? AND groupId=?");
             pstDropStudentFromGroup.setInt(1,e.getId());
-            pstDropStudentFromGroup.setInt(2,g.getInt());
-            pst.executeUpdate();
+            pstDropStudentFromGroup.setInt(2,g.getId());
+            pstDropStudentFromGroup.executeUpdate();
         }catch(SQLException ex){
             throw new IllegalStateException(ex.getMessage());
         }
@@ -395,7 +410,7 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
             if(e.getNom().equals(nomEtu)){
                     searchResult.add(e);
                     break;
-                }else if(e.substring(0,nomEtu.length())==nomEtu){
+                }else if(e.getNom().substring(0,nomEtu.length()).equals(nomEtu)){
                     searchResult.add(e);
                 }
         }
@@ -416,7 +431,28 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         for (Groupe groupe : listgrp) {
             if(groupe.getEtudiants().contains(etu)) setgrp.add(groupe);
         }
-
         return setgrp;
     }
 }
+
+/*
+ //Création de l'objet GroupeP correpondant à la promotion
+            PreparedStatement pstGetMinMax = singleton.cnx.prepareStatement("SELECT name,min,max FROM PJIHM__Groups WHERE id = ?");
+            pstGetMinMax.setInt(1,1);
+            ResultSet rsGetMinMax = pst1.executeQuery();
+            rsGetMinMax.next();
+            this.promo = new GroupeP(rsGetMinMax.getString(1),rsGetMinMax.getInt(2),rsGetMinMax.getInt(3));
+
+            //Ajout des étudiants au GroupeP correspondant à la promotion
+            PreparedStatement pstGetPromotionStudents = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Students"); // La promo contient tous les étudiants, on peut donc directement tous les récuperer au lieu de chercher les étudiant appartenants au groupe d'id 1. On économise ainsi une étape 
+            ResultSet rsGetPromotionStudents = pstGetPromotionStudents.executeQuery();
+            
+            Etudiant studentTmp;
+            while(rsGetPromotionStudents.next()){
+                Etudiant student = new Etudiant(rsGetPromotionStudents.getString(3),rsGetPromotionStudents.getString(2),rsGetPromotionStudents.getInt(1));
+                this.promo.addEtudiant(student);
+            }
+            this.groupsTable.put(Integer.valueOf(this.promo.getId()),this.promo);
+
+            //Créer en local les groupes déja existant
+*/
