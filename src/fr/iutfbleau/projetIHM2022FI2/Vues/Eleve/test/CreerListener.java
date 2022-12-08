@@ -183,6 +183,15 @@ public class CreerListener implements MouseListener {
             this.cardLayout.show(this.window.getContentPane(), "Menu");
 
         }
+
+        if (button.getText() == "Rejoindre") {
+            Groupe depart = Controller.Instance(false).getGroupeFactory().getGroupesOfEtudiant(Controller.Instance(false).getGroupeFactory().getPromotion().getEtudiants().iterator().next()).iterator().next();
+            Controller.Instance(false).getChangementFactory().createChangement(depart ,Controller.Instance(false).getGroupeFactory().getPromotion().getEtudiants().iterator().next() ,g);;
+            dialog.dispose();
+            this.refresh("Groupes    ", g.getPointPoint());
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
+
+        }
     }
 
     @Override

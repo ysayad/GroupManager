@@ -114,7 +114,7 @@ public class Menu extends JFrame {
         this.menu.add(this.vide());
         this.menu.add(this.drawButton("Groupes    ","groupe.png"));
         this.menu.add(this.drawButton("Etudiants  ","etudiant.png"));
-        this.menu.add(this.drawButton("Changements","changement.png"));
+        //this.menu.add(this.drawButton("Changements","changement.png"));
 
 
 
