@@ -10,7 +10,7 @@ import javax.swing.UIManager.*;
 import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import javax.swing.border.Border;
 import javax.swing.event.MouseInputListener;
 

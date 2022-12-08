@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.UIManager.*;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
@@ -139,7 +139,7 @@ public class ButtonGroupeListener implements MouseListener{
 
     public void mousePressed(MouseEvent e) {
         System.out.println(g.getName());
-        this.refresh("Groupes    ",g);
+        this.refresh("Groupes   ",g);
         this.cardLayout.show(this.window.getContentPane(), "Menu");
     }
 

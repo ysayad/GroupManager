@@ -11,7 +11,7 @@ import java.util.*;
 import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Changement;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 
 public class CarteChangement extends JFrame {
     Menu menu;
@@ -96,7 +96,7 @@ public class CarteChangement extends JFrame {
         //searchbarpanel.setBackground(Color.WHITE);
 
 int h = 0;
-Cadmin admin = Cadmin.Instance(false);
+Controller admin = Controller.Instance(false);
 Set<Changement> liste = admin.getAllChangements();
 for(Changement e : liste ){
         

@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 
 import java.io.*;
@@ -88,7 +88,7 @@ public void refresh(String name, Set<Etudiant> liste){
 
     public void mouseClicked(MouseEvent e) {
         String name = searchbar.getText();
-        Cadmin admin = Cadmin.Instance(false);
+        Controller admin = Controller.Instance(false);
         Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
         for (Etudiant etu : liste) {
             System.out.println(etu.getNom() + " " + etu.getPrenom());

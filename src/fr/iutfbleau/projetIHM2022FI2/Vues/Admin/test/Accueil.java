@@ -7,7 +7,7 @@ import javax.swing.border.EmptyBorder;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 
 import java.io.*;
 import java.lang.Thread;
@@ -197,7 +197,7 @@ public class Accueil {
        JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,fenetre,cardLayout);
-        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion();
+        Groupe promo = Controller.Instance(false).getGroupeFactory().getPromotion();
         if (!promo.getSousGroupes().isEmpty()) {
             if (promo.getSousGroupes().iterator().next().getType() == TypeGroupe.PARTITION) {
                 promo = promo.getSousGroupes().iterator().next();

@@ -9,7 +9,7 @@ import javax.swing.UIManager.*;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
@@ -75,7 +75,7 @@ public class ButtonGroupeEditListener implements MouseListener {
 
 
             desc = new JLabel("Ajoutez un etudiant :");
-            Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion();
+            Groupe promo = Controller.Instance(false).getGroupeFactory().getPromotion();
             String[] elements = new String[promo.getSize()];
             int j=0;
             for (Etudiant e : promo.getEtudiants()) {

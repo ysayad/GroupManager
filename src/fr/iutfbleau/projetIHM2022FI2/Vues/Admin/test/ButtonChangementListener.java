@@ -9,7 +9,7 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Changement;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 
 import java.io.*;
 import java.lang.Thread;
@@ -37,7 +37,7 @@ public void refresh(){}
 
     public void mouseClicked(MouseEvent e) {
         System.out.println(this.button.getName());
-        Cadmin admin = Cadmin.Instance(false);
+        Controller admin = Controller.Instance(false);
         if (button.getName() == "Oui") {
             admin.getChangementFactory().applyChangement(ch);
         }

@@ -9,7 +9,7 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.awt.event.*;
 import java.util.*;
@@ -78,7 +78,7 @@ public class ChampTextListener implements MouseListener, KeyListener {
         // TODO Auto-generated method stub
         String name = searchbar.getText();
         if (name.length() != 0) {
-            Cadmin admin = Cadmin.Instance(false);
+            Controller admin = Controller.Instance(false);
             Set<Etudiant> liste = admin.search(name, admin.getGroupeFactory().getPromotion());
             for (Etudiant etu : liste) {
                 System.out.println(etu.getNom() + " " + etu.getPrenom());

@@ -11,7 +11,7 @@ import java.io.*;
 import java.lang.Thread;
 import java.lang.ProcessBuilder.Redirect.Type;
 
-import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
+import fr.iutfbleau.projetIHM2022FI2.Controller.Controller;
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.awt.event.*;
 import java.util.*;
@@ -139,36 +139,50 @@ public class CreerListener implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
         if (button.getText() == "Créer") {
-            Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisiearea.getText(), 12, 95);
+            Controller.Instance(false).getGroupeFactory().createGroupe(g, saisiearea.getText(), 12, 95);
+            dialog.dispose();
+            this.refresh("Groupes    ", g);
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
 
         if (button.getText() == "Renommer") {
             System.out.println(saisiearea.getText());
-            Cadmin.Instance(false).renameGroup(g, saisiearea.getText());
+            Controller.Instance(false).renameGroup(g, saisiearea.getText());
+            dialog.dispose();
+            this.refresh("Groupes    ", g);
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
         
         if (button.getText() == "Ajouter") {
             String nom = combobox.getEditor().getItem().toString().split(" ",2)[0];
-            Cadmin.Instance(false).getGroupeFactory().addToGroupe(g, Cadmin.Instance(false).search(nom, Cadmin.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+            Controller.Instance(false).getGroupeFactory().addToGroupe(g, Controller.Instance(false).search(nom, Controller.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+            dialog.dispose();
+            this.refresh("Groupes    ", g);
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
 
         if (button.getText() == "Supprimer") {
             String nom = combobox.getEditor().getItem().toString().split(" ",2)[0];
-            Cadmin.Instance(false).getGroupeFactory().dropFromGroupe(g, Cadmin.Instance(false).search(nom, Cadmin.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+            Controller.Instance(false).getGroupeFactory().dropFromGroupe(g, Controller.Instance(false).search(nom, Controller.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+            dialog.dispose();
+            this.refresh("Groupes    ", g.getPointPoint());
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
 
         if (button.getText() == "Partitionner") {
-            Cadmin.Instance(false).getGroupeFactory().createPartition(g, g.getName(), ( Integer)spinner.getValue());
+            Controller.Instance(false).getGroupeFactory().createPartition(g, g.getName(), ( Integer)spinner.getValue());
+            dialog.dispose();
+            this.refresh("Groupes    ", g);
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
 
         if (button.getText() == "Supprimer le groupe") {
-            Cadmin.Instance(false).getGroupeFactory().deleteGroupe(g);
+            Controller.Instance(false).getGroupeFactory().deleteGroupe(g);
+            dialog.dispose();
+            this.refresh("Groupes    ", g.getPointPoint());
+            this.cardLayout.show(this.window.getContentPane(), "Menu");
 
         }
-        dialog.dispose();
-        this.refresh("Groupes    ", g);
-        this.cardLayout.show(this.window.getContentPane(), "Menu");
-        
     }
 
     @Override

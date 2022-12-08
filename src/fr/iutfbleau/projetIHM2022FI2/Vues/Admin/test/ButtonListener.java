@@ -63,7 +63,7 @@ public class ButtonListener implements MouseListener{
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,window,cardLayout);
-        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
+        Groupe promo = Controller.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
         
         if (promo.getType() == TypeGroupe.FREE) {
             JButton creer = new JButton("Créer un groupe");
