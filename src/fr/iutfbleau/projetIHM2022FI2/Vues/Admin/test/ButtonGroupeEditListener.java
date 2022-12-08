@@ -44,9 +44,9 @@ public class ButtonGroupeEditListener implements MouseListener{
             JTextField saisi_renommer = new JTextField(g.getName());
             saisi_renommer.setBounds(20,20,20,20);
             saisi_renommer.setForeground(Color.GRAY);
-            saisi_renommer.setMinimumSize(new Dimension(300,45));
-            saisi_renommer.setSize(300, 45);
-            saisi_renommer.setPreferredSize( new Dimension( 500, 45 ) );
+            saisi_renommer.setMinimumSize(new Dimension(100,45));
+            saisi_renommer.setSize(200, 45);
+            saisi_renommer.setPreferredSize( new Dimension( 200, 45 ) );
             saisi_renommer.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
             Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
             saisi_renommer.setBorder(border);
@@ -65,26 +65,24 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
 
-            // desc = new JLabel("R :");
-            // JTextField saisi_renommer = new JTextField(g.getName());
-            // saisi_renommer.setBounds(20,20,20,20);
-            // saisi_renommer.setForeground(Color.GRAY);
-            // saisi_renommer.setMinimumSize(new Dimension(300,45));
-            // saisi_renommer.setSize(300, 45);
-            // saisi_renommer.setPreferredSize( new Dimension( 500, 45 ) );
-            // saisi_renommer.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
-            // Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
-            // saisi_renommer.setBorder(border);
-            // saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
-            // JButton renommer = new JButton("Renommer");
-            // JPanel saisi_container = new JPanel(new GridLayout(2,2));
+            desc = new JLabel("Ajoutez un etudiant :");
+            JTextField saisi_ajoutez = new JTextField(g.getName());
+            saisi_ajoutez.setBounds(20,20,20,20);
+            saisi_ajoutez.setForeground(Color.GRAY);
+            saisi_ajoutez.setMinimumSize(new Dimension(100,45));
+            saisi_ajoutez.setSize(200, 45);
+            saisi_ajoutez.setPreferredSize( new Dimension( 200, 45 ) );
+            saisi_ajoutez.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+            border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            saisi_ajoutez.setBorder(border);
+            saisi_ajoutez.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+            JButton ajouter = new JButton("Ajouter");
+            JPanel ajouter_container = new JPanel(new GridLayout(2,2));
 
-            // saisi_container.add(desc);
-            // saisi_container.add(this.vide());
-            // saisi_container.add(saisi_renommer);
-            // saisi_container.add(renommer);
-
-
+            ajouter_container.add(desc);
+            ajouter_container.add(this.vide());
+            ajouter_container.add(saisi_ajoutez);
+            ajouter_container.add(ajouter);
 
 
 
@@ -92,12 +90,17 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
 
+JPanel big_container = new JPanel();
 
 
 
 
-            dialog.add(saisi_container);
-            dialog.setSize(200, 100); 
+
+            big_container.add(saisi_container);
+
+            big_container.add(ajouter_container);
+            dialog.add(big_container);
+            dialog.setSize(500, 600); 
 
             dialog.setVisible(true); 
     }
