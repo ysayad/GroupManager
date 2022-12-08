@@ -4,15 +4,15 @@ import fr.iutfbleau.projetIHM2022FI2.MNP.*;
 import fr.iutfbleau.projetIHM2022FI2.MP.*;
 import java.util.*;
 
-public class Cadmin {
+public class Controller {
 
-    public static Cadmin instance = null;
+    public static Controller instance = null;
     AbstractGroupeFactory groupeFactory;
     AbstractChangementFactory changementFactory;
     Groupe promo;
 
-    private Cadmin(boolean persist){
-        if(persist){
+    private Controller(boolean persist){
+        if(!persist){
             this.groupeFactory = new AbstractGroupeFactoryP();
             //this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
@@ -69,9 +69,9 @@ public class Cadmin {
         }
     }
 
-    public static Cadmin Instance(boolean bool){
+    public static Controller Instance(boolean bool){
         if (instance == null) {
-            instance = new Cadmin(bool);
+            instance = new Controller(bool);
         }
         return instance;
     }
