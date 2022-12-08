@@ -135,6 +135,16 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 switch(rsGetSubGroups.getString(3)){
                     case "FREE":
                         newGrp = new GroupeP(father,rsGetSubGroups.getInt(1),rsGetSubGroups.getString(2),TypeGroupe.FREE,rsGetSubGroups.getInt(4),rsGetSubGroups.getInt(5)); //Création du groupe Fils
+                        PreparedStatement pstGetStudentsOfGroup = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__Groups WHERE fatherId = ?");
+                        pstGetStudentsOfGroup.setInt(newGrp.GetId());
+                        ResultSet rsGetStudentsOfGroup = pstGetStudentsOfGroup.executeQuery();
+                        while(rsGetStudentsOfGroup.next()){
+                            for(Etudiant etuTmp : this.promo.getEtudiants()){
+                                if(etuTmp.getId()==pstGetStudentsOfGroup.getInt(1)){
+                                    newGrp.addEtudiant(etuTmp);
+                                }
+                            }
+                        }
                         //Ajt étudiants
                         break;
                     default :
@@ -153,13 +163,32 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
              }
     }
 
-        /**
+    /**
      * Test plutôt optimiste. Si la clé est identique alors on fait comme si c'était le bon groupe.
      */
     public Boolean knows(Groupe g){
         return this.groupsTable.containsKey(Integer.valueOf(g.getId()));
     }
 
+    // /**
+    //  * Permet de récuperer un étudiant de la promo à partir de son Id,
+    //  * Cette méthode n'est utilisée que par la factory des changements.
+    //  * Cette dernière utilisera cette méthode après avoir récupérée les id des étudiants sur la Bd donc on est sur que tous les appels à cette fonction retournera correctement un Etudiant
+    //  * 
+    //  * @param id - L'id de l'étudiant à récuperer
+    //  * @return L'objet Etudiant correspondant à l'id
+    //  */
+    // public Etudiant getEtudiantById(int id){
+    //     Etudiant student;
+    //     for(Etudiant etuTmp : this.promo.getEtudiants()){
+    //         if(etuTmp.getId()==id) student = etuTmp;
+    //     }
+    //     return student;
+    // }
+
+    // public Groupe getGroupeById(int id){
+    //     return this.groupsTable.get(Integer.valueOf(id));
+    // }
     /**
      * permet de récupérer le Groupe qui contient les étudiants de toute la promotion
      * @return la promo.
@@ -350,7 +379,6 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         if(!g.getPointPoint().getEtudiants().contains(e)) throw new IllegalStateException("Le groupe père ne contient pas l'étudiant");
         if(g.getEtudiants().contains(e)) throw new IllegalStateException("Le groupe contient déja l'étudiant");
         if(g.getSize()==g.getMax()) throw new IllegalStateException("On ne peut pas dépasser la limite supérieure");
-        
         ConnectionSingleton singleton;
         try{
             singleton = ConnectionSingleton.getInstance();
