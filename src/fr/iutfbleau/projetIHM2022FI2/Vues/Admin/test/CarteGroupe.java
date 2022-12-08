@@ -125,7 +125,7 @@ public class CarteGroupe extends JFrame {
         layout.setHgap(0);
         JPanel test = new JPanel(layout);
         test.setBackground(Color.WHITE);
-        test.addMouseListener(new ButtonGroupeListener(test,this.menu, cardLayout,this.window,g));
+        test.addMouseListener(new ButtonGroupeListener(test,menu, cardLayout,window,g));
         edit.addMouseListener(new ButtonGroupeEditListener(edit,this.menu, cardLayout,this.window,g));
         test.add(carte);
         //test.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));

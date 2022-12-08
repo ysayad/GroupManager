@@ -52,7 +52,8 @@ public class ButtonGroupeListener implements MouseListener{
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
         JButton retour = new JButton("Retour");
         JButton creer = new JButton("Créer un groupe");
-        //creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
+        retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
+        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
         navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
@@ -78,7 +79,6 @@ public class ButtonGroupeListener implements MouseListener{
 
         
         this.window.add(menuContainer, "Menu");
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
 
 
         this.window.revalidate();
@@ -94,25 +94,31 @@ public class ButtonGroupeListener implements MouseListener{
 
     public void mouseEntered(MouseEvent e) {
 
-        this.carte.setBorder(
-BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY),
-            BorderFactory.createMatteBorder(0, 0, 0, 3, Color.GRAY)
-        )
-        
-        );
-        JPanel defaultcolor = new JPanel();
-        //this.carte.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 5, defaultcolor.getBackground ()));
-        this.carte.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        if (this.carte != null) {
+            this.carte.setBorder(
+                BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY),
+                BorderFactory.createMatteBorder(0, 0, 0, 3, Color.GRAY)
+            )
+            
+            );
+            JPanel defaultcolor = new JPanel();
+            //this.carte.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 5, defaultcolor.getBackground ()));
+            this.carte.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
+
     }
 
     public void mouseExited(MouseEvent e) {
-                this.carte.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
+        if (this.carte != null) {
+            this.carte.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
+        }
+                
     }
 
     public void mousePressed(MouseEvent e) {
         System.out.println(g.getName());
-        this.refresh("Groupes    ",g);
+        this.refresh("Groupes   ",g);
         this.cardLayout.show(this.window.getContentPane(), "Menu");
     }
 

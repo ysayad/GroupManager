@@ -55,7 +55,8 @@ public class CreerListener implements MouseListener {
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
         JButton retour = new JButton("Retour");
         JButton creer = new JButton("Créer un groupe");
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
+        retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
+        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
         navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
@@ -79,7 +80,6 @@ public class CreerListener implements MouseListener {
 
         menuContainer.add(menuP);
 
-
         this.window.add(menuContainer, "Menu");
 
 
@@ -96,7 +96,7 @@ public class CreerListener implements MouseListener {
         Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisi_renommer.getText(), 12, 95);
         dialog.dispose();
         this.refresh("Groupes   ", g);
-        cardLayout.show(window.getContentPane(), "Menu");
+        this.cardLayout.show(this.window.getContentPane(), "Menu");
     }
 
     @Override
