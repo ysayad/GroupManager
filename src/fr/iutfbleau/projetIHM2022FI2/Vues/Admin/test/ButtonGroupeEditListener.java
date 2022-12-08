@@ -120,6 +120,10 @@ public class ButtonGroupeEditListener implements MouseListener{
             big_container.add(supprimer_container);
             dialog.add(big_container);
             dialog.setSize(500, 600); 
+            Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+            int x = (int) ((dimension.getWidth() - dialog.getWidth()) / 2);
+            int y = (int) ((dimension.getHeight() - dialog.getHeight()) / 2);
+            dialog.setLocation(x, y);
             dialog.setResizable(false);
             dialog.setVisible(true); 
     }
