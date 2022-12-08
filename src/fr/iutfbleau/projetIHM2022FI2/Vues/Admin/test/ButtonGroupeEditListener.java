@@ -47,8 +47,14 @@ public class ButtonGroupeEditListener implements MouseListener{
 
         JPanel menuP = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-        menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout);
+        JPanel navbar = new JPanel(new BorderLayout());
+        JButton retour = new JButton("Retour");
+        JButton creer = new JButton("Créer un groupe");
+        navbar.add(retour, BorderLayout.BEFORE_LINE_BEGINS);
+        navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+        navbar.add(creer, BorderLayout.AFTER_LINE_ENDS);
+        menuP.add(navbar,BorderLayout.PAGE_START);
+        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
 
         menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
 
