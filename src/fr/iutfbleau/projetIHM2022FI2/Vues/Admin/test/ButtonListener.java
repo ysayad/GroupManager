@@ -173,7 +173,7 @@ public class ButtonListener implements MouseListener{
             JPanel menuP = new JPanel(new BorderLayout());
             SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
             menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
-            CarteChangement carteGroupe = new CarteChangement(menu,this.window);
+            CarteChangement carteGroupe = new CarteChangement(this.cardLayout,menu,this.window);
             menuP.add(carteGroupe.drawCarteGroupe());
 
 

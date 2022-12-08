@@ -12,7 +12,7 @@ public class Controller {
     Groupe promo;
 
     private Controller(boolean persist){
-        if(!persist){
+        if(persist){
             this.groupeFactory = new AbstractGroupeFactoryP();
             //this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();

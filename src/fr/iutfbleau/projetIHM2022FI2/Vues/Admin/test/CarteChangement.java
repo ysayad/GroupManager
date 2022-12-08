@@ -22,9 +22,11 @@ public class CarteChangement extends JFrame {
     JButton no;
     JPanel panneaucarte;
     JPanel cartecontainer;
-    public CarteChangement(Menu menu, JFrame window){
+    CardLayout cardLayout;
+    public CarteChangement(CardLayout cardLayout, Menu menu, JFrame window){
         this.menu = menu;
         this.window = window;
+        this.cardLayout = cardLayout;
     }
 
  
@@ -103,8 +105,8 @@ for(Changement e : liste ){
          this.panneaucarte = new JPanel();
          this.panneaucarte.add(drawCarte("Changement " + e.getEtu().getNom() + " " + e.getEtu().getPrenom() + " vers groupe " + e.getB().getName()));
 
-        this.yes.addMouseListener(new ButtonChangementListener(this,yes,this.menu,this.window, e));
-        this.no.addMouseListener(new ButtonChangementListener(this,no,this.menu,this.window, e)); 
+        this.yes.addMouseListener(new ButtonChangementListener(this.cardLayout,this,yes,this.menu,this.window, e));
+        this.no.addMouseListener(new ButtonChangementListener(this.cardLayout,this,no,this.menu,this.window, e)); 
          h+=300;
         this.cartecontainer.add(this.panneaucarte);
 } 
