@@ -135,8 +135,8 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
                 switch(rsGetSubGroups.getString(3)){
                     case "FREE":
                         newGrp = new GroupeP(father,rsGetSubGroups.getInt(1),rsGetSubGroups.getString(2),TypeGroupe.FREE,rsGetSubGroups.getInt(4),rsGetSubGroups.getInt(5)); //Création du groupe Fils
-                        PreparedStatement pstGetStudentsOfGroup = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__studentsGroup WHERE groupId = ?");
-                        pstGetStudentsOfGroup.setInt(1, newGrp.getId());
+                        PreparedStatement pstGetStudentsOfGroup = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
+                        pstGetStudentsOfGroup.setInt(1,newGrp.getId());
                         ResultSet rsGetStudentsOfGroup = pstGetStudentsOfGroup.executeQuery();
                         while(rsGetStudentsOfGroup.next()){
                             for(Etudiant etuTmp : this.promo.getEtudiants()){

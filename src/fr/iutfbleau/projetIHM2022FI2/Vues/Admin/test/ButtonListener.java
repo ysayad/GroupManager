@@ -65,7 +65,7 @@ public class ButtonListener implements MouseListener{
         SearchBar searchbar = new SearchBar(menu,window,cardLayout);
         Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
         
-        if (promo.getType() != TypeGroupe.FREE) {
+        if (promo.getType() == TypeGroupe.FREE) {
             JButton creer = new JButton("Créer un groupe");
             creer.setFocusable(false);
             creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
