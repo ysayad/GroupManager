@@ -3,10 +3,7 @@
 
 ## Détails du projet
 
-
-Les commandes make sont :
-* make clean : permet de nettoyer /inserer/directory
-* make doc : permet de créer la doc
-* make run : permet de lancer le JAR
-  
-# A completer
+Les commandes pour lancer les logiciels sont :
+* make admin
+* make prof 
+* make eleve 
