@@ -22,16 +22,51 @@ public class ButtonChangementListener implements MouseListener{
     JFrame window;
     Menu menu;
     Changement ch;
-
-    public ButtonChangementListener(CarteChangement carte,JButton button, Menu menu, JFrame window, Changement ch) {
+    CardLayout cardLayout;
+    public ButtonChangementListener(CardLayout cardLayout,CarteChangement carte,JButton button, Menu menu, JFrame window, Changement ch) {
         this.window=window;
         this.button = button;
         this.menu = menu;
         this.ch = ch;
+        this.cardLayout = cardLayout;
     }
 
 
-public void refresh(){}
+public void refresh(){
+    this.window.remove(menu);
+
+
+            Menu menu = new Menu(this.window, cardLayout, "Changements", "Administrtateur");
+            GridLayout gridLayout = new GridLayout(1,2);
+            gridLayout.setHgap(0);
+            gridLayout.setVgap(0);
+
+
+            JPanel menuContainer = new JPanel(new BorderLayout());
+
+
+
+            JPanel menuP = new JPanel(new BorderLayout());
+            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
+            menuP.add(searchbar.drawSearchBar(),BorderLayout.PAGE_START);
+            CarteChangement carteGroupe = new CarteChangement(this.cardLayout,menu,this.window);
+            menuP.add(carteGroupe.drawCarteGroupe());
+
+
+
+            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+
+            menuContainer.add(menuP);
+
+
+            this.window.add(menuContainer, "Menu");
+
+
+            this.window.revalidate();
+            this.window.repaint();
+            this.window.invalidate();
+            this.window.validate();
+        }
   
 
 
@@ -46,6 +81,7 @@ public void refresh(){}
         }
         
         this.refresh();
+        this.cardLayout.show(this.window.getContentPane(), "Menu");
         
     }
 
