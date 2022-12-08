@@ -51,7 +51,7 @@ public class ButtonGroupeListener implements MouseListener{
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-        if (g.getType() != TypeGroupe.ROOT) {
+        if (g.getType() != TypeGroupe.ROOT && g.getType() == TypeGroupe.FREE) {
             JButton retour = new JButton("Retour");
             retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
             navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
