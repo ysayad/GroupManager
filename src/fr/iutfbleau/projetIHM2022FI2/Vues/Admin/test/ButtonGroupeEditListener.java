@@ -157,7 +157,12 @@ public class ButtonGroupeEditListener implements MouseListener {
 
 
 
-
+            JButton suprimmer_groupe = new JButton("Supprimer le groupe");
+            suprimmer_groupe.setFont(new Font("Verdana", Font.PLAIN, 16));
+            suprimmer_groupe.setBackground(new Color(255,0,0));
+            suprimmer_groupe.setForeground(Color.WHITE);
+            suprimmer_groupe.setFocusable(false);
+            suprimmer_groupe.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
 
@@ -166,6 +171,20 @@ public class ButtonGroupeEditListener implements MouseListener {
             big_container.add(ajouter_container);
             big_container.add(supprimer_container);
             big_container.add(partitionner_container);
+            JPanel gap = new JPanel();
+            gap.setMinimumSize(new Dimension(100,45));
+            gap.setSize(200, 45);
+            gap.setPreferredSize( new Dimension( 200, 45 ) );
+
+            big_container.add(gap);            
+            JPanel gap1 = new JPanel();
+            gap1.setMinimumSize(new Dimension(100,45));
+            gap1.setSize(200, 45);
+            gap1.setPreferredSize( new Dimension( 200, 45 ) );
+
+            big_container.add(gap1);
+
+            big_container.add(suprimmer_groupe);
             dialog.add(big_container);
             dialog.setSize(500, 600); 
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
