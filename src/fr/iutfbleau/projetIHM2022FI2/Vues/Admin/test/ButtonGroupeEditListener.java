@@ -80,14 +80,14 @@ public class ButtonGroupeEditListener implements MouseListener{
             saisi_ajoutez.setBorder(border);
             saisi_ajoutez.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
             JButton ajouter = new JButton("Ajouter");
-            JPanel ajouter_container = new JPanel(new GridLayout(2,3));
+            JPanel ajouter_container = new JPanel(new GridLayout(3,2));
 
             ajouter_container.add(desc);
             ajouter_container.add(this.vide());
             ajouter_container.add(saisi_ajoutez);
 
-            ajouter_container.add(comboBox);
             ajouter_container.add(ajouter);
+            ajouter_container.add(comboBox);
 
             ajouter_container.add(this.vide());
 
