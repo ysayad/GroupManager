@@ -44,6 +44,7 @@ public class ButtonGroupeEditListener implements MouseListener {
             JDialog dialog = new JDialog(this.window, "Modifier le groupe : "+g.getName()); 
             JLabel desc = new JLabel("Renommer le groupe :");
             JTextField saisi_renommer = new JTextField(g.getName());
+            saisi_renommer.addMouseListener(new ChampTextListener(saisi_renommer,g.getName()));
             saisi_renommer.setBounds(20,20,20,20);
             saisi_renommer.setForeground(Color.GRAY);
             saisi_renommer.setMinimumSize(new Dimension(100,45));
