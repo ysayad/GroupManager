@@ -66,7 +66,10 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
             desc = new JLabel("Ajoutez un etudiant :");
+            String[] elements = {"Apple", "Banana", "Orange"};
+            JComboBox comboBox = new JComboBox(elements);
             JTextField saisi_ajoutez = new JTextField(g.getName());
+            dialog.add(comboBox);
             saisi_ajoutez.setBounds(20,20,20,20);
             saisi_ajoutez.setForeground(Color.GRAY);
             saisi_ajoutez.setMinimumSize(new Dimension(100,45));
@@ -79,6 +82,7 @@ public class ButtonGroupeEditListener implements MouseListener{
             JButton ajouter = new JButton("Ajouter");
             JPanel ajouter_container = new JPanel(new GridLayout(2,2));
 
+            ajouter_container.add(comboBox);
             ajouter_container.add(desc);
             ajouter_container.add(this.vide());
             ajouter_container.add(saisi_ajoutez);
@@ -90,7 +94,7 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
 
-JPanel big_container = new JPanel();
+            JPanel big_container = new JPanel();
 
 
 
@@ -98,6 +102,7 @@ JPanel big_container = new JPanel();
 
             big_container.add(saisi_container);
 
+            big_container.add(comboBox);
             big_container.add(ajouter_container);
             dialog.add(big_container);
             dialog.setSize(500, 600); 
