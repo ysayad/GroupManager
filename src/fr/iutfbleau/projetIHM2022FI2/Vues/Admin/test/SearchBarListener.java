@@ -34,10 +34,10 @@ public class SearchBarListener implements MouseListener, KeyListener {
     public void mouseExited(MouseEvent e) {
         if(this.searchbar.getText().equals("") && this.val == 1){
             this.searchbar.setForeground(Color.GRAY);
-            this.searchbar.setText("Rechercher par Nom");
+            this.searchbar.setText("Rechercher un etudiant");
             this.searchbar.setFocusable(false);
             this.val = 0;
-        }else if(this.searchbar.getText().equals("Rechercher par Nom")){
+        }else if(this.searchbar.getText().equals("Rechercher un etudiant")){
             this.searchbar.setFocusable(false);
             this.searchbar.setForeground(Color.GRAY);
         }
