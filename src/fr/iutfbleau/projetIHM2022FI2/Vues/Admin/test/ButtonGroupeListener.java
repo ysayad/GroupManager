@@ -52,15 +52,23 @@ public class ButtonGroupeListener implements MouseListener{
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
         JButton retour = new JButton("Retour");
         JButton creer = new JButton("Créer un groupe");
+        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, g));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
         navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
         navbar.add(Box.createHorizontalStrut(100));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         menuP.add(navbar,BorderLayout.PAGE_START);
-        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
+        
 
-        menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
+        if (g.getSousGroupes().isEmpty()) {
+            CarteEtudiant carteEtudiant = new CarteEtudiant(menu,this.window, g.getEtudiants());
+            menuP.add(carteEtudiant.drawCarteGroupe(),BorderLayout.CENTER);
+        } else {
+            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
+            menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
+        }
+
 
 
 

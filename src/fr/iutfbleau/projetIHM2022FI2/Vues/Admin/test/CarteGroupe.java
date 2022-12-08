@@ -109,7 +109,7 @@ public class CarteGroupe extends JFrame {
 
         carte.add(this.vide());
 
-        JLabel nbetudiant = new JLabel(num+"/35 etudiant");
+        JLabel nbetudiant = new JLabel(num+"/" + g.getMax() + " etudiant");
         nbetudiant.setFont(new Font("Verdana", Font.PLAIN, 14));
         nbetudiant.setHorizontalAlignment(SwingConstants.CENTER);
         JPanel test2 = new JPanel(new GridLayout(2,1));

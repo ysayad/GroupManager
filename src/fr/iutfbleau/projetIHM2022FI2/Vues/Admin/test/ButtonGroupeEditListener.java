@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
+
+import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 import javax.swing.border.Border;
@@ -87,8 +89,13 @@ public class ButtonGroupeEditListener implements MouseListener{
 
 
             desc = new JLabel("Supprimer un etudiant :");
-            String[] elements2 = {"Apple", "Banana", "Orange"};
-            JComboBox comboBox1 = new JComboBox(elements);
+            String[] elements2 = new String[g.getSize()];
+            int i=0;
+            for (Etudiant e : g.getEtudiants()) {
+                elements2[i] = e.getNom() + " " + e.getPrenom();
+                i++;
+            }
+            JComboBox comboBox1 = new JComboBox(elements2);
             comboBox1.setEditable(true);
             comboBox1.setForeground(Color.GRAY);
             comboBox1.setMinimumSize(new Dimension(100,45));

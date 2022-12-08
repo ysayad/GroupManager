@@ -196,6 +196,7 @@ public class Accueil {
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,fenetre,cardLayout);
         JButton creer = new JButton("Créer un groupe");
+        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, searchbar, Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
         menuP.add(navbar,BorderLayout.PAGE_START);
