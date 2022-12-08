@@ -5,6 +5,8 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 
 import java.io.*;
@@ -195,14 +197,19 @@ public class Accueil {
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,fenetre,cardLayout);
-        JButton creer = new JButton("Créer un groupe");
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, fenetre, Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
+        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
+        
+        if (promo.getType() != TypeGroupe.PARTITION) {
+            JButton creer = new JButton("Créer un groupe");
+            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, fenetre, promo));
+            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+        }
+        
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-        navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+        
         menuP.add(navbar,BorderLayout.PAGE_START);
         CarteGroupe carteGroupe = new CarteGroupe(menu,fenetre,cardLayout, navbar);
-        Cadmin admin = Cadmin.Instance(false);
-        menuP.add(carteGroupe.drawCarteGroupe(admin.getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
+        menuP.add(carteGroupe.drawCarteGroupe(promo));
 
 
 

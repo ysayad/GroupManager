@@ -9,6 +9,8 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 import java.io.*;
 import java.lang.Thread;
+import java.lang.ProcessBuilder.Redirect.Type;
+
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 import fr.iutfbleau.projetIHM2022FI2.API.*;
 import java.awt.event.*;
@@ -22,19 +24,31 @@ public class CreerListener implements MouseListener {
     CardLayout cardLayout;
     Groupe g;
     JDialog dialog;
-    JTextField saisi_renommer;
+    String saisie;
+    JComboBox combobox;
 
     
 
-    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JTextField saisi_renommer) {
+    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, String saisie) {
         this.window=window;
         this.button = button;
         this.menu = menu;
         this.cardLayout = cardLayout;
         this.g = g;
         this.dialog = dialog;
-        this.saisi_renommer = saisi_renommer;
+        this.saisie = saisie;
     }
+
+    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JComboBox combobox) {
+        this.window=window;
+        this.button = button;
+        this.menu = menu;
+        this.cardLayout = cardLayout;
+        this.g = g;
+        this.dialog = dialog;
+        this.combobox = combobox;
+    }
+
 
     public void refresh(String name, Groupe g){
         this.window.remove(menu);
@@ -53,25 +67,30 @@ public class CreerListener implements MouseListener {
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-        JButton retour = new JButton("Retour");
-        JButton creer = new JButton("Créer un groupe");
-        retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
+        if (g.getType() != TypeGroupe.ROOT) {
+            JButton retour = new JButton("Retour");
+            retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
+            navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
+        }
+        
+        if (g.getType() != TypeGroupe.PARTITION) {
+            JButton creer = new JButton("Créer un groupe");
+            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
+            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+        }
+        
+        
+        
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-        navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
-        navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
+        
+        
         navbar.add(Box.createHorizontalStrut(100));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         menuP.add(navbar,BorderLayout.PAGE_START);
         
+        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
+        menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
 
-        if (g.getSousGroupes().isEmpty()) {
-            CarteEtudiant carteEtudiant = new CarteEtudiant(menu,this.window, g.getEtudiants());
-            menuP.add(carteEtudiant.drawCarteGroupe(),BorderLayout.CENTER);
-        } else {
-            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
-            menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
-        }
 
 
 
@@ -93,10 +112,37 @@ public class CreerListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
-        Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisi_renommer.getText(), 12, 95);
+        if (button.getText() == "Créer") {
+            Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisie, 12, 95);
+        }
+
+        if (button.getText() == "Renommer") {
+            System.out.println(saisie);
+            Cadmin.Instance(false).renameGroup(g, saisie);
+        }
+        
+        if (button.getText() == "Ajouter") {
+            String nom = combobox.getEditor().getItem().toString().split(" ",2)[0];
+            Cadmin.Instance(false).getGroupeFactory().addToGroupe(g, Cadmin.Instance(false).search(nom, Cadmin.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+        }
+
+        if (button.getText() == "Supprimer") {
+            String nom = combobox.getEditor().getItem().toString().split(" ",2)[0];
+            Cadmin.Instance(false).getGroupeFactory().dropFromGroupe(g, Cadmin.Instance(false).search(nom, Cadmin.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
+        }
+
+        if (button.getText() == "Partitionner") {
+            Cadmin.Instance(false).getGroupeFactory().createPartition(g, g.getName(), Integer.parseInt(saisie));
+        }
+
+        if (button.getText() == "Supprimer le groupe") {
+            Cadmin.Instance(false).getGroupeFactory().deleteGroupe(g);
+
+        }
         dialog.dispose();
         this.refresh("Groupes   ", g);
         this.cardLayout.show(this.window.getContentPane(), "Menu");
+        
     }
 
     @Override

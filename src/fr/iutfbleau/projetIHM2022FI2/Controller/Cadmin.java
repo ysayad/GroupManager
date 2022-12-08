@@ -144,13 +144,18 @@ public class Cadmin {
     }
 
     // Renommer un groupe
-    public void renameGroup(int id, String name){ 
-        this.createGroup(name);
-        Set<Etudiant> tmp = getGroupe(id).getEtudiants();
-        for (Etudiant etu : tmp){
-            this.getGroupe(name).addEtudiant(etu);
+    public void renameGroup(Groupe g, String name){ 
+        groupeFactory.createGroupe(g.getPointPoint(), name, g.getMin(), g.getMax());
+        Set<Etudiant> tmp = g.getEtudiants();
+        for (Groupe gggg : g.getPointPoint().getSousGroupes()) {
+            if (gggg.getName() == name) {
+                for (Etudiant etu : tmp){
+                    gggg.addEtudiant(etu);
+                }
+            }
         }
-        this.deleteGroup(id);
+
+        groupeFactory.deleteGroupe(g);
     }
 
     // Ajouter un étudiant à un groupe

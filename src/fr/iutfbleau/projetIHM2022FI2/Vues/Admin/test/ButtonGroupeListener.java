@@ -7,6 +7,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.UIManager.*;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 import javax.swing.border.Border;
 import java.io.*;
@@ -50,25 +51,27 @@ public class ButtonGroupeListener implements MouseListener{
         JPanel menuP = new JPanel(new BorderLayout());
         JPanel navbar = new JPanel(new BorderLayout());
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-        JButton retour = new JButton("Retour");
-        JButton creer = new JButton("Créer un groupe");
-        retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
-        creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
+        if (g.getType() != TypeGroupe.ROOT) {
+            JButton retour = new JButton("Retour");
+            retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
+            navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
+        }
+
+        if (g.getType() == TypeGroupe.FREE) {
+            JButton creer = new JButton("Créer un groupe");
+            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
+            navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+        }
+        
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-        navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
-        navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
         navbar.add(Box.createHorizontalStrut(100));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         menuP.add(navbar,BorderLayout.PAGE_START);
         
+        
+        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
+        menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
 
-        if (g.getSousGroupes().isEmpty()) {
-            CarteEtudiant carteEtudiant = new CarteEtudiant(menu,this.window, g.getEtudiants());
-            menuP.add(carteEtudiant.drawCarteGroupe(),BorderLayout.CENTER);
-        } else {
-            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
-            menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
-        }
 
 
 

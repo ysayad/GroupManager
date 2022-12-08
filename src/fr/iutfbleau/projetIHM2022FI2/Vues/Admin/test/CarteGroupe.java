@@ -8,7 +8,9 @@ import java.lang.Thread;
 import java.awt.event.*;
 import java.util.*;
 
+import fr.iutfbleau.projetIHM2022FI2.API.Etudiant;
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.Cadmin;
 
 public class CarteGroupe extends JFrame {
@@ -140,11 +142,23 @@ public class CarteGroupe extends JFrame {
         //searchbarpanel.setBackground(Color.WHITE);
         Set<Groupe> list = pere.getSousGroupes();
 
+
         for(Groupe g : list){
                 JPanel panneaucarte = new JPanel();
                 panneaucarte.add(drawCarte(g.getName(),g.getSize(), g));
                 cartecontainer.add(panneaucarte);
         }
+
+        if (pere.getType() == TypeGroupe.FREE) {
+            for(Etudiant e : pere.getEtudiants()){
+                JPanel panneaucarte = new JPanel();
+                CarteEtudiant carteEtudiant = new CarteEtudiant(menu, window);
+                panneaucarte.add(carteEtudiant.drawCarte(e.getNom(),e.getPrenom()));
+                cartecontainer.add(panneaucarte);
+            }
+        }
+
+
 // Cadmin admin = new Cadmin.Instance(false);
 // Groupe grp = admin.getAllGroup().iterator().next();
 // Set<Groupe> list = grp.getSousGroupes();

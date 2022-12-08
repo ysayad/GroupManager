@@ -54,6 +54,7 @@ public class ButtonGroupeEditListener implements MouseListener {
             saisi_renommer.setBorder(border);
             saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
             JButton renommer = new JButton("Renommer");
+            renommer.addMouseListener(new CreerListener(renommer, menu, cardLayout, window, g, dialog, saisi_renommer.getText()));
             renommer.setFocusable(false);
             renommer.setCursor(new Cursor(Cursor.HAND_CURSOR));
             renommer.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -73,7 +74,13 @@ public class ButtonGroupeEditListener implements MouseListener {
 
 
             desc = new JLabel("Ajoutez un etudiant :");
-            String[] elements = {"Apple", "Banana", "Orange"};
+            Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion();
+            String[] elements = new String[promo.getSize()];
+            int j=0;
+            for (Etudiant e : promo.getEtudiants()) {
+                    elements[j] = e.getNom() + " " + e.getPrenom();
+                    j++;
+            }
             JComboBox comboBox = new JComboBox(elements);
 
   
@@ -87,6 +94,7 @@ public class ButtonGroupeEditListener implements MouseListener {
 /*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
             comboBox.setBorder(border);*/
             JButton ajouter = new JButton("Ajouter");
+            ajouter.addMouseListener(new CreerListener(ajouter, menu, cardLayout, window, g, dialog, comboBox));
             ajouter.setFont(new Font("Verdana", Font.PLAIN, 16));
             ajouter.setBackground(new Color(64,0,128));
             ajouter.setForeground(Color.WHITE);
@@ -119,6 +127,7 @@ public class ButtonGroupeEditListener implements MouseListener {
 /*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
             comboBox1.setBorder(border);*/
             JButton supprimer = new JButton("Supprimer");
+            supprimer.addMouseListener(new CreerListener(supprimer, menu, cardLayout, window, g, dialog, comboBox1));
             supprimer.setFont(new Font("Verdana", Font.PLAIN, 16));
             supprimer.setBackground(new Color(64,0,128));
             supprimer.setForeground(Color.WHITE);
@@ -142,6 +151,7 @@ public class ButtonGroupeEditListener implements MouseListener {
 /*            border = BorderFactory.createLineBorder(new Color(25,25,25));  
             nbr.setBorder(border);*/
             JButton partitionner = new JButton("Partitionner");
+            partitionner.addMouseListener(new CreerListener(partitionner, menu, cardLayout, window, g, dialog, nbr.toString()));
             partitionner.setFont(new Font("Verdana", Font.PLAIN, 16));
             partitionner.setBackground(new Color(64,0,128));
             partitionner.setForeground(Color.WHITE);
@@ -158,6 +168,7 @@ public class ButtonGroupeEditListener implements MouseListener {
 
 
             JButton suprimmer_groupe = new JButton("Supprimer le groupe");
+            suprimmer_groupe.addMouseListener(new CreerListener(suprimmer_groupe, menu, cardLayout, window, g, dialog, ""));
             suprimmer_groupe.setFont(new Font("Verdana", Font.PLAIN, 16));
             suprimmer_groupe.setBackground(new Color(255,0,0));
             suprimmer_groupe.setForeground(Color.WHITE);
