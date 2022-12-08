@@ -9,6 +9,7 @@ import javax.swing.UIManager.*;
 import javax.swing.border.Border;
 
 import fr.iutfbleau.projetIHM2022FI2.API.Groupe;
+import fr.iutfbleau.projetIHM2022FI2.API.TypeGroupe;
 import fr.iutfbleau.projetIHM2022FI2.Controller.*;
 
 import java.io.*;
@@ -57,25 +58,52 @@ public class ButtonListener implements MouseListener{
 
 
 
-            JPanel menuP = new JPanel(new BorderLayout());
-            SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-            JPanel navbar = new JPanel(new BorderLayout());
-
+        JPanel menuP = new JPanel(new BorderLayout());
+        JPanel navbar = new JPanel(new BorderLayout());
+        SearchBar searchbar = new SearchBar(menu,window,cardLayout);
+        Groupe promo = Cadmin.Instance(false).getGroupeFactory().getPromotion().getSousGroupes().iterator().next();
+        
+        if (promo.getType() != TypeGroupe.FREE) {
             JButton creer = new JButton("Créer un groupe");
-            navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+            creer.setFocusable(false);
+            creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            creer.setFont(new Font("Verdana", Font.PLAIN, 16));
+            creer.setBackground(new Color(64,0,128));
+            creer.setForeground(Color.WHITE);
+            creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, promo));
             navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
 
-            navbar.add(Box.createHorizontalStrut(100));
-            navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-            menuP.add(navbar,BorderLayout.PAGE_START);
-            CarteGroupe carteGroupe = new CarteGroupe(menu,this.window,this.cardLayout, navbar);
-            Cadmin admin = Cadmin.Instance(false);
-            menuP.add(carteGroupe.drawCarteGroupe(admin.getGroupeFactory().getPromotion().getSousGroupes().iterator().next()));
+        }   
+        if (promo.getType() != TypeGroupe.ROOT) {
+            JButton retour = new JButton("Retour");
+            retour.setFocusable(false);
+            retour.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            retour.setFont(new Font("Verdana", Font.PLAIN, 16));
+            retour.setBackground(new Color(64,0,128));
+            retour.setForeground(Color.WHITE);
+            retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,promo.getPointPoint()));
+            navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
 
 
 
-            menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
+        }
 
+
+        
+        navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+        navbar.add(Box.createHorizontalStrut(100));
+        navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
+        menuP.add(navbar,BorderLayout.PAGE_START);
+        
+        
+        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
+        menuP.add(carteGroupe.drawCarteGroupe(promo),BorderLayout.CENTER);
+
+
+
+
+
+        menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
             menuContainer.add(menuP);
 
 

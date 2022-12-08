@@ -49,9 +49,9 @@ public class ButtonGroupeCreerListener implements MouseListener {
             if (g.getType() == TypeGroupe.PARTITION) {
                 saisi_renommer.setText(g.getPointPoint().getName());
             } else {
-                saisi_renommer.setText(g.getName());
+                saisi_renommer.setText("Saisissez un nom");
             }
-            
+            saisi_renommer.addMouseListener(new ChampTextListener(saisi_renommer,"Saisissez un nom"));
             saisi_renommer.setBounds(20,20,20,20);
             saisi_renommer.setForeground(Color.GRAY);
             saisi_renommer.setMinimumSize(new Dimension(100,45));

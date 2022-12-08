@@ -18,6 +18,7 @@ Vues:
 classes: 
 	$(JC) $(SRC)API/*.java
 	$(JC) $(SRC)MNP/*.java
+	$(JC) $(SRC)MP/*.java
 	$(JC) $(SRC)Controller/*.java
 	$(JC) $(SRC)Vues/Admin/test/*.java
 

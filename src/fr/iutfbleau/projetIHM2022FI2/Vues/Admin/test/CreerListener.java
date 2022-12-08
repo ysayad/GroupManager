@@ -80,24 +80,39 @@ public class CreerListener implements MouseListener {
         SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
         if (g.getType() != TypeGroupe.ROOT) {
             JButton retour = new JButton("Retour");
+                        retour.setFocusable(false);
+            retour.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            retour.setFont(new Font("Verdana", Font.PLAIN, 16));
+            retour.setBackground(new Color(64,0,128));
+            retour.setForeground(Color.WHITE);
             retour.addMouseListener(new ButtonGroupeListener(null,menu, cardLayout,window,g.getPointPoint()));
             navbar.add(retour,BorderLayout.BEFORE_LINE_BEGINS);
+
+
+
         }
-        
-        if (g.getType() != TypeGroupe.PARTITION) {
+
+        if (g.getType() == TypeGroupe.FREE) {
             JButton creer = new JButton("Créer un groupe");
+            creer.setFocusable(false);
+            creer.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            creer.setFont(new Font("Verdana", Font.PLAIN, 16));
+            creer.setBackground(new Color(64,0,128));
+            creer.setForeground(Color.WHITE);
             creer.addMouseListener(new ButtonGroupeCreerListener(creer, menu, cardLayout, window, g));
             navbar.add(creer,BorderLayout.AFTER_LINE_ENDS);
+
+
+
         }
-        
-        
+
+
         
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-        
-        
         navbar.add(Box.createHorizontalStrut(100));
         navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
         menuP.add(navbar,BorderLayout.PAGE_START);
+        
         
         CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
         menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
