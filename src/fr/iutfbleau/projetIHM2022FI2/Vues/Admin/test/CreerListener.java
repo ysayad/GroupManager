@@ -124,7 +124,7 @@ public class CreerListener implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
         if (button.getText() == "Créer") {
-            Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisie, 12, 95);
+            Cadmin.Instance(false).getGroupeFactory().createGroupe(g, saisiearea.getText(), 12, 95);
         }
 
         if (button.getText() == "Renommer") {
