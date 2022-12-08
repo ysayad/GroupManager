@@ -76,11 +76,13 @@ public class ButtonGroupeEditListener implements MouseListener {
 
             desc = new JLabel("Ajoutez un etudiant :");
             Groupe promo = Controller.Instance(false).getGroupeFactory().getPromotion();
-            String[] elements = new String[promo.getSize()];
+            String[] elements = new String[promo.getSize() - g.getSize()];
             int j=0;
             for (Etudiant e : promo.getEtudiants()) {
+                if (!Controller.Instance(false).getGroupeFactory().getGroupesOfEtudiant(e).contains(g)) {
                     elements[j] = e.getNom() + " " + e.getPrenom();
                     j++;
+                }
             }
             JComboBox comboBox = new JComboBox(elements);
 

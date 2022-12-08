@@ -12,7 +12,7 @@ public class Controller {
     Groupe promo;
 
     private Controller(boolean persist){
-        if(!persist){
+        if(persist){
             this.groupeFactory = new AbstractGroupeFactoryP();
             //this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
@@ -22,36 +22,68 @@ public class Controller {
             this.changementFactory = new AbstractChangementFactoryNP(groupeFactory);
             this.promo = groupeFactory.getPromotion();
 
-            // Random name
-            String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            StringBuilder nom = new StringBuilder();
-            StringBuilder prenom = new StringBuilder();
-        
-            Random random = new Random();
-
-            //init etudiant
-            for (int i = 0; i < 50; i++) {
-                for(int j = 0; j < 5; j++) {
-                    int index = random.nextInt(alphabet.length());
-              
-                    char randomChar = alphabet.charAt(index);
-
-                    nom.append(randomChar);
-
-                    index = random.nextInt(alphabet.length());
-
-                    randomChar = alphabet.charAt(index);
-              
-                    prenom.append(randomChar);        
-                }
-
-
-                promo.addEtudiant(new EtudiantNP(nom.toString(), prenom.toString()));
-
-                prenom = new StringBuilder();
-                nom = new StringBuilder();
-            }
+            promo.addEtudiant(new EtudiantNP("césar","lycurgus"));
+            promo.addEtudiant(new EtudiantNP("denis","uranus"));
+            promo.addEtudiant(new EtudiantNP("marcel","castor"));
+            promo.addEtudiant(new EtudiantNP("marin","eurydice"));
+            promo.addEtudiant(new EtudiantNP("constantin","akoni"));
+            promo.addEtudiant(new EtudiantNP("donat","anakoni"));
+            promo.addEtudiant(new EtudiantNP("alexandre","apikalia"));
+            promo.addEtudiant(new EtudiantNP("andré","ekewaka"));
+            promo.addEtudiant(new EtudiantNP("renard","elikapeka"));
+            promo.addEtudiant(new EtudiantNP("achille","haukea"));
+            promo.addEtudiant(new EtudiantNP("agathe","iakopa"));
+            promo.addEtudiant(new EtudiantNP("sabine","spartacus"));
+            promo.addEtudiant(new EtudiantNP("michel","caligula"));
+            promo.addEtudiant(new EtudiantNP("marthe","alaric"));
+            promo.addEtudiant(new EtudiantNP("juliane","hannibal"));
+            promo.addEtudiant(new EtudiantNP("anne","juvenal"));
+            promo.addEtudiant(new EtudiantNP("sophie","bede"));
+            promo.addEtudiant(new EtudiantNP("louis","hamilcar"));
+            promo.addEtudiant(new EtudiantNP("diane","ladislas"));
+            promo.addEtudiant(new EtudiantNP("christine","mahatma"));
+            promo.addEtudiant(new EtudiantNP("youcef","sayad"));
+            promo.addEtudiant(new EtudiantNP("francine","napoleon"));
+            promo.addEtudiant(new EtudiantNP("adam","meddahi"));
+            promo.addEtudiant(new EtudiantNP("louise","lalita"));
+            promo.addEtudiant(new EtudiantNP("yanis","bouarroudj"));
+            promo.addEtudiant(new EtudiantNP("chantal","laxman"));
+            promo.addEtudiant(new EtudiantNP("giselle","laxmi"));
+            promo.addEtudiant(new EtudiantNP("caroline","leela"));
+            promo.addEtudiant(new EtudiantNP("florent","madelaine"));
+            promo.addEtudiant(new EtudiantNP("claude","lila"));
+            promo.addEtudiant(new EtudiantNP("luc","hernandez"));
+            promo.addEtudiant(new EtudiantNP("pauline","lilavati"));
+            promo.addEtudiant(new EtudiantNP("avril","lochan"));
+            promo.addEtudiant(new EtudiantNP("jacqueline","madh)av"));
+            promo.addEtudiant(new EtudiantNP("denise","turlough"));
+            promo.addEtudiant(new EtudiantNP("gabrielle","uaithne"));
+            promo.addEtudiant(new EtudiantNP("julie","uilleag"));
+            promo.addEtudiant(new EtudiantNP("madeleine","uilliam"));
+            promo.addEtudiant(new EtudiantNP("charlotte","uinseann"));
+            promo.addEtudiant(new EtudiantNP("bertrand","ulick"));
+            promo.addEtudiant(new EtudiantNP("lucile","ultan"));
+            promo.addEtudiant(new EtudiantNP("nicole","firdaus"));
+            promo.addEtudiant(new EtudiantNP("blanche","yasmin"));
+            promo.addEtudiant(new EtudiantNP("jeanine","javed"));
+            promo.addEtudiant(new EtudiantNP("roxane","naveed"));       
+            promo.addEtudiant(new EtudiantNP("adeline","shahnaz"));
+            promo.addEtudiant(new EtudiantNP("dion","ardashir"));
+            promo.addEtudiant(new EtudiantNP("liane","atefeh"));
+            promo.addEtudiant(new EtudiantNP("myriam","luigina"));
+            promo.addEtudiant(new EtudiantNP("danielle","luigino"));
+            promo.addEtudiant(new EtudiantNP("arlette","maddalena"));
+            promo.addEtudiant(new EtudiantNP("michelle","manfredo"));
+            promo.addEtudiant(new EtudiantNP("justine","manlio"));
+            promo.addEtudiant(new EtudiantNP("natalie","marcellino"));
+            promo.addEtudiant(new EtudiantNP("aline","mariangela"));          
+            promo.addEtudiant(new EtudiantNP("prosper","marzio"));
+            promo.addEtudiant(new EtudiantNP("mirabelle","massimiliano"));
+            promo.addEtudiant(new EtudiantNP("carine","matteo"));
+            promo.addEtudiant(new EtudiantNP("jeannine","melchiorre"));
+            promo.addEtudiant(new EtudiantNP("dianne","micaela"));
+            promo.addEtudiant(new EtudiantNP("evette","michela"));
+            promo.addEtudiant(new EtudiantNP("gisselle","michelangela"));
 
             //init groupe
             groupeFactory.createPartition(promo, "TD", 4);

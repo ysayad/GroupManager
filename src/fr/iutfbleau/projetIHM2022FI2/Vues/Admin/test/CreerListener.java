@@ -149,7 +149,7 @@ public class CreerListener implements MouseListener {
             System.out.println(saisiearea.getText());
             Controller.Instance(false).renameGroup(g, saisiearea.getText());
             dialog.dispose();
-            this.refresh("Groupes    ", g);
+            this.refresh("Groupes    ", g.getPointPoint());
             this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
         
@@ -157,7 +157,7 @@ public class CreerListener implements MouseListener {
             String nom = combobox.getEditor().getItem().toString().split(" ",2)[0];
             Controller.Instance(false).getGroupeFactory().addToGroupe(g, Controller.Instance(false).search(nom, Controller.Instance(false).getGroupeFactory().getPromotion()).iterator().next());
             dialog.dispose();
-            this.refresh("Groupes    ", g);
+            this.refresh("Groupes    ", g.getPointPoint());
             this.cardLayout.show(this.window.getContentPane(), "Menu");
         }
 
