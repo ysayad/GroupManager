@@ -139,7 +139,7 @@ public class ButtonGroupeListener implements MouseListener{
 
     public void mousePressed(MouseEvent e) {
         System.out.println(g.getName());
-        this.refresh("Groupes   ",g);
+        this.refresh("Groupes    ",g);
         this.cardLayout.show(this.window.getContentPane(), "Menu");
     }
 
