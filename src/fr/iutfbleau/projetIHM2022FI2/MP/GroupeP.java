@@ -77,7 +77,8 @@ public class GroupeP implements Groupe {
     *
     * @param pere - Le groupe pere du groupe à créer
     */
-    public GroupeP(int id, String name, TypeGroupe type, int min, int max){ 
+    public GroupeP(Groupe father, int id, String name, TypeGroupe type, int min, int max){ 
+        this.father = father;
         this.id = id;
         this.nom = name;
         this.type = type;

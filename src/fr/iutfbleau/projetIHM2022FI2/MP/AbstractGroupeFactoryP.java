@@ -84,61 +84,70 @@ public class AbstractGroupeFactoryP implements AbstractGroupeFactory {
         }
 
         try{
-           //Je recupere les groupes de la bd
-            PreparedStatement pstgetAllGroups = singleton.cnx.prepareStatement("SELECT id,name,type,min,max FROM PJIHM__Groups");
-            ResultSet rsgetAllGroups = pstgetAllGroups.executeQuery();
-
             this.groupsTable = new HashMap<Integer,Groupe>();
-            while(rsgetAllGroups.next()){//Création des groupes sans pere ni etudiants/sousgroupes
-                Groupe grp;
-                switch(rsgetAllGroups.getString(3)){
-                    case "ROOT":
-                        grp = new GroupeP(rsgetAllGroups.getString(2),rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
-                        this.promo = grp;
-                        break;
-
-                    case "PARTITION":
-                        grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), TypeGroupe.PARTITION,rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
-                        break;
-
-                    default:
-                        grp = new GroupeP(rsgetAllGroups.getInt(1),rsgetAllGroups.getString(2), TypeGroupe.FREE,rsgetAllGroups.getInt(4),rsgetAllGroups.getInt(5));
-                }                
-                this.groupsTable.put(Integer.valueOf(grp.getId()),grp);
-            }
-            System.out.println("    A");
-
-            //On attribue les groupes et sous-groupes 
-            PreparedStatement pstGetAllGroups = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Groups WHERE id!=1");
-            ResultSet rsGetAllGroups = pstGetAllGroups.executeQuery();
-            while(rsGetAllGroups.next()){//Ajouter les sous-groupes de chaque groupe
-                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(1)));
-                Groupe fatherTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(6)));
-                groupTmp.setFather(fatherTmp);
-                fatherTmp.addSousGroupe(groupTmp); 
-            }
-            //Ajouter tous les étudiant à this.promotion
+            //créer le groupe Root en local
+            PreparedStatement pstGetRoot = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Groups WHERE id = ?");
+            pstGetRoot.setInt(1,1);
+            ResultSet rsGetRoot = pstGetRoot.executeQuery();
+            rsGetRoot.next();
+            Groupe root = new GroupeP(rsGetRoot.getString(2),rsGetRoot.getInt(4), rsGetRoot.getInt(5));
+            this.groupsTable.put(Integer.valueOf(1),root);
+            this.promo = root;
+            //Ajoute les étudiants au groupe Root
             PreparedStatement pstGetAllStudents = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Students");
             ResultSet rsGetAllStudents = pstGetAllStudents.executeQuery();
+
             while(rsGetAllStudents.next()){
                 Etudiant etuTmp = new EtudiantP(rsGetAllStudents.getString(3),rsGetAllStudents.getString(2), rsGetAllStudents.getInt(1));
                 this.promo.addEtudiant(etuTmp);
-            }  
-            //Ajoute les étudiants dans leurs groupes 
-            PreparedStatement pstGetStudentsOfGroup = singleton.cnx.prepareStatement("SELECT studentId FROM PJIHM__StudentsGroups WHERE groupId = ?");
-            rsGetAllGroups.beforeFirst();
-            while(rsGetAllGroups.next()){//Parcours les groupes qui existent
-                Groupe groupTmp = groupsTable.get(Integer.valueOf(rsGetAllGroups.getInt(1)));
-                pstGetStudentsOfGroup.setInt(1,groupTmp.getId());//Récupere l'id des Etudiants de ce groupe
-                ResultSet rsGetStudentsOfGroup = pstGetStudentsOfGroup.executeQuery();
-                while(rsGetStudentsOfGroup.next()){
-                    for(Etudiant etuTmp : this.promo.getEtudiants()){
-                        if(etuTmp.getId() == rsGetStudentsOfGroup.getInt(1)){
-                            groupTmp.addEtudiant(etuTmp);
+            }
+            // Pere doivent etres crées avant les fils
+            //Créer tous les groupes tous les groupes fils du pere
+
+            //Créer le groupe actuel
+            //Si ce groupe à des fils, les crées -> les ajouté en tant que subGroups du pere
+            try{
+                this.createGroupsRecursively(this.promo);
+
+            }catch(IllegalStateException ex){
+                throw ex;
+            }
+            }catch(SQLException ex){
+                throw new IllegalStateException(ex.getMessage());
+             }
+    }
+
+    public void createGroupsRecursively(Groupe father) throws IllegalStateException{
+        ConnectionSingleton singleton;
+        
+        try{
+            singleton = ConnectionSingleton.getInstance();
+        }catch(IllegalStateException ex){
+            throw ex;
+        }
+
+        try{
+            PreparedStatement pstGetSubGroups = singleton.cnx.prepareStatement("SELECT * FROM PJIHM__Groups WHERE fatherId = ? AND id != 1");
+            pstGetSubGroups.setInt(1,father.getId());
+            ResultSet rsGetSubGroups = pstGetSubGroups.executeQuery();
+            while(rsGetSubGroups.next()){//Parcourt les sous groupes du pere
+                Groupe newGrp;
+                switch(rsGetSubGroups.getString(3)){
+                    case "FREE":
+                        newGrp = new GroupeP(father,rsGetSubGroups.getInt(1),rsGetSubGroups.getString(2),TypeGroupe.FREE,rsGetSubGroups.getInt(4),rsGetSubGroups.getInt(5)); //Création du groupe Fils
+                        //Ajt étudiants
+                        break;
+                    default :
+                        newGrp = new GroupeP(father,rsGetSubGroups.getInt(1),rsGetSubGroups.getString(2),TypeGroupe.PARTITION,rsGetSubGroups.getInt(4),rsGetSubGroups.getInt(5)); //Création du groupe Fils
+                        for(Etudiant etuTmp:this.promo.getEtudiants()){//Ajoute tous les étudiants du père dans la partition
+                            newGrp.addEtudiant(etuTmp);
                         }
-                    }
+                        break;
                 }
-            }                
+                if(!father.addSousGroupe(newGrp)) System.out.println("Fail ajout au daron");
+                this.groupsTable.put(Integer.valueOf(newGrp.getId()), newGrp);//Ajoute le groupe à this.groupsTable
+                this.createGroupsRecursively(newGrp);
+            }                          
             }catch(SQLException ex){
                 throw new IllegalStateException(ex.getMessage());
              }

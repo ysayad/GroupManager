@@ -17,9 +17,7 @@ public class Test{
         getGroupeOfEtudiant = ok
         getEtudiants = Ok
 
-
         */
-        //Test premier constructeur - OK
         try{
             //AbstractGroupeFactory facto = new AbstractGroupeFactoryP("PROMOTION",10,15);
             //System.out.println("Test Constructeur 1 : Affichage de la promo");
@@ -34,6 +32,7 @@ public class Test{
             // facto.createGroupe(facto.getPromotion(),"TD1",10,20);
             Set<Groupe> g = facto.getPromotion().getSousGroupes();
             Iterator<Groupe> it = g.iterator();
+            System.out.println(facto.getPromotion().getSousGroupes().size());
             System.out.println("Affichage des sous-groupes de la promo");
             while(it.hasNext()){
                 Groupe grp = it.next();
@@ -97,7 +96,6 @@ public class Test{
         }catch(IllegalStateException ex){
             System.out.println(ex.getMessage());
         }
-
         //Test 2eme constructeur 
         // try{
         //     AbstractGroupeFactory facto = new AbstractGroupeFactoryP("PROMOTION",10,15);
