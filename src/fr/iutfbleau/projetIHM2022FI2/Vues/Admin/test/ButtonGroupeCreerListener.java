@@ -62,7 +62,7 @@ public class ButtonGroupeCreerListener implements MouseListener {
             saisi_renommer.setBorder(border);
             saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
             JButton creer = new JButton("Créer");
-            creer.addMouseListener(new CreerListener(creer,menu,cardLayout,window,g,dialog,saisi_renommer.getText()));
+            creer.addMouseListener(new CreerListener(creer,menu,cardLayout,window,g,dialog,saisi_renommer));
             JPanel saisi_container = new JPanel(new GridLayout(2,2));
 
             saisi_container.add(desc);

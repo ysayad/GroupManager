@@ -26,17 +26,28 @@ public class CreerListener implements MouseListener {
     JDialog dialog;
     String saisie;
     JComboBox combobox;
+    JTextField saisiearea;
+    JSpinner spinner;
 
     
-
-    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, String saisie) {
+    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JTextField saisiearea) {
         this.window=window;
         this.button = button;
         this.menu = menu;
         this.cardLayout = cardLayout;
         this.g = g;
         this.dialog = dialog;
-        this.saisie = saisie;
+        this.saisiearea = saisiearea;
+    }
+
+    public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JSpinner spinner) {
+        this.window=window;
+        this.button = button;
+        this.menu = menu;
+        this.cardLayout = cardLayout;
+        this.g = g;
+        this.dialog = dialog;
+        this.spinner = spinner;
     }
 
     public CreerListener(JButton button , Menu menu, CardLayout cardLayout, JFrame window, Groupe g, JDialog dialog, JComboBox combobox) {
@@ -117,8 +128,8 @@ public class CreerListener implements MouseListener {
         }
 
         if (button.getText() == "Renommer") {
-            System.out.println(saisie);
-            Cadmin.Instance(false).renameGroup(g, saisie);
+            System.out.println(saisiearea.getText());
+            Cadmin.Instance(false).renameGroup(g, saisiearea.getText());
         }
         
         if (button.getText() == "Ajouter") {
@@ -132,7 +143,7 @@ public class CreerListener implements MouseListener {
         }
 
         if (button.getText() == "Partitionner") {
-            Cadmin.Instance(false).getGroupeFactory().createPartition(g, g.getName(), Integer.parseInt(saisie));
+            Cadmin.Instance(false).getGroupeFactory().createPartition(g, g.getName(), ( Integer)spinner.getValue());
         }
 
         if (button.getText() == "Supprimer le groupe") {
