@@ -31,50 +31,79 @@ public class ButtonGroupeEditListener implements MouseListener{
     }
 
 
-    public void refresh(String name, Groupe g){
-        this.window.remove(menu);
-
-
-        Menu menu = new Menu(this.window, cardLayout, name, "Administrtateur");
-        GridLayout gridLayout = new GridLayout(1,2);
-        gridLayout.setHgap(0);
-        gridLayout.setVgap(0);
-
-
-        JPanel menuContainer = new JPanel(new BorderLayout());
-
-
-
-        JPanel menuP = new JPanel(new BorderLayout());
-        SearchBar searchbar = new SearchBar(menu,this.window,this.cardLayout);
-        JPanel navbar = new JPanel(new BorderLayout());
-        JButton retour = new JButton("Retour");
-        JButton creer = new JButton("Créer un groupe");
-        navbar.add(retour, BorderLayout.BEFORE_LINE_BEGINS);
-        navbar.add(searchbar.drawSearchBar(), BorderLayout.CENTER);
-        navbar.add(creer, BorderLayout.AFTER_LINE_ENDS);
-        menuP.add(navbar,BorderLayout.PAGE_START);
-        CarteGroupe carteGroupe = new CarteGroupe(menu,this.window, cardLayout, navbar);
-
-        menuP.add(carteGroupe.drawCarteGroupe(g),BorderLayout.CENTER);
-
-
-
-        menuContainer.add(menu.drawMenu(),BorderLayout.LINE_START);
-
-        menuContainer.add(menuP);
-
-
-        this.window.add(menuContainer, "Menu");
-
-
-        this.window.revalidate();
-        this.window.repaint();
-        this.window.invalidate();
-        this.window.validate();
+    public JPanel vide(){
+        JPanel vide = new JPanel();
+        vide.setOpaque(false);
+        return vide;
     }
 
-  
+
+    public void edit(Groupe g){
+            JDialog dialog = new JDialog(this.window, "Modifier le groupe : "+g.getName()); 
+            JLabel desc = new JLabel("Renommer le groupe :");
+            JTextField saisi_renommer = new JTextField(g.getName());
+            saisi_renommer.setBounds(20,20,20,20);
+            saisi_renommer.setForeground(Color.GRAY);
+            saisi_renommer.setMinimumSize(new Dimension(300,45));
+            saisi_renommer.setSize(300, 45);
+            saisi_renommer.setPreferredSize( new Dimension( 500, 45 ) );
+            saisi_renommer.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+            Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            saisi_renommer.setBorder(border);
+            saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+            JButton renommer = new JButton("Renommer");
+            JPanel saisi_container = new JPanel(new GridLayout(2,2));
+
+            saisi_container.add(desc);
+            saisi_container.add(this.vide());
+            saisi_container.add(saisi_renommer);
+            saisi_container.add(renommer);
+
+
+
+
+
+
+
+            // desc = new JLabel("R :");
+            // JTextField saisi_renommer = new JTextField(g.getName());
+            // saisi_renommer.setBounds(20,20,20,20);
+            // saisi_renommer.setForeground(Color.GRAY);
+            // saisi_renommer.setMinimumSize(new Dimension(300,45));
+            // saisi_renommer.setSize(300, 45);
+            // saisi_renommer.setPreferredSize( new Dimension( 500, 45 ) );
+            // saisi_renommer.setFont(new Font("Verdana", Font.PLAIN, 16)); // définition du style de texte
+            // Border border = BorderFactory.createLineBorder(new Color(25,25,25));  
+            // saisi_renommer.setBorder(border);
+            // saisi_renommer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+            // JButton renommer = new JButton("Renommer");
+            // JPanel saisi_container = new JPanel(new GridLayout(2,2));
+
+            // saisi_container.add(desc);
+            // saisi_container.add(this.vide());
+            // saisi_container.add(saisi_renommer);
+            // saisi_container.add(renommer);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            dialog.add(saisi_container);
+            dialog.setSize(200, 100); 
+
+            dialog.setVisible(true); 
+    }
+
+
+
 
 
     public void mouseClicked(MouseEvent e) {}
@@ -88,6 +117,7 @@ public class ButtonGroupeEditListener implements MouseListener{
 
     public void mousePressed(MouseEvent e) {
         System.out.println(button.getName());
+        this.edit(g);
     }
 
     public void mouseReleased(MouseEvent e) {}
