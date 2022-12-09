@@ -101,7 +101,7 @@ public class Accueil {
         gbcpanneau.gridwidth = 1;
         gbcpanneau.gridheight = 1;
         JPanel panneauLogo = new JPanel();
-        JLabel logoupec = new JLabel(new ImageIcon(getClass().getResource("/menulogo.png")));
+        JLabel logoupec = new JLabel(new ImageIcon(getClass().getResource("/adminlogo.png")));
         panneauLogo.setBackground(Color.WHITE);
         panneauLogo.add(logoupec);
         panneau.add(panneauLogo, gbcpanneau);

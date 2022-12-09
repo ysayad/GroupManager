@@ -83,7 +83,7 @@ public class ButtonGroupeCreerListener implements MouseListener {
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             int x = (int) ((dimension.getWidth() - dialog.getWidth()) / 2);
             int y = (int) ((dimension.getHeight() - dialog.getHeight()) / 2);
-            dialog.setLocation(x, y);
+            dialog.setLocationRelativeTo(null);
             dialog.setResizable(false);
             dialog.setVisible(true); 
     }
